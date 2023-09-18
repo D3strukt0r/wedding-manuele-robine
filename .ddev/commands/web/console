@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## https://github.com/ddev/ddev-contrib/blob/master/custom-commands/symfony/web/console
+## Description: Run Symphony console
+## Usage: console <command>
+## Example: "ddev console about" or "ddev console debug:config"
+bin/console $@

@@ -1,0 +1,193 @@
+services:
+  pwa:
+    build:
+      dockerfile: pwa.Dockerfile
+      ssh:
+        - default
+      target: dev
+    init: true
+    container_name: pwa
+    volumes:
+      # Mount app directory
+      - ./pwa:/app
+
+      # Disable svelte-kit process and use vite dev server
+      - ./.docker/rootfs-local/empty.txt:/etc/supervisor/conf.d/svelte-kit.conf
+      - ./pwa/.docker/rootfs-local/etc/supervisor/conf.d/vite-dev-server.conf:/etc/supervisor/conf.d/vite-dev-server.conf
+
+      # Entrypoint scripts to run only locally (install deps, etc.)
+      - ./pwa/.docker/rootfs-local/docker-entrypoint.d/10_install-deps.sh:/docker-entrypoint.d/10_install-deps.sh
+      #- ./pwa/.docker/rootfs-local/docker-entrypoint.d/20_build.sh:/docker-entrypoint.d/20_build.sh
+    environment:
+      API_URL: https://api.weddingmanager.test
+    links:
+      - api
+    labels:
+      traefik.enable: true
+
+      traefik.http.routers.pwa0.entrypoints: web
+      traefik.http.routers.pwa0.rule: Host(`weddingmanager.test`)
+      traefik.http.routers.pwa0.middlewares: redirect-to-https
+
+      traefik.http.routers.pwa.entrypoints: websecure
+      traefik.http.routers.pwa.rule: Host(`weddingmanager.test`)
+      traefik.http.routers.pwa.tls: true
+
+  api:
+    build:
+      dockerfile: api.Dockerfile
+      ssh:
+        - default
+      target: dev
+    init: true
+    container_name: api
+    volumes:
+      # Mount app directory
+      - ./api:/app
+
+      # Entrypoint scripts to run only locally (install deps, etc.)
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/01_composer-install.sh:/docker-entrypoint.d/01_composer-install.sh
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/06_test-cache-clear.sh:/docker-entrypoint.d/06_test-cache-clear.sh
+
+      # Forward XDebug log to console
+      - ./api/.docker/rootfs-local/etc/supervisor/conf.d/xdebug-log.conf:/etc/supervisor/conf.d/xdebug-log.conf
+
+      # Add cron jobs supposed to run locally
+      - ./api/.docker/rootfs-local/etc/cron.d/crontabs:/etc/cron.d/crontabs
+
+      # Move cache and sessions out of the way for better NFS performance
+      - ~/data/app/cache:/app/var/cache
+      - ~/data/app/sessions:/app/var/sessions
+
+      # Keep cache data for IDE Symfony Plugin
+      - ./api/var/cache/dev/translations:/app/var/cache/dev/translations
+      - ./api/var/cache/dev/twig:/app/var/cache/dev/twig
+
+      # Store package manager cache in vagrant
+      #- ~/data/composer:/home/www-data/.composer/cache
+      #- ~/data/yarn:/home/www-data/.cache/yarn
+
+      # Keep upload data
+      #- ~/data/app/data:/app/data
+      #- ~/data/app/public/media:/app/public/media
+
+      # Mount the .ssh folder of the vagrant machine to the php container to
+      # allow GIT access from within
+      - ~/.ssh:/home/app/.ssh
+
+      # This one is needed for running tests from inside PhpStorm with Remote
+      # interpreters and does only apply for a Vagrant environment
+      - ~:/home/vagrant
+    environment:
+      PHP_IDE_CONFIG: serverName=weddingmanager # for PHPStorm debugging
+      DATABASE_URL: mysql://db:db@db:3306/db?serverVersion=10.11.2-MariaDB&charset=utf8mb4
+      COMPOSER_MEMORY_LIMIT: -1
+      RUNTIME_ENVIRONMENT: local
+      APP_ENV: dev
+    links:
+      - db
+      - mailpit
+    secrets:
+      - sensible_env
+    labels:
+      traefik.enable: true
+
+      traefik.http.routers.api0.entrypoints: web
+      traefik.http.routers.api0.rule: Host(`api.weddingmanager.test`)
+      traefik.http.routers.api0.middlewares: redirect-to-https
+
+      traefik.http.routers.api.entrypoints: websecure
+      traefik.http.routers.api.rule: Host(`api.weddingmanager.test`)
+      traefik.http.routers.api.tls: true
+
+  traefik:
+    image: traefik
+    init: true
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.file.directory=/etc/traefik/dynamic_conf
+      - --providers.file.watch=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./.docker/certs:/etc/ssl/certs/local:ro
+      - ./.docker/rootfs-local/traefik/etc/traefik/dynamic_conf/conf.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+    labels:
+      traefik.enable: true
+
+      traefik.http.routers.traefik0.entrypoints: web
+      traefik.http.routers.traefik0.rule: Host(`traefik.weddingmanager.test`)
+      traefik.http.routers.traefik0.middlewares: redirect-to-https
+
+      traefik.http.routers.traefik.entrypoints: websecure
+      traefik.http.routers.traefik.rule: Host(`traefik.weddingmanager.test`)
+      traefik.http.routers.traefik.tls: true
+      traefik.http.routers.traefik.service: api@internal
+
+      traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
+      traefik.http.middlewares.redirect-to-https-perm.redirectscheme.scheme: https
+      traefik.http.middlewares.redirect-to-https-perm.redirectscheme.permanent: true
+
+  db:
+    image: mariadb
+    init: true
+    container_name: db
+    volumes:
+      - ./.docker/rootfs-local/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ~/data/db:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: db
+      MARIADB_PASSWORD: db
+      MARIADB_DATABASE: db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    init: true
+    environment:
+      PMA_HOST: db
+      PMA_USER: db
+      PMA_PASSWORD: db
+      UPLOAD_LIMIT: 100M
+    links:
+      - db
+    labels:
+      traefik.enable: true
+
+      traefik.http.routers.phpmyadmin0.entrypoints: web
+      traefik.http.routers.phpmyadmin0.rule: Host(`phpmyadmin.weddingmanager.test`)
+      traefik.http.routers.phpmyadmin0.middlewares: redirect-to-https
+
+      traefik.http.routers.phpmyadmin.entrypoints: websecure
+      traefik.http.routers.phpmyadmin.rule: Host(`phpmyadmin.weddingmanager.test`)
+      traefik.http.routers.phpmyadmin.tls: true
+
+  mailpit:
+    image: axllent/mailpit
+    init: true
+    labels:
+      traefik.enable: true
+
+      traefik.http.services.mailpit.loadbalancer.server.port: 8025
+
+      traefik.http.routers.mailpit0.entrypoints: web
+      traefik.http.routers.mailpit0.rule: Host(`mailpit.weddingmanager.test`)
+      traefik.http.routers.mailpit0.middlewares: redirect-to-https
+
+      traefik.http.routers.mailpit.entrypoints: websecure
+      traefik.http.routers.mailpit.rule: Host(`mailpit.weddingmanager.test`)
+      traefik.http.routers.mailpit.tls: true
+
+secrets:
+  sensible_env:
+    file: api/sensible.env
