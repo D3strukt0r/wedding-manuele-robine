@@ -12,7 +12,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Download and cache apt packages
 RUN rm -f /etc/apt/apt.conf.d/docker-clean \
-    && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+    && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' >/etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     # Update system first
@@ -72,7 +72,7 @@ RUN \
         echo 'export PS1="🐳 \e[38;5;46m\u@\h\e[0m:\e[38;5;33m\w\e[0m\\$ "'; \
         # Add bash auto completion
         echo 'source /etc/profile.d/bash_completion.sh'; \
-    } >> "$HOME/.bashrc" \
+    } >>"$HOME/.bashrc" \
     \
     # Create non-root user/group (1000:1000) for app
     && useradd --create-home --shell /bin/bash app \
@@ -81,7 +81,7 @@ RUN \
     && { \
         # Same as above (except bash completion, because it's already in the bashrc)
         echo 'export PS1="🐳 \e[38;5;46m\u@\h\e[0m:\e[38;5;33m\w\e[0m\\$ "'; \
-    } >> /home/app/.bashrc
+    } >>/home/app/.bashrc
 
 COPY .docker/rootfs/common /
 COPY pwa/.docker/rootfs /
@@ -104,14 +104,12 @@ FROM base AS dev
 # -----------------------------------------------------------------------------
 # Keep prod dependencies in prod environemnt
 FROM base AS prod-deps
-USER app
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store \
     pnpm install --prod --frozen-lockfile
 
 # Build PWA application
 FROM base AS build
-USER app
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store \
     pnpm install --frozen-lockfile
@@ -124,7 +122,7 @@ RUN pnpm run build
 FROM base AS prod
 COPY --from=prod-deps /app .
 COPY --from=build /app .
-COPY --chown=app:app pwa .
+COPY pwa .
 RUN \
     # Clean up after copying files to /app
     rm -rf \
@@ -135,8 +133,14 @@ RUN \
         tests \
     && rm -f \
         .browserslistrc \
+        .eslintignore \
+        .eslintrc.cjs \
+        .gitignore \
         .npmrc \
+        .prettierignore \
+        .prettierrc.cjs \
         playwright.config.ts \
+        README.md \
         svelte.config.js \
         tsconfig.json \
-        vite.config.ts \
+        vite.config.ts

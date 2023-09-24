@@ -14,7 +14,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Download and cache apt packages
 RUN rm -f /etc/apt/apt.conf.d/docker-clean \
-    && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+    && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' >/etc/apt/apt.conf.d/keep-cache
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     # Update system first
@@ -63,9 +63,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     \
     # Install PHP & Nginx (https://packages.sury.org/php/README.txt & https://packages.sury.org/nginx/README.txt)
     && curl --fail --silent --show-error --location --output /usr/share/keyrings/deb.sury.org-php.gpg https://packages.sury.org/php/apt.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list \
+    && echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" >/etc/apt/sources.list.d/php.list \
     && curl --fail --silent --show-error --location --output /usr/share/keyrings/deb.sury.org-nginx.gpg https://packages.sury.org/nginx/apt.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-nginx.gpg] https://packages.sury.org/nginx/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/nginx.list \
+    && echo "deb [signed-by=/usr/share/keyrings/deb.sury.org-nginx.gpg] https://packages.sury.org/nginx/ $(lsb_release -sc) main" >/etc/apt/sources.list.d/nginx.list \
     && apt-get update -qq \
     && apt-get -qq install \
         nginx \
@@ -83,7 +83,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 RUN \
     # Fix missing default binaries
-    ln --symbolic php-fpm8.2 /usr/sbin/php-fpm \
+    ln --symbolic php-fpm$PHP_VERSION /usr/sbin/php-fpm \
+    # By default, PHP-FPM uses the production config, which can be found in
+    # "/usr/lib/php/$PHP_VERSION/php.ini-production"
+    #&& ln --symbolic --force /usr/lib/php/$PHP_VERSION/php.ini-production /etc/php/$PHP_VERSION/fpm/php.ini \
     \
     # Set time zone
     && ln --symbolic --force /usr/share/zoneinfo/Europe/Zurich /etc/localtime \
@@ -101,7 +104,7 @@ RUN \
         echo 'export PS1="🐳 \e[38;5;46m\u@\h\e[0m:\e[38;5;33m\w\e[0m\\$ "'; \
         # Add bash auto completion
         echo 'source /etc/profile.d/bash_completion.sh'; \
-    } >> "$HOME/.bashrc" \
+    } >>"$HOME/.bashrc" \
     \
     # Create non-root user/group (1000:1000) for app and delete www-data
     && useradd --create-home --shell /bin/bash app \
@@ -114,7 +117,7 @@ RUN \
     && { \
         # Same as above (except bash completion, because it's already in the bashrc)
         echo 'export PS1="🐳 \e[38;5;46m\u@\h\e[0m:\e[38;5;33m\w\e[0m\\$ "'; \
-    } >> /home/app/.bashrc \
+    } >>/home/app/.bashrc \
     \
     # Forward request and error logs to docker log collector
     && ln --symbolic --force /dev/stdout /var/log/nginx/access.log \
@@ -163,13 +166,45 @@ RUN \
     && sed -i 's/\(listen =\).*/\1\ \/run\/php\/php-fpm.sock/' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf \
     # Fix problem with logging to stdout (https://github.com/docker-library/php/issues/878#issuecomment-938595965)
     && sed -i '/^;fastcgi\.logging/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
-    # Enable php fpm status page
-    && echo 'pm.status_path = /status' >> /etc/php/$PHP_VERSION/fpm/php-fpm.conf \
+    \
+    # Enable php fpm status page (https://github.com/renatomefi/php-fpm-healthcheck/blob/master/test/Dockerfile-buster)
+    && echo 'pm.status_path = /status' >>/etc/php/$PHP_VERSION/fpm/php-fpm.conf \
+    \
+    # Other settings
     # Use new default user app for everything
     && sed -i 's/^\(user =\).*/\1\ app/' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf \
     && sed -i 's/^\(group =\).*/\1\ app/' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf \
     && sed -i 's/^\(listen\.owner =\).*/\1\ app/' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf \
-    && sed -i 's/^\(listen\.group =\).*/\1\ app/' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+    && sed -i 's/^\(listen\.group =\).*/\1\ app/' /etc/php/$PHP_VERSION/fpm/pool.d/www.conf \
+    # Set memory limited to unlimited and use Docker memory limits instead
+    && sed -i 's/^\(memory_limit =\).*/\1\ -1/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    # Change upload limit to a desirable value (use 0 for unlimited)
+    # General rule: memory_limi > post_max_size > upload_max_filesize
+    && sed -i 's/^\(post_max_size =\).*/\1\ 100M/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(upload_max_filesize =\).*/\1\ 100M/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    \
+    # Improve performance for prod with OPcache (https://symfony.com/doc/current/performance.html)
+    # OPcache can compile and load classes at start-up and make them available to all requests until the server is restarted
+    && sed -i '/^;opcache.preload/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(opcache.preload=\).*/\1\ \/app\/config\/preload.php/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    # required for opcache.preload
+    && sed -i '/^;opcache.preload_user/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(opcache.preload_user=\).*/\1\ app/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    # Maximum memory that OPcache can use to store compiled PHP files (min 8, so cannot be set to unlimited)
+    && sed -i '/^;opcache.memory_consumption/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(opcache.memory_consumption=\).*/\1\ 256/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    # maximum number of files that can be stored in the cache (calculate with "find")
+    && sed -i '/^;opcache.max_accelerated_files/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(opcache.max_accelerated_files=\).*/\1\ 20000/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    # When a relative path is transformed into its real and absolute path, PHP
+    # caches the result to improve performance. Applications that open many PHP
+    # files, such as Symfony projects, should use at least these values:
+    # maximum memory allocated to store the results
+    && sed -i '/^;realpath_cache_size/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(realpath_cache_size =\).*/\1\ 4096K/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    # save the results for 10 minutes (600 seconds)
+    && sed -i '/^;realpath_cache_ttl/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(realpath_cache_ttl =\).*/\1\ 600/' /etc/php/$PHP_VERSION/fpm/php.ini
 
 COPY .docker/rootfs/common /
 COPY api/.docker/rootfs /
@@ -259,8 +294,17 @@ RUN \
     && phpstan --version \
     && rector --version
 RUN \
+    # Values used inside php.ini-development
+    sed -i 's/^\(zend.exception_ignore_args =\).*/\1\ Off/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(zend.exception_string_param_max_len =\).*/\1\ 15/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(expose_php =\).*/\1\ On/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(error_reporting =\).*/\1\ E_ALL/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(display_errors =\).*/\1\ On/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(display_startup_errors =\).*/\1\ On/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(mysqlnd.collect_memory_statistics =\).*/\1\ On/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    \
     # Setup XDebug
-    { \
+    && { \
         echo; \
         echo 'xdebug.mode = develop,coverage,debug'; \
         # If enabled, Xdebug will first try to connect to the client that made
@@ -272,7 +316,7 @@ RUN \
         # XDebug can't write to /dev/stdout, so we read it indirectly with a
         # separated supervisord process
         echo 'xdebug.log = "/var/log/xdebug.log"'; \
-    } >> "/etc/php/$PHP_VERSION/fpm/php.ini" \
+    } >>"/etc/php/$PHP_VERSION/fpm/php.ini" \
     \
     # Fix issue with GIT "detected dubious ownership in repository" error in
     # local development due to CVE-2022-24765 (https://github.com/git/git/commit/8959555cee7ec045958f9b6dd62e541affb7e7d9)
@@ -289,10 +333,31 @@ COPY --chown=app:app api/composer.json api/composer.lock api/symfony.lock ./
 RUN --mount=type=cache,target=/home/app/.composer/cache \
     --mount=type=ssh,required=true \
     # Don't use ~/.ssh/known_hosts (see https://stackoverflow.com/a/73264002/4156752)
-    ssh-keyscan -t ed25519 github.com | tee /etc/ssh/ssh_known_hosts \
+    ssh-keyscan -t ed25519 github.com >>/etc/ssh/ssh_known_hosts \
     # Install composer dependencies (see https://stackoverflow.com/a/21921309/4156752)
+    # https://symfony.com/doc/current/performance.html#optimize-composer-autoloader
+    # https://getcomposer.org/doc/articles/autoloader-optimization.md \
+    # "--classmap-authoritative" doesn't work -> "Uncaught Error: Class "App\Kernel" not found in /app/bin/console:14"
     && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
 FROM base AS prod
 COPY --from=prod-deps /app .
 COPY api .
+RUN \
+    # Further optimize php.ini for production
+    # maximum number of files that can be stored in the cache (calculate with "find")
+    sed -i "s/^\(opcache.max_accelerated_files=\).*/\1\ $(find /app -type f -print | grep -c php)/" /etc/php/$PHP_VERSION/fpm/php.ini \
+    # In production servers, PHP files should never change, unless a new
+    # application version is deployed. However, by default OPcache checks if
+    # cached files have changed their contents since they were cached.
+    && sed -i '/^;opcache.validate_timestamps/s/^;//' /etc/php/$PHP_VERSION/fpm/php.ini \
+    && sed -i 's/^\(opcache.validate_timestamps=\).*/\1\ 0/' /etc/php/$PHP_VERSION/fpm/php.ini \
+    \
+    # Clean up after copying files to /app
+    && rm -rf \
+        .docker \
+        tests \
+    && rm -f \
+        .env.test \
+        .gitignore \
+        phpunit.xml.dist
