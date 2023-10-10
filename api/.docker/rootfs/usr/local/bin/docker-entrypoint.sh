@@ -17,18 +17,21 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'nginx' ] || [ "$1" = "nginx-debug" ] || [ "
     shift
     printf '%s [%s] [Entrypoint]: %s\n' "$(date '+%Y-%m-%d %T %z')" "$type" "$*"
   }
+  export -f entrypoint_log
+
   entrypoint_info() {
     entrypoint_log Info "$@"
   }
+  export -f entrypoint_info
+
   entrypoint_warn() {
     entrypoint_log Warn "$@" >&2
   }
+  export -f entrypoint_warn
+
   entrypoint_error() {
     entrypoint_log ERROR "$@" >&2
   }
-  export -f entrypoint_log
-  export -f entrypoint_info
-  export -f entrypoint_warn
   export -f entrypoint_error
 
   # usage: touchp FILE...
@@ -49,6 +52,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'nginx' ] || [ "$1" = "nginx-debug" ] || [ "
       touch "$arg"
     done
   }
+  export -f touchp
 
   exec_all_sh_in_folder() {
     local folder="$1"

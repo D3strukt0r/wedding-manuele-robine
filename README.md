@@ -1,8 +1,6 @@
-# Emoji Helper
+# Wedding Manager
 
-An Emoji cheat sheet extension for Chromium and Firefox based browsers. Built because I like spamming my coworkers with :mushroom: :pig: :rocket: :snail: but fortunately have more important things to keep in mind than the name for :moyai:
-
-Install from the [Firefox addon page][firefox-add-on] or the [Chrome addon page][chrome-web-store]
+The wedding page and manager for my own wedding. Might make it more customizable in the future.
 
 [![License -> GitHub](https://img.shields.io/github/license/D3strukt0r/wedding-manager?label=License)](LICENSE.txt)
 [![Static Badge](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa)](CODE_OF_CONDUCT.md)
@@ -18,6 +16,8 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install the software and how to install them
 
 * [Git](https://git-scm.com/) - Run `brew install git` (Only for macOS)
+* [VirtualBox](https://www.virtualbox.org/) - Run `brew install virtualbox` (Only for macOS)
+* [Vagrant](https://www.vagrantup.com/) - Run `brew install vagrant` (Only for macOS)
 
 ### Installing
 
@@ -31,6 +31,12 @@ cd emoji-helper
 TODO
 
 ### Development
+
+Start the project
+
+```shell
+vagrant up
+```
 
 TODO
 
