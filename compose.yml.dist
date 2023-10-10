@@ -20,8 +20,9 @@ services:
       #- ./pwa/.docker/rootfs-local/docker-entrypoint.d/20_build.sh:/docker-entrypoint.d/20_build.sh
     environment:
       API_URL: https://api.weddingmanager.test
-    links:
+    depends_on:
       - api
+      - traefik
     labels:
       traefik.enable: true
 
@@ -84,7 +85,7 @@ services:
       COMPOSER_MEMORY_LIMIT: -1
       RUNTIME_ENVIRONMENT: local
       APP_ENV: dev
-    links:
+    depends_on:
       - db
       - mailpit
     secrets:
@@ -138,6 +139,8 @@ services:
 
   db:
     image: mariadb
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "--user=db", "--password=db"]
     init: true
     container_name: db
     volumes:
@@ -159,7 +162,7 @@ services:
       PMA_USER: db
       PMA_PASSWORD: db
       UPLOAD_LIMIT: 100M
-    links:
+    depends_on:
       - db
     labels:
       traefik.enable: true
