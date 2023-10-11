@@ -87,12 +87,12 @@ RUN \
     ln --symbolic php-fpm$PHP_VERSION /usr/sbin/php-fpm \
     # By default, PHP-FPM uses the production config, which can be found in
     # "/usr/lib/php/$PHP_VERSION/php.ini-production"
-    #&& ln --symbolic --force /usr/lib/php/$PHP_VERSION/php.ini-production $PHP_DIR/php.ini \
+    #&& ln --symbolic --force /usr/lib/php/$PHP_VERSION/php.ini-production "$PHP_DIR/php.ini" \
     \
     # Set time zone
     && ln --symbolic --force /usr/share/zoneinfo/Europe/Zurich /etc/localtime \
-    && sed -i '/^;date\.timezone/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(date\.timezone =\).*/\1\ \"Europe\/Zurich\"/' $PHP_DIR/php.ini \
+    && sed -i '/^;date\.timezone/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(date\.timezone =\).*/\1\ \"Europe\/Zurich\"/' "$PHP_DIR/php.ini" \
     \
     # Smoke tests
     && php --version \
@@ -147,65 +147,65 @@ RUN \
     \
     # Setup PHP-FPM for Docker (https://github.com/docker-library/php/blob/master/8.2/bookworm/fpm/Dockerfile)
     # Forward errors to stderr
-    && sed -i 's/^\(error_log =\).*/\1\ \/proc\/self\/fd\/2/' $PHP_DIR/php-fpm.conf \
+    && sed -i 's/^\(error_log =\).*/\1\ \/proc\/self\/fd\/2/' "$PHP_DIR/php-fpm.conf" \
     # Increase log limit to avoid e.g. breaking back traces (https://github.com/docker-library/php/pull/725#issuecomment-443540114)
-    && sed -i '/^;log_limit/s/^;//' $PHP_DIR/php-fpm.conf \
-    && sed -i 's/^\(log_limit =\).*/\1\ 8192/' $PHP_DIR/php-fpm.conf \
+    && sed -i '/^;log_limit/s/^;//' "$PHP_DIR/php-fpm.conf" \
+    && sed -i 's/^\(log_limit =\).*/\1\ 8192/' "$PHP_DIR/php-fpm.conf" \
     # php-fpm closes STDOUT on startup, so sending logs to /proc/self/fd/1 does
     # not work. (https://bugs.php.net/bug.php?id=73886)
-    && sed -i '/^;access\.log/s/^;//' $PHP_DIR/pool.d/www.conf \
-    && sed -i 's/^\(access\.log =\).*/\1\ \/proc\/self\/fd\/2/' $PHP_DIR/pool.d/www.conf \
+    && sed -i '/^;access\.log/s/^;//' "$PHP_DIR/pool.d/www.conf" \
+    && sed -i 's/^\(access\.log =\).*/\1\ \/proc\/self\/fd\/2/' "$PHP_DIR/pool.d/www.conf" \
     # Pass all environment variables to PHP-FPM
-    && sed -i '/^;clear_env/s/^;//' $PHP_DIR/pool.d/www.conf \
+    && sed -i '/^;clear_env/s/^;//' "$PHP_DIR/pool.d/www.conf" \
     # Ensure worker stdout and stderr are sent to the main error log.
-    && sed -i '/^;catch_workers_output/s/^;//' $PHP_DIR/pool.d/www.conf \
-    && sed -i '/^;decorate_workers_output/s/^;//' $PHP_DIR/pool.d/www.conf \
+    && sed -i '/^;catch_workers_output/s/^;//' "$PHP_DIR/pool.d/www.conf" \
+    && sed -i '/^;decorate_workers_output/s/^;//' "$PHP_DIR/pool.d/www.conf" \
     # Don't use daemon, supervisor needs the process to stay in foreground
-    && sed -i '/^;daemonize/s/^;//' $PHP_DIR/php-fpm.conf \
-    && sed -i 's/^\(daemonize =\).*/\1\ no/' $PHP_DIR/php-fpm.conf \
+    && sed -i '/^;daemonize/s/^;//' "$PHP_DIR/php-fpm.conf" \
+    && sed -i 's/^\(daemonize =\).*/\1\ no/' "$PHP_DIR/php-fpm.conf" \
     # Use more general path for socket
-    && sed -i 's/\(listen =\).*/\1\ \/run\/php\/php-fpm.sock/' $PHP_DIR/pool.d/www.conf \
+    && sed -i 's/\(listen =\).*/\1\ \/run\/php\/php-fpm.sock/' "$PHP_DIR/pool.d/www.conf" \
     # Fix problem with logging to stdout (https://github.com/docker-library/php/issues/878#issuecomment-938595965)
-    && sed -i '/^;fastcgi\.logging/s/^;//' $PHP_DIR/php.ini \
+    && sed -i '/^;fastcgi\.logging/s/^;//' "$PHP_DIR/php.ini" \
     \
     # Enable php fpm status page (https://github.com/renatomefi/php-fpm-healthcheck/blob/master/test/Dockerfile-buster)
-    && echo 'pm.status_path = /status' >>$PHP_DIR/php-fpm.conf \
+    && echo 'pm.status_path = /status' >>"$PHP_DIR/php-fpm.conf" \
     \
     # Other settings
     # Use new default user app for everything
-    && sed -i 's/^\(user =\).*/\1\ app/' $PHP_DIR/pool.d/www.conf \
-    && sed -i 's/^\(group =\).*/\1\ app/' $PHP_DIR/pool.d/www.conf \
-    && sed -i 's/^\(listen\.owner =\).*/\1\ app/' $PHP_DIR/pool.d/www.conf \
-    && sed -i 's/^\(listen\.group =\).*/\1\ app/' $PHP_DIR/pool.d/www.conf \
+    && sed -i 's/^\(user =\).*/\1\ app/' "$PHP_DIR/pool.d/www.conf" \
+    && sed -i 's/^\(group =\).*/\1\ app/' "$PHP_DIR/pool.d/www.conf" \
+    && sed -i 's/^\(listen\.owner =\).*/\1\ app/' "$PHP_DIR/pool.d/www.conf" \
+    && sed -i 's/^\(listen\.group =\).*/\1\ app/' "$PHP_DIR/pool.d/www.conf" \
     # Set memory limited to unlimited and use Docker memory limits instead
-    && sed -i 's/^\(memory_limit =\).*/\1\ -1/' $PHP_DIR/php.ini \
+    && sed -i 's/^\(memory_limit =\).*/\1\ -1/' "$PHP_DIR/php.ini" \
     # Change upload limit to a desirable value (use 0 for unlimited)
     # General rule: memory_limi > post_max_size > upload_max_filesize
-    && sed -i 's/^\(post_max_size =\).*/\1\ 100M/' $PHP_DIR/php.ini \
-    && sed -i 's/^\(upload_max_filesize =\).*/\1\ 100M/' $PHP_DIR/php.ini \
+    && sed -i 's/^\(post_max_size =\).*/\1\ 100M/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(upload_max_filesize =\).*/\1\ 100M/' "$PHP_DIR/php.ini" \
     \
     # Improve performance for prod with OPcache (https://symfony.com/doc/current/performance.html)
     # OPcache can compile and load classes at start-up and make them available to all requests until the server is restarted
-    && sed -i '/^;opcache.preload/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(opcache.preload=\).*/\1\ \/app\/config\/preload.php/' $PHP_DIR/php.ini \
+    && sed -i '/^;opcache.preload/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(opcache.preload=\).*/\1\ \/app\/config\/preload.php/' "$PHP_DIR/php.ini" \
     # required for opcache.preload
-    && sed -i '/^;opcache.preload_user/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(opcache.preload_user=\).*/\1\ app/' $PHP_DIR/php.ini \
+    && sed -i '/^;opcache.preload_user/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(opcache.preload_user=\).*/\1\ app/' "$PHP_DIR/php.ini" \
     # Maximum memory that OPcache can use to store compiled PHP files (min 8, so cannot be set to unlimited)
-    && sed -i '/^;opcache.memory_consumption/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(opcache.memory_consumption=\).*/\1\ 256/' $PHP_DIR/php.ini \
+    && sed -i '/^;opcache.memory_consumption/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(opcache.memory_consumption=\).*/\1\ 256/' "$PHP_DIR/php.ini" \
     # maximum number of files that can be stored in the cache (calculate with "find")
-    && sed -i '/^;opcache.max_accelerated_files/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(opcache.max_accelerated_files=\).*/\1\ 20000/' $PHP_DIR/php.ini \
+    && sed -i '/^;opcache.max_accelerated_files/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(opcache.max_accelerated_files=\).*/\1\ 20000/' "$PHP_DIR/php.ini" \
     # When a relative path is transformed into its real and absolute path, PHP
     # caches the result to improve performance. Applications that open many PHP
     # files, such as Symfony projects, should use at least these values:
     # maximum memory allocated to store the results
-    && sed -i '/^;realpath_cache_size/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(realpath_cache_size =\).*/\1\ 4096K/' $PHP_DIR/php.ini \
+    && sed -i '/^;realpath_cache_size/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(realpath_cache_size =\).*/\1\ 4096K/' "$PHP_DIR/php.ini" \
     # save the results for 10 minutes (600 seconds)
-    && sed -i '/^;realpath_cache_ttl/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(realpath_cache_ttl =\).*/\1\ 600/' $PHP_DIR/php.ini
+    && sed -i '/^;realpath_cache_ttl/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(realpath_cache_ttl =\).*/\1\ 600/' "$PHP_DIR/php.ini"
 
 COPY .docker/rootfs/common /
 COPY api/.docker/rootfs /
@@ -296,13 +296,13 @@ RUN \
     && rector --version
 RUN \
     # Values used inside php.ini-development
-    sed -i 's/^\(zend.exception_ignore_args =\).*/\1\ Off/' $PHP_DIR/php.ini \
-    && sed -i 's/^\(zend.exception_string_param_max_len =\).*/\1\ 15/' $PHP_DIR/php.ini \
-    && sed -i 's/^\(expose_php =\).*/\1\ On/' $PHP_DIR/php.ini \
-    && sed -i 's/^\(error_reporting =\).*/\1\ E_ALL/' $PHP_DIR/php.ini \
-    && sed -i 's/^\(display_errors =\).*/\1\ On/' $PHP_DIR/php.ini \
-    && sed -i 's/^\(display_startup_errors =\).*/\1\ On/' $PHP_DIR/php.ini \
-    && sed -i 's/^\(mysqlnd.collect_memory_statistics =\).*/\1\ On/' $PHP_DIR/php.ini \
+    sed -i 's/^\(zend.exception_ignore_args =\).*/\1\ Off/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(zend.exception_string_param_max_len =\).*/\1\ 15/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(expose_php =\).*/\1\ On/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(error_reporting =\).*/\1\ E_ALL/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(display_errors =\).*/\1\ On/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(display_startup_errors =\).*/\1\ On/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(mysqlnd.collect_memory_statistics =\).*/\1\ On/' "$PHP_DIR/php.ini" \
     \
     # Setup XDebug
     && { \
@@ -347,13 +347,13 @@ COPY --from=prod-deps /app .
 COPY api .
 RUN \
     # Further optimize php.ini for production
-    # maximum number of files that can be stored in the cache (calculate with "find")
-    sed -i "s/^\(opcache.max_accelerated_files=\).*/\1\ $(find /app -type f -print | grep -c php)/" $PHP_DIR/php.ini \
+    # maximum number of files that can be stored in the cache (calculate with "find" and add buffer for var folder)
+    sed -i "s/^\(opcache.max_accelerated_files=\).*/\1\ $(($(find /app -type f -print | grep -c php) + 1000))/" "$PHP_DIR/php.ini" \
     # In production servers, PHP files should never change, unless a new
     # application version is deployed. However, by default OPcache checks if
     # cached files have changed their contents since they were cached.
-    && sed -i '/^;opcache.validate_timestamps/s/^;//' $PHP_DIR/php.ini \
-    && sed -i 's/^\(opcache.validate_timestamps=\).*/\1\ 0/' $PHP_DIR/php.ini \
+    && sed -i '/^;opcache.validate_timestamps/s/^;//' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(opcache.validate_timestamps=\).*/\1\ 0/' "$PHP_DIR/php.ini" \
     \
     # Clean up after copying files to /app
     && rm -rf \
