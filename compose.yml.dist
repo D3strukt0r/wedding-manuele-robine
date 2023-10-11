@@ -19,7 +19,8 @@ services:
       - ./pwa/.docker/rootfs-local/docker-entrypoint.d/10_install-deps.sh:/docker-entrypoint.d/10_install-deps.sh
       #- ./pwa/.docker/rootfs-local/docker-entrypoint.d/20_build.sh:/docker-entrypoint.d/20_build.sh
     environment:
-      API_URL: https://api.weddingmanager.test
+      API_URL: http://api
+      API_URL_PUBLIC: https://api.weddingmanager.test
     depends_on:
       - api
       - traefik

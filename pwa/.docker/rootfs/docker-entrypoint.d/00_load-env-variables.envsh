@@ -29,6 +29,7 @@ file_env() {
 entrypoint_info 'Load various environment variables'
 manualEnvs=(
   API_URL
+  API_URL_PUBLIC
 )
 envs=(
   ENV
@@ -62,6 +63,10 @@ for e in "${manualEnvs[@]}"; do
     case $e in
       API_URL)
         : "${!e:=https://example.test/api}"
+        entrypoint_error "$e=${!e}"
+        ;;
+      API_URL_PUBLIC)
+        : "${!e:=http://api}"
         entrypoint_error "$e=${!e}"
         ;;
       *)

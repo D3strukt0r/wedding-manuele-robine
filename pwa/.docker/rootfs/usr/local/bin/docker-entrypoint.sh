@@ -17,38 +17,42 @@ if [ "$1" = 'node' ] || [ "$1" = 'supervisord' ]; then
     shift
     printf '%s [%s] [Entrypoint]: %s\n' "$(date '+%Y-%m-%d %T %z')" "$type" "$*"
   }
+  export -f entrypoint_log
+
   entrypoint_info() {
     entrypoint_log Info "$@"
   }
+  export -f entrypoint_info
+
   entrypoint_warn() {
     entrypoint_log Warn "$@" >&2
   }
+  export -f entrypoint_warn
+
   entrypoint_error() {
     entrypoint_log ERROR "$@" >&2
   }
-  export -f entrypoint_log
-  export -f entrypoint_info
-  export -f entrypoint_warn
   export -f entrypoint_error
-  
+
   # usage: touchp FILE...
   # https://stackoverflow.com/a/70726657/4156752
   touchp() {
     for arg; do
       # Get base directory
       baseDir=${arg%/*}
-  
+
       # If whole path is not equal to the baseDire (sole element)
       # AND baseDir is not a directory (or does not exist)
       if ! { [ "$arg" = "$baseDir" ] || [ -d "$baseDir" ];}; then
         # Creates leading directories
         mkdir -p "${arg%/*}"
       fi
-  
+
       # Touch file in-place without cd into dir
       touch "$arg"
     done
   }
+  export -f touchp
 
   exec_all_sh_in_folder() {
     local folder="$1"

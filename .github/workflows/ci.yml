@@ -116,7 +116,7 @@ jobs:
         with:
           file: ./api.Dockerfile
           target: prod
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64 #,linux/arm64 # TODO: Reenable when needed
           ssh: |
             default
           push: ${{ github.event_name != 'pull_request' }}
@@ -130,7 +130,7 @@ jobs:
         with:
           file: ./pwa.Dockerfile
           target: prod
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64 #,linux/arm64 # TODO: Reenable when needed
           ssh: |
             default
           push: ${{ github.event_name != 'pull_request' }}
