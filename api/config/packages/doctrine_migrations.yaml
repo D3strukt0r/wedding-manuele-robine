@@ -1,4 +1,8 @@
 doctrine_migrations:
+    # https://symfony.com/bundles/DoctrineMigrationsBundle/current/index.html#migration-dependencies
+    services:
+        'Doctrine\Migrations\Version\MigrationFactory': 'App\Migrations\Factory\MigrationFactoryDecorator'
+
     migrations_paths:
         # namespace is arbitrary but should be different from App\Migrations
         # as migrations classes should NOT be autoloaded

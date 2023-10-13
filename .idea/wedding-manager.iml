@@ -133,6 +133,7 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/nelmio/api-doc-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/zircote/swagger-php" />
+      <excludeFolder url="file://$MODULE_DIR$/api/var" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
