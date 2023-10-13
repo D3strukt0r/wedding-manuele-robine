@@ -20,7 +20,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && apt-get dist-upgrade -qq >/dev/null \
     \
     # Install locales first
+    # apt-utils to fix "debconf: delaying package configuration, since apt-utils is not installed" but also needs "DEBIAN_FRONTEND=noninteractive"
     && apt-get -qq install \
+        apt-utils \
         locales >/dev/null \
     # Create locale files (uncomments the langauges we want to generate)
     && sed -i -e '/de_CH.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
