@@ -72,7 +72,7 @@ services:
       - ~:/home/vagrant
 
       # Entrypoint scripts to run only locally (install deps, etc.)
-      - ./api/.docker/rootfs-local/docker-entrypoint.d/01_composer-install.sh:/docker-entrypoint.d/01_composer-install.sh
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/02_composer-install.sh:/docker-entrypoint.d/02_composer-install.sh
       - ./api/.docker/rootfs-local/docker-entrypoint.d/06_test-cache-clear.sh:/docker-entrypoint.d/06_test-cache-clear.sh
 
       # Forward XDebug log to console
