@@ -24,6 +24,9 @@ trim_trailing_whitespace = false
 # Trailing whitespace means manual linebreaks in Markdown thus is not trimmable
 trim_trailing_whitespace = false
 
+[*.{yml,yaml}]
+indent_size = 4
+
 [*.twig]
 indent_size = 4
 
