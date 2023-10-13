@@ -14,7 +14,7 @@ final class Version20230920062313 extends AbstractMigrationWithCommand
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add Symfony Messenger';
     }
 
     public function preUp(Schema $schema): void

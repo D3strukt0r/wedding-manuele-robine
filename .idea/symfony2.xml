@@ -4,5 +4,6 @@
     <option name="pathToTranslation" value="api/var/cache/dev/translations" />
     <option name="directoryToWeb" value="api/public" />
     <option name="pluginEnabled" value="true" />
+    <option name="profilerCsvPath" value="" />
   </component>
 </project>

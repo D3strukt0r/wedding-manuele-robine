@@ -18,6 +18,12 @@ framework:
     php_errors:
         log: true
 
+    # For Symfony to understand being behind a reverse proxy (e.g. Docker) (https://symfony.com/doc/current/deployment/proxies.html)
+    # the IP address (or range) of your proxy
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    # trust *all* "X-Forwarded-*" headers
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
+
 when@test:
     framework:
         test: true

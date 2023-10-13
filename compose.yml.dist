@@ -47,16 +47,6 @@ services:
       # Mount app directory
       - ./api:/app
 
-      # Entrypoint scripts to run only locally (install deps, etc.)
-      - ./api/.docker/rootfs-local/docker-entrypoint.d/01_composer-install.sh:/docker-entrypoint.d/01_composer-install.sh
-      - ./api/.docker/rootfs-local/docker-entrypoint.d/06_test-cache-clear.sh:/docker-entrypoint.d/06_test-cache-clear.sh
-
-      # Forward XDebug log to console
-      - ./api/.docker/rootfs-local/etc/supervisor/conf.d/xdebug-log.conf:/etc/supervisor/conf.d/xdebug-log.conf
-
-      # Add cron jobs supposed to run locally
-      - ./api/.docker/rootfs-local/etc/cron.d/crontabs:/etc/cron.d/crontabs
-
       # Move cache and sessions out of the way for better NFS performance
       - ~/data/app/cache:/app/var/cache
       - ~/data/app/sessions:/app/var/sessions
@@ -80,12 +70,27 @@ services:
       # This one is needed for running tests from inside PhpStorm with Remote
       # interpreters and does only apply for a Vagrant environment
       - ~:/home/vagrant
+
+      # Entrypoint scripts to run only locally (install deps, etc.)
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/01_composer-install.sh:/docker-entrypoint.d/01_composer-install.sh
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/06_test-cache-clear.sh:/docker-entrypoint.d/06_test-cache-clear.sh
+
+      # Forward XDebug log to console
+      - ./api/.docker/rootfs-local/etc/supervisor/conf.d/xdebug-log.conf:/etc/supervisor/conf.d/xdebug-log.conf
+
+      # Add cron jobs supposed to run locally
+      - ./api/.docker/rootfs-local/etc/cron.d/crontabs:/etc/cron.d/crontabs
+
+      # Locally CSP should be set to report only
+      - ./api/.docker/rootfs-local/etc/nginx/snippets/csp-header.conf:/etc/nginx/snippets/csp-header.conf
     environment:
       PHP_IDE_CONFIG: serverName=weddingmanager # for PHPStorm debugging
       DATABASE_URL: mysql://db:db@db:3306/db?serverVersion=10.11.2-MariaDB&charset=utf8mb4
       COMPOSER_MEMORY_LIMIT: -1
       RUNTIME_ENVIRONMENT: local
       APP_ENV: dev
+      APP_URL: https://api.weddingmanager.test
+      TRUSTED_PROXIES: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
     depends_on:
       - db
       - mailpit
