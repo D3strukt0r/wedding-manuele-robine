@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     tags: [ '*.*.*' ]
     # and only if one of these files changed.
     paths:
-      - .github/workflows/ci-cd.yml
+      - .github/workflows/ci.yml
       - .dockerignore
       - api.Dockerfile
       - pwa.Dockerfile
