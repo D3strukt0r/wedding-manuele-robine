@@ -234,7 +234,6 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/git,linux,macos,vagrant,windows,intellij,visualstudiocode
 
-sensible.env
 pwa/.pnpm-store/
 .vagrant.config.yml
 compose.yml

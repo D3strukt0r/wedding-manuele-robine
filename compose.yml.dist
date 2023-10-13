@@ -94,8 +94,6 @@ services:
     depends_on:
       - db
       - mailpit
-    secrets:
-      - sensible_env
     labels:
       traefik.enable: true
 
@@ -196,7 +194,3 @@ services:
       traefik.http.routers.mailpit.entrypoints: websecure
       traefik.http.routers.mailpit.rule: Host(`mailpit.weddingmanager.test`)
       traefik.http.routers.mailpit.tls: true
-
-secrets:
-  sensible_env:
-    file: api/sensible.env

@@ -246,9 +246,6 @@ Vagrant.configure('2') do |config|
         if [ ! -f /vagrant/compose.yml ]; then
             cp /vagrant/compose.yml.dist /vagrant/compose.yml
         fi
-        if [ ! -f /vagrant/api/sensible.env ]; then
-            cp /vagrant/api/sensible.env.dist /vagrant/api/sensible.env
-        fi
     SCRIPT
 
     # Run mkcert on host if cert files don't exist yet or incomplete
