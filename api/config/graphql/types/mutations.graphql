@@ -1,0 +1,8 @@
+type Mutation {
+  createCard(card: CreateCard!): Card!
+  #updateCard(id: ID!, card: UpdateCard!): Card!
+  createTable(table: CreateTable!): Table!
+  #updateTable(id: ID!, table: UpdateTable!): Table!
+  createInvitee(invitee: CreateInvitee!): Invitee!
+  #updateInvitee(id: ID!, invitee: UpdateInvitee!): Invitee!
+}

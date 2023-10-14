@@ -1,0 +1,9 @@
+type Query {
+  card(id: ID!): Card
+  cards: [Card!]!
+  table(id: ID!): Table
+  tables: [Table!]!
+  invitee(id: ID!): Invitee
+  invitees: [Invitee!]!
+  #findInviteeByLastName(lastName: String!) : [Invitee!]!
+}

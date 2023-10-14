@@ -2,9 +2,9 @@ app:
     title: Wedding Manager
     description: Verwalte deine Hochzeit
 
-index:
+help:
     introduction: |
         Willkommen beim Wedding Manager!
         Dies ist ein Tool, um deine Hochzeit zu verwalten.
         Du bist auf der API gelandet.
-        Wenn du Fragen hast, kontaktiere uns bitte unter {{ email }}.
+        Wenn du Fragen hast, kontaktiere uns bitte unter <a href="mailto:%email%">%email%</a>.

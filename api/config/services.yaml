@@ -29,3 +29,9 @@ services:
     App\Migrations\Factory\MigrationFactoryDecorator:
         decorates: Doctrine\Migrations\Version\DbalMigrationFactory
         arguments: ['@App\Migrations\Factory\MigrationFactoryDecorator.inner', '@service_container']
+
+    # Add GraphQL resolver
+    # https://github.com/overblog/GraphQLBundle/blob/master/docs/definitions/resolver-map.md
+    App\Resolver\AppResolverMap:
+        tags:
+            - { name: overblog_graphql.resolver_map, schema: default }

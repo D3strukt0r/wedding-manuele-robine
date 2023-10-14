@@ -134,6 +134,13 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/nelmio/api-doc-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/zircote/swagger-php" />
       <excludeFolder url="file://$MODULE_DIR$/api/var" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/murtukov/php-code-generator" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/overblog/graphql-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/webonyx/graphql-php" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/data-fixtures" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/doctrine-fixtures-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/fakerphp/faker" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/overblog/graphiql-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
