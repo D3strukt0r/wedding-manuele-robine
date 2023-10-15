@@ -2,7 +2,7 @@ app:
     title: Wedding Manager
     description: Verwalte deine Hochzeit
 
-help:
+welcome:
     introduction: |
         Willkommen beim Wedding Manager!
         Dies ist ein Tool, um deine Hochzeit zu verwalten.
