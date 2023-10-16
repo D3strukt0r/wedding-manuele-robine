@@ -1,0 +1,7 @@
+query AllInvitees {
+  invitees {
+    id
+    firstname,
+    lastname
+  }
+}

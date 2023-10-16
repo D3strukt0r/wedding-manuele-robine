@@ -319,7 +319,7 @@ RUN \
         # XDebug can't write to /dev/stdout, so we read it indirectly with a
         # separated supervisord process
         echo 'xdebug.log = "/var/log/xdebug.log"'; \
-        echo 'xdebug.log_level = 5'; \
+        echo 'xdebug.log_level = 3'; \
     } >>"$PHP_DIR/php.ini" \
     \
     # Fix issue with GIT "detected dubious ownership in repository" error in

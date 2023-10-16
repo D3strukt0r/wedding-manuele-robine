@@ -729,5 +729,8 @@ indent_size = 4
 # ij_yaml_spaces_within_braces = true
 # ij_yaml_spaces_within_brackets = true
 
+[{compose.yml,compose.yml.dist}]
+indent_size = 2
+
 [api/config/**/*.yaml]
 indent_size = 4

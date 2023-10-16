@@ -20,7 +20,7 @@ services:
       #- ./pwa/.docker/rootfs-local/docker-entrypoint.d/20_build.sh:/docker-entrypoint.d/20_build.sh
     environment:
       API_URL: http://api
-      API_URL_PUBLIC: https://api.weddingmanager.test
+      PUBLIC_API_URL: https://api.weddingmanager.test
     depends_on:
       - api
       - traefik
@@ -91,6 +91,7 @@ services:
       APP_ENV: dev
       APP_URL: https://api.weddingmanager.test
       TRUSTED_PROXIES: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      CORS_ALLOW_ORIGIN: ^https?://(weddingmanager\.test|localhost|127\.0\.0\.1)(:[0-9]+)?$
     depends_on:
       - db
       - mailpit

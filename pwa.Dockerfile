@@ -47,7 +47,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         # To run multiple processes simultaneously
         supervisor \
         # For the wait-for.sh which uses nc to check for server
-        netcat-traditional >/dev/null \
+        netcat-traditional \
+        # For the dig command
+        dnsutils >/dev/null \
     \
     # Install Node.js
     && mkdir -p /etc/apt/keyrings \
@@ -115,7 +117,7 @@ FROM base AS build
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store \
     pnpm install --frozen-lockfile
-COPY pwa/.browserslistrc pwa/svelte.config.js pwa/tsconfig.json pwa/vite.config.ts ./
+COPY pwa/.browserslistrc pwa/houdini.config.js pwa/schema.graphql pwa/svelte.config.js pwa/tsconfig.json pwa/vite.config.ts ./
 COPY pwa/src src
 COPY pwa/static static
 RUN pnpm run build

@@ -141,6 +141,8 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/doctrine-fixtures-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/fakerphp/faker" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/overblog/graphiql-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/nelmio/cors-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/pwa/.pnpm-store" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

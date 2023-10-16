@@ -38,9 +38,11 @@ on:
       - 'pwa/tests/**'
       - pwa/.browserslistrc
       - pwa/.npmrc
+      - pwa/houdini.config.js
       - pwa/package.json
       - pwa/playwright.config.ts
       - pwa/pnpm-lock.yaml
+      - pwa/schema.graphql
       - pwa/svelte.config.js
       - pwa/tsconfig.json
       - pwa/vite.config.ts

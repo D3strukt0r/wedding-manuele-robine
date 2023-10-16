@@ -1,5 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/kit/vite';
+import path from 'path';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -31,6 +32,10 @@ const config = {
       // reportOnly: {
       //   'script-src': ['self'],
       // },
+    },
+
+    alias: {
+      $houdini: path.resolve('.', '$houdini'),
     },
   },
 };
