@@ -20,4 +20,22 @@ class TableRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Table::class);
     }
+
+    public function save(Table $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Table $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }

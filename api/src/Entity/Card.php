@@ -6,6 +6,7 @@ use App\Repository\CardRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Hidehalo\Nanoid\Client;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
 class Card
@@ -36,6 +37,15 @@ class Card
     public function getLoginCode(): string
     {
         return $this->loginCode;
+    }
+
+    public function renewLoginCode(): static
+    {
+        $client = new Client();
+
+        $this->loginCode = $client->generateId();
+
+        return $this;
     }
 
     /**

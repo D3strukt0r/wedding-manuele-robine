@@ -143,6 +143,8 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/overblog/graphiql-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/nelmio/cors-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/pwa/.pnpm-store" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/hidehalo/nanoid-php" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/paragonie/random_compat" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
