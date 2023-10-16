@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Api\Table;
 
-use App\Entity\Card;
 use App\Entity\Invitee;
-use App\Repository\CardRepository;
+use App\Entity\Table;
+use App\Repository\TableRepository;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,26 +12,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ListCardsController extends AbstractController
+class ListTableController extends AbstractController
 {
     public function __construct(
-        private readonly CardRepository $cardRepository,
+        private readonly TableRepository $tableRepository,
     ) {}
 
     #[Route(
-        path: '/card',
-        name: 'api_card_list',
+        path: '/table',
+        name: 'api_table_list',
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
-    #[OA\Tag('Card')]
+    #[OA\Tag('Table')]
     public function __invoke(): JsonResponse
     {
-        return $this->json(array_map(fn (Card $card) => [
-            'id' => $card->getId(),
-            'loginCode' => $card->getLoginCode(),
-            'invitees' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
-        ], $this->cardRepository->findAll()));
+        return $this->json(array_map(fn (Table $table) => [
+            'id' => $table->getId(),
+            'seats' => $table->getSeats(),
+            'invitees' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+        ], $this->tableRepository->findAll()));
     }
 }

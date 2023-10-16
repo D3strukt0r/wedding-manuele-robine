@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Api\Table;
 
-use App\Entity\Card;
-use App\Repository\CardRepository;
+use App\Entity\Table;
+use App\Repository\TableRepository;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,25 +12,25 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeleteCardController extends AbstractController
+class DeleteTableController extends AbstractController
 {
     public function __construct(
-        private readonly CardRepository $cardRepository,
+        private readonly TableRepository $tableRepository,
     ) {}
 
     #[Route(
-        path: '/card/{card_id}',
-        name: 'api_card_delete',
-        requirements: ['card_id' => '\d+'],
+        path: '/table/{table_id}',
+        name: 'api_table_delete',
+        requirements: ['table_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_DELETE],
     )]
     #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
-    #[OA\Tag('Card')]
-    public function __invoke(#[MapEntity(id: 'card_id')] Card $card): JsonResponse
+    #[OA\Tag('Table')]
+    public function __invoke(#[MapEntity(id: 'table_id')] Table $table): JsonResponse
     {
-        $this->cardRepository->remove($card, true);
+        $this->tableRepository->remove($table, true);
 
         return $this->json(null, Response::HTTP_NO_CONTENT);
     }

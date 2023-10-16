@@ -1,13 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Api\Table;
 
-use App\Dto\Card\CreateCardDto;
-use App\Entity\Card;
+use App\Dto\Table\CreateTableDto;
 use App\Entity\Invitee;
-use App\Repository\CardRepository;
+use App\Entity\Table;
 use App\Repository\InviteeRepository;
-use Hidehalo\Nanoid\Client;
+use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,39 +16,35 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreateCardController extends AbstractController
+class CreateTableController extends AbstractController
 {
     public function __construct(
-        private readonly CardRepository $cardRepository,
+        private readonly TableRepository $tableRepository,
         private readonly InviteeRepository $inviteeRepository,
     ) {}
 
     #[Route(
-        path: '/card',
-        name: 'api_card_create',
+        path: '/table',
+        name: 'api_table_create',
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateCardDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateTableDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
-    #[OA\Tag('Card')]
-    public function __invoke(#[MapRequestPayload] CreateCardDto $dto): JsonResponse
+    #[OA\Tag('Table')]
+    public function __invoke(#[MapRequestPayload] CreateTableDto $dto): JsonResponse
     {
-        $client = new Client();
-
-        $uid = $client->generateId();
-
-        $card = new Card($uid);
+        $table = new Table($dto->seats);
         foreach ($dto->invitees as $invitee) {
-            $card->addInvitee($this->inviteeRepository->find($invitee));
+            $table->addInvitee($this->inviteeRepository->find($invitee));
         }
-        $this->cardRepository->save($card, true);
+        $this->tableRepository->save($table, true);
 
         return $this->json([
-            'id' => $card->getId(),
-            'loginCode' => $card->getLoginCode(),
-            'invitees' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'id' => $table->getId(),
+            'seats' => $table->getSeats(),
+            'invitees' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ], Response::HTTP_CREATED);
     }
 }

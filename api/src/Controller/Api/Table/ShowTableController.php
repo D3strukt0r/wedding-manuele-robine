@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Api\Table;
 
-use App\Entity\Card;
 use App\Entity\Invitee;
+use App\Entity\Table;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,24 +12,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ShowCardController extends AbstractController
+class ShowTableController extends AbstractController
 {
     #[Route(
-        path: '/card/{card_id}',
-        name: 'api_card_show',
-        requirements: ['card_id' => '\d+'],
+        path: '/table/{table_id}',
+        name: 'api_table_show',
+        requirements: ['table_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
-    #[OA\Tag('Card')]
-    public function __invoke(#[MapEntity(id: 'card_id')] Card $card): JsonResponse
+    #[OA\Tag('Table')]
+    public function __invoke(#[MapEntity(id: 'table_id')] Table $table): JsonResponse
     {
         return $this->json([
-            'id' => $card->getId(),
-            'loginCode' => $card->getLoginCode(),
-            'invitees' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'id' => $table->getId(),
+            'seats' => $table->getSeats(),
+            'invitees' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ]);
     }
 }

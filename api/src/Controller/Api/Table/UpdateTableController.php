@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Api\Table;
 
-use App\Dto\Card\UpdateCardDto;
-use App\Entity\Card;
+use App\Dto\Table\UpdateTableDto;
 use App\Entity\Invitee;
-use App\Repository\CardRepository;
+use App\Entity\Table;
 use App\Repository\InviteeRepository;
+use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -18,34 +18,32 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UpdateCardController extends AbstractController
+class UpdateTableController extends AbstractController
 {
     public function __construct(
-        private readonly CardRepository $cardRepository,
+        private readonly TableRepository $tableRepository,
         private readonly InviteeRepository $inviteeRepository,
     ) {}
 
     #[Route(
-        path: '/card/{card_id}',
-        name: 'api_card_update',
-        requirements: ['card_id' => '\d+'],
+        path: '/table/{table_id}',
+        name: 'api_table_update',
+        requirements: ['table_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateCardDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateTableDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
-    #[OA\Tag('Card')]
+    #[OA\Tag('Table')]
     public function __invoke(
-        #[MapEntity(id: 'card_id')] Card $card,
-        #[MapRequestPayload] UpdateCardDto $dto
+        #[MapEntity(id: 'table_id')] Table $table,
+        #[MapRequestPayload] UpdateTableDto $dto
     ): JsonResponse {
-        if ($dto->renewLoginCode) {
-            $card->renewLoginCode();
-        }
+        $table->update($dto);
 
-        $inviteesIs = $card->getInvitees();
+        $inviteesIs = $table->getInvitees();
         $inviteesToBe = [];
         foreach ($dto->invitees as $inviteeId) {
             $inviteesToBe[$inviteeId] = $this->inviteeRepository->find($inviteeId);
@@ -58,21 +56,21 @@ class UpdateCardController extends AbstractController
 
         foreach ($inviteesToBe as $invitee) {
             if (!$inviteesIs->contains($invitee)) {
-                $card->addInvitee($invitee);
+                $table->addInvitee($invitee);
             }
         }
         foreach ($inviteesIs->toArray() as $invitee) {
             if (!in_array($invitee->getId(), $dto->invitees, true)) {
-                $card->removeInvitee($invitee);
+                $table->removeInvitee($invitee);
             }
         }
 
-        $this->cardRepository->save($card, true);
+        $this->tableRepository->save($table, true);
 
         return $this->json([
-            'id' => $card->getId(),
-            'loginCode' => $card->getLoginCode(),
-            'invitees' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'id' => $table->getId(),
+            'seats' => $table->getSeats(),
+            'invitees' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ]);
     }
 }

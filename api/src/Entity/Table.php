@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Dto\Table\UpdateTableDto;
 use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -67,5 +68,10 @@ class Table
         }
 
         return $this;
+    }
+
+    public function update(UpdateTableDto $dto): void
+    {
+        $this->seats = $dto->seats;
     }
 }
