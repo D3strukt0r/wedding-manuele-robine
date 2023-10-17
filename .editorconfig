@@ -737,3 +737,6 @@ indent_size = 4
 
 [{*.Dockerfile,Dockerfile}]
 indent_size = 4
+
+[api/.docker/rootfs/etc/nginx/**/*.conf]
+indent_size = 4
