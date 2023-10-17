@@ -11,6 +11,9 @@ services:
       # Mount app directory
       - ./pwa:/app
 
+      # Store package manager cache in vagrant
+      - ~/data/pnpm:/var/cache/pnpm-store
+
       # Disable svelte-kit process and use vite dev server
       - ./.docker/rootfs-local/empty.txt:/etc/supervisor/conf.d/svelte-kit.conf
       - ./pwa/.docker/rootfs-local/etc/supervisor/conf.d/vite-dev-server.conf:/etc/supervisor/conf.d/vite-dev-server.conf
@@ -57,7 +60,6 @@ services:
 
       # Store package manager cache in vagrant
       #- ~/data/composer:/home/www-data/.composer/cache
-      #- ~/data/yarn:/home/www-data/.cache/yarn
 
       # Keep upload data
       #- ~/data/app/data:/app/data

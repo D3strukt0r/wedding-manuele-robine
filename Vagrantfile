@@ -231,7 +231,7 @@ Vagrant.configure('2') do |config|
             ~/data/app/sessions \
             ~/data/app/data \
             ~/data/composer \
-            ~/data/yarn \
+            ~/data/pnpm \
             ~/data/db
     SCRIPT
 

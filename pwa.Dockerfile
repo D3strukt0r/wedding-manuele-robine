@@ -70,6 +70,9 @@ RUN \
     && node --version \
     && pnpm --version \
     \
+    # Change pnpm store dir to be outside /app (currently defaults to /app/.pnpm-store) (https://pnpm.io/configuring)
+    && pnpm config set store-dir /var/cache/pnpm-store \
+    \
     && { \
         # Add custom PS1
         # https://strasis.com/documentation/limelight-xe/reference/ecma-48-sgr-codes
@@ -109,13 +112,13 @@ FROM base AS dev
 # Keep prod dependencies in prod environemnt
 FROM base AS prod-deps
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store \
+RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm-store \
     pnpm install --prod --frozen-lockfile
 
 # Build PWA application
 FROM base AS build
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/app/.pnpm-store \
+RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm-store \
     pnpm install --frozen-lockfile
 COPY pwa/.browserslistrc pwa/houdini.config.js pwa/schema.graphql pwa/svelte.config.js pwa/tsconfig.json pwa/vite.config.ts ./
 COPY pwa/src src

@@ -734,3 +734,6 @@ indent_size = 2
 
 [api/config/**/*.yaml]
 indent_size = 4
+
+[{*.Dockerfile,Dockerfile}]
+indent_size = 4
