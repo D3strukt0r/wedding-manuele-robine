@@ -52,7 +52,7 @@ class Table
     {
         if (!$this->invitees->contains($invitee)) {
             $this->invitees->add($invitee);
-            $invitee->setTableToSit($this);
+            $invitee->setTable($this);
         }
 
         return $this;
@@ -62,8 +62,8 @@ class Table
     {
         if ($this->invitees->removeElement($invitee)) {
             // set the owning side to null (unless already changed)
-            if ($invitee->getTableToSit() === $this) {
-                $invitee->setTableToSit(null);
+            if ($invitee->getTable() === $this) {
+                $invitee->setTable(null);
             }
         }
 

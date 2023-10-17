@@ -1,12 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Table;
+namespace App\Controller\Api\Invitee;
 
-use App\Dto\Table\CreateTableDto;
+use App\Dto\Invitee\CreateInviteeDto;
 use App\Entity\Invitee;
-use App\Entity\Table;
 use App\Repository\InviteeRepository;
-use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,35 +14,37 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CreateTableController extends AbstractController
+class CreateInviteeController extends AbstractController
 {
     public function __construct(
-        private readonly TableRepository $tableRepository,
         private readonly InviteeRepository $inviteeRepository,
     ) {}
 
     #[Route(
-        path: '/table',
-        name: 'api_table_create',
+        path: '/invitee',
+        name: 'api_invitee_create',
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateTableDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateInviteeDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
-    #[OA\Tag('Table')]
-    public function __invoke(#[MapRequestPayload] CreateTableDto $dto): JsonResponse
+    #[OA\Tag('Invitee')]
+    public function __invoke(#[MapRequestPayload] CreateInviteeDto $dto): JsonResponse
     {
-        $table = new Table($dto->seats);
-        foreach ($dto->invitees as $invitee) {
-            $table->addInvitee($this->inviteeRepository->find($invitee));
-        }
-        $this->tableRepository->save($table, true);
+        $invitee = Invitee::create($dto);
+
+        $this->inviteeRepository->save($invitee, true);
 
         return $this->json([
-            'id' => $table->getId(),
-            'seats' => $table->getSeats(),
-            'invitees_id' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'firstname' => $invitee->getFirstname(),
+            'lastname' => $invitee->getLastname(),
+            'email' => $invitee->getEmail(),
+            'will_come' => $invitee->willCome(),
+            'food' => $invitee->getFood(),
+            'allergies' => $invitee->getAllergies(),
+            'table_id' => $invitee->getTable()?->getId(),
+            'card_id' => $invitee->getCard()?->getId(),
         ], Response::HTTP_CREATED);
     }
 }

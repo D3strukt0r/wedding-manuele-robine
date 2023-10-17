@@ -14,6 +14,6 @@ readonly class UpdateCardDto
 
         #[Assert\NotNull]
         #[OA\Property(example: false)]
-        public bool $renewLoginCode,
+        public bool $renewLoginCode = false,
     ) {}
 }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Dto\Invitee\CreateInviteeDto;
+use App\Dto\Invitee\UpdateInviteeDto;
 use App\Repository\InviteeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,7 +34,8 @@ class Invitee
     private ?string $allergies = null;
 
     #[ORM\ManyToOne(inversedBy: 'invitees')]
-    private ?Table $tableToSit = null;
+    #[ORM\JoinColumn(name: 'table_to_sit_id')]
+    private ?Table $table = null;
 
     #[ORM\ManyToOne(inversedBy: 'invitees')]
     private ?Card $card = null;
@@ -78,14 +81,14 @@ class Invitee
         return $this->allergies;
     }
 
-    public function getTableToSit(): ?Table
+    public function getTable(): ?Table
     {
-        return $this->tableToSit;
+        return $this->table;
     }
 
-    public function setTableToSit(?Table $tableToSit): static
+    public function setTable(?Table $table): static
     {
-        $this->tableToSit = $tableToSit;
+        $this->table = $table;
 
         return $this;
     }
@@ -100,5 +103,33 @@ class Invitee
         $this->card = $card;
 
         return $this;
+    }
+
+    public static function create(CreateInviteeDto $dto): self
+    {
+        $entity = new self(
+            $dto->firstname,
+            $dto->lastname,
+        );
+        $entity->email = $dto->email;
+        $entity->willCome = $dto->willCome;
+        $entity->food = $dto->food;
+        $entity->allergies = $dto->allergies;
+        $entity->table = $dto->table;
+        $entity->card = $dto->card;
+
+        return $entity;
+    }
+
+    public function update(UpdateInviteeDto $dto): void
+    {
+        $this->firstname = $dto->firstname;
+        $this->lastname = $dto->lastname;
+        $this->email = $dto->email;
+        $this->willCome = $dto->willCome;
+        $this->food = $dto->food;
+        $this->allergies = $dto->allergies;
+        $this->table = $dto->table;
+        $this->card = $dto->card;
     }
 }

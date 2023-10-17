@@ -70,7 +70,7 @@ class UpdateTableController extends AbstractController
         return $this->json([
             'id' => $table->getId(),
             'seats' => $table->getSeats(),
-            'invitees' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'invitees_id' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ]);
     }
 }

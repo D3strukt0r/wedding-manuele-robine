@@ -29,7 +29,7 @@ class ShowCardController extends AbstractController
         return $this->json([
             'id' => $card->getId(),
             'loginCode' => $card->getLoginCode(),
-            'invitees' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'invitees_id' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ]);
     }
 }

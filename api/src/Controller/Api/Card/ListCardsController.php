@@ -28,10 +28,10 @@ class ListCardsController extends AbstractController
     #[OA\Tag('Card')]
     public function __invoke(): JsonResponse
     {
-        return $this->json(array_map(fn (Card $card) => [
+        return $this->json(array_map(static fn (Card $card) => [
             'id' => $card->getId(),
             'loginCode' => $card->getLoginCode(),
-            'invitees' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'invitees_id' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ], $this->cardRepository->findAll()));
     }
 }

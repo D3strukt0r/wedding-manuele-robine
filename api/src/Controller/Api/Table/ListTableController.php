@@ -28,10 +28,10 @@ class ListTableController extends AbstractController
     #[OA\Tag('Table')]
     public function __invoke(): JsonResponse
     {
-        return $this->json(array_map(fn (Table $table) => [
+        return $this->json(array_map(static fn (Table $table) => [
             'id' => $table->getId(),
             'seats' => $table->getSeats(),
-            'invitees' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
+            'invitees_id' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ], $this->tableRepository->findAll()));
     }
 }
