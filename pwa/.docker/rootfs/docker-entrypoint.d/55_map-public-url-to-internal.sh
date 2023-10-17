@@ -32,7 +32,7 @@ fi
 api_ip=$(dig "$host" +short)
 
 if [ -n "$api_ip" ]; then
-  grep -v -e "$host$" /etc/hosts | tee /etc/hosts >/dev/null
+  #grep -v -e "$host$" /etc/hosts | tee /etc/hosts >/dev/null # TODO: This doesn't seem to always work. Why? Is it necessary?
   echo -e "$api_ip\t$public_host" | tee -a /etc/hosts >/dev/null
 
   entrypoint_info "Host '$public_host' added as with IP address '$api_ip' ('$host') to /etc/hosts"
