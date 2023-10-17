@@ -2,9 +2,7 @@
 
 namespace App\Dto\Invitee;
 
-use App\Entity\Card;
 use App\Entity\Food;
-use App\Entity\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 
 readonly class UpdateInviteeDto
@@ -24,8 +22,8 @@ readonly class UpdateInviteeDto
 
         public ?string $allergies,
 
-        public ?Table $table,
+        public ?int $tableId,
 
-        public ?Card $card,
+        public ?int $cardId,
     ) {}
 }

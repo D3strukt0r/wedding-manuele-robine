@@ -30,7 +30,7 @@ class CreateTableController extends AbstractController
         methods: [Request::METHOD_POST],
     )]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateTableDto::class)))]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[OA\Response(response: Response::HTTP_CREATED, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
     #[OA\Tag('Table')]
     public function __invoke(#[MapRequestPayload] CreateTableDto $dto): JsonResponse

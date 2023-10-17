@@ -115,8 +115,6 @@ class Invitee
         $entity->willCome = $dto->willCome;
         $entity->food = $dto->food;
         $entity->allergies = $dto->allergies;
-        $entity->table = $dto->table;
-        $entity->card = $dto->card;
 
         return $entity;
     }
@@ -129,7 +127,5 @@ class Invitee
         $this->willCome = $dto->willCome;
         $this->food = $dto->food;
         $this->allergies = $dto->allergies;
-        $this->table = $dto->table;
-        $this->card = $dto->card;
     }
 }

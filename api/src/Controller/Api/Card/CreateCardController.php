@@ -31,7 +31,7 @@ class CreateCardController extends AbstractController
         methods: [Request::METHOD_POST],
     )]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateCardDto::class)))]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[OA\Response(response: Response::HTTP_CREATED, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
     #[OA\Tag('Card')]
     public function __invoke(#[MapRequestPayload] CreateCardDto $dto): JsonResponse
