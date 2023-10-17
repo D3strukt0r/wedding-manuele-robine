@@ -111,7 +111,7 @@ RUN \
     \
     # Create non-root user/group (1000:1000) for app and delete www-data
     && useradd --create-home --shell /bin/bash app \
-    && mkdir -p /app \
+    && mkdir --parents /app \
     && chown -R app:app /app \
     # Delete the www-data user and use default 1000 (which also happens to
     # match vagrant's default user to avoid permission issues)
@@ -213,7 +213,9 @@ COPY .docker/rootfs/common /
 COPY api/.docker/rootfs /
 
 ENV RUNTIME_ENVIRONMENT=prod \
-    APP_ENV=prod
+    APP_ENV=prod \
+    # Change composer cache dir to be outside /home/app/ (currently defaults to /home/app/.compose/cache) (https://getcomposer.org/doc/03-cli.md#composer-home)
+    COMPOSER_HOME=/var/cache/composer
 
 WORKDIR /app
 
@@ -324,7 +326,11 @@ RUN \
     \
     # Fix issue with GIT "detected dubious ownership in repository" error in
     # local development due to CVE-2022-24765 (https://github.com/git/git/commit/8959555cee7ec045958f9b6dd62e541affb7e7d9)
-    && git config --global --add safe.directory /app
+    && git config --global --add safe.directory /app \
+    \
+    # Prepare compose cache folder
+    && mkdir --parents /var/cache/composer/cache \
+    && chown -R app:app /var/cache/composer
 
 WORKDIR /app
 
@@ -334,7 +340,7 @@ WORKDIR /app
 FROM base AS prod-deps
 COPY --from=composer /usr/local/bin/composer /usr/local/bin/composer
 COPY --chown=app:app api/composer.json api/composer.lock api/symfony.lock ./
-RUN --mount=type=cache,target=/home/app/.composer/cache \
+RUN --mount=type=cache,target=/var/cache/composer/cache \
     --mount=type=ssh,required=true \
     # Don't use ~/.ssh/known_hosts (see https://stackoverflow.com/a/73264002/4156752)
     ssh-keyscan -t ed25519 github.com >>/etc/ssh/ssh_known_hosts \

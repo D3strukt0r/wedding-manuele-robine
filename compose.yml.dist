@@ -59,7 +59,7 @@ services:
       - ./api/var/cache/dev/twig:/app/var/cache/dev/twig
 
       # Store package manager cache in vagrant
-      #- ~/data/composer:/home/www-data/.composer/cache
+      - ~/data/composer:/var/cache/composer/cache
 
       # Keep upload data
       #- ~/data/app/data:/app/data
