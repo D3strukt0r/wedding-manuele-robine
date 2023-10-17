@@ -6,7 +6,7 @@ import houdini from 'houdini/vite';
 export default defineConfig({
   plugins: [
     sveltekit(),
-    // houdini(),
+    houdini(),
   ],
   build: {
     target: browserslistToEsbuild(),

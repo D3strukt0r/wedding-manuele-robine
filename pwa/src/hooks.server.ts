@@ -7,7 +7,7 @@ const securityHeaders = {
   // 'Cross-Origin-Opener-Policy': 'same-origin',
   // [...]
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-  // 'Content-Security-Policy': "..." // see "src/hooks.server.ts"
+  // 'Content-Security-Policy': "..." // see "../svelte.config.js"
   'X-Frame-Options': 'SAMEORIGIN',
   'X-Content-Type-Options': 'nosniff',
   'Referrer-Policy': 'strict-origin-when-cross-origin',

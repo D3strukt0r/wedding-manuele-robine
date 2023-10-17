@@ -1,10 +1,15 @@
-<script>
-  /* @type { import('./$houdini').PageData } */
-  export let data
+<script lang="ts">
+  import type { PageData } from './$houdini';
+
+  export let data: PageData;
 
   $: ({ AllInvitees } = data)
-
-  console.log(AllInvitees)
 </script>
 
-Hello
+<p>Hello</p>
+
+<ul>
+  {#each $AllInvitees.data.invitees as invitee}
+    <li>{invitee.firstname} {invitee.lastname}</li>
+  {/each}
+</ul>
