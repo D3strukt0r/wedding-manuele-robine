@@ -19,7 +19,7 @@ const config = {
       directives: {
         'default-src': ['none'],
         'script-src': ['self'],
-        'connect-src': ['self', process.env.PUBLIC_API_URL],
+        'connect-src': ['self', /*process.env.PUBLIC_API_URL*/], // TODO: Fix Connect url for GraphQL
         'img-src': ['self'],
         'manifest-src': ['self'],
         'style-src': ['self', 'unsafe-inline'],
