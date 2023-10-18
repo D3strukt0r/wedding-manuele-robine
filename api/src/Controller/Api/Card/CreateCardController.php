@@ -25,7 +25,7 @@ class CreateCardController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/card',
+        path: '/cards',
         name: 'api_card_create',
         options: ['expose' => true],
         methods: [Request::METHOD_POST],

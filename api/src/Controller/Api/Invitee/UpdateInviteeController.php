@@ -27,7 +27,7 @@ class UpdateInviteeController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/invitee/{invitee_id}',
+        path: '/invitees/{invitee_id}',
         name: 'api_invitee_update',
         requirements: ['invitee_id' => '\d+'],
         options: ['expose' => true],
@@ -56,6 +56,7 @@ class UpdateInviteeController extends AbstractController
         $this->inviteeRepository->save($invitee, true);
 
         return $this->json([
+            'id' => $invitee->getId(),
             'firstname' => $invitee->getFirstname(),
             'lastname' => $invitee->getLastname(),
             'email' => $invitee->getEmail(),

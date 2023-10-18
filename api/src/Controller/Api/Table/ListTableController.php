@@ -19,7 +19,7 @@ class ListTableController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/table',
+        path: '/tables',
         name: 'api_table_list',
         options: ['expose' => true],
         methods: [Request::METHOD_GET],

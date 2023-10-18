@@ -27,7 +27,7 @@ class CreateInviteeController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/invitee',
+        path: '/invitees',
         name: 'api_invitee_create',
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
@@ -52,6 +52,7 @@ class CreateInviteeController extends AbstractController
         $this->inviteeRepository->save($invitee, true);
 
         return $this->json([
+            'id' => $invitee->getId(),
             'firstname' => $invitee->getFirstname(),
             'lastname' => $invitee->getLastname(),
             'email' => $invitee->getEmail(),

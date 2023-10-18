@@ -24,7 +24,7 @@ class CreateTableController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/table',
+        path: '/tables',
         name: 'api_table_create',
         options: ['expose' => true],
         methods: [Request::METHOD_POST],

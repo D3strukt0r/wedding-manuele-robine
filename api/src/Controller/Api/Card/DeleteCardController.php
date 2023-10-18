@@ -19,7 +19,7 @@ class DeleteCardController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/card/{card_id}',
+        path: '/cards/{card_id}',
         name: 'api_card_delete',
         requirements: ['card_id' => '\d+'],
         options: ['expose' => true],

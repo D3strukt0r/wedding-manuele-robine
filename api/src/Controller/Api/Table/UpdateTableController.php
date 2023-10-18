@@ -26,7 +26,7 @@ class UpdateTableController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/table/{table_id}',
+        path: '/tables/{table_id}',
         name: 'api_table_update',
         requirements: ['table_id' => '\d+'],
         options: ['expose' => true],

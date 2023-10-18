@@ -19,7 +19,7 @@ class DeleteInviteeController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/invitee/{invitee_id}',
+        path: '/invitees/{invitee_id}',
         name: 'api_invitee_delete',
         requirements: ['invitee_id' => '\d+'],
         options: ['expose' => true],

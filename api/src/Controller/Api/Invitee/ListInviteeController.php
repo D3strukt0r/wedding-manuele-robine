@@ -18,7 +18,7 @@ class ListInviteeController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/invitee',
+        path: '/invitees',
         name: 'api_invitee_list',
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
@@ -28,6 +28,7 @@ class ListInviteeController extends AbstractController
     public function __invoke(): JsonResponse
     {
         return $this->json(array_map(static fn (Invitee $invitee) => [
+            'id' => $invitee->getId(),
             'firstname' => $invitee->getFirstname(),
             'lastname' => $invitee->getLastname(),
             'email' => $invitee->getEmail(),

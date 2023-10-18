@@ -19,7 +19,7 @@ class ListCardsController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/card',
+        path: '/cards',
         name: 'api_card_list',
         options: ['expose' => true],
         methods: [Request::METHOD_GET],

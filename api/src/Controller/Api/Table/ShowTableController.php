@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShowTableController extends AbstractController
 {
     #[Route(
-        path: '/table/{table_id}',
+        path: '/tables/{table_id}',
         name: 'api_table_show',
         requirements: ['table_id' => '\d+'],
         options: ['expose' => true],

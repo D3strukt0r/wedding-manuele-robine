@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShowCardController extends AbstractController
 {
     #[Route(
-        path: '/card/{card_id}',
+        path: '/cards/{card_id}',
         name: 'api_card_show',
         requirements: ['card_id' => '\d+'],
         options: ['expose' => true],

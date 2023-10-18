@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ShowInviteeController extends AbstractController
 {
     #[Route(
-        path: '/invitee/{invitee_id}',
+        path: '/invitees/{invitee_id}',
         name: 'api_invitee_show',
         requirements: ['invitee_id' => '\d+'],
         options: ['expose' => true],
@@ -26,6 +26,7 @@ class ShowInviteeController extends AbstractController
     public function __invoke(#[MapEntity(id: 'invitee_id')] Invitee $invitee): JsonResponse
     {
         return $this->json([
+            'id' => $invitee->getId(),
             'firstname' => $invitee->getFirstname(),
             'lastname' => $invitee->getLastname(),
             'email' => $invitee->getEmail(),

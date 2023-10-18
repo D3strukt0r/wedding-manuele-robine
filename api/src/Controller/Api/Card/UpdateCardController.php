@@ -27,7 +27,7 @@ class UpdateCardController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/card/{card_id}',
+        path: '/cards/{card_id}',
         name: 'api_card_update',
         requirements: ['card_id' => '\d+'],
         options: ['expose' => true],

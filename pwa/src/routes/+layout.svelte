@@ -1,6 +1,18 @@
-<h1>Wedding Manager</h1>
+<script lang="ts">
+  import { QueryClientProvider } from '@tanstack/svelte-query'
+  import type { PageData } from './$types'
 
-<a href="/">Home</a>
-<a href="/test-graphql">GraphQL</a>
+  export let data: PageData
+</script>
 
-<slot></slot>
+<QueryClientProvider client={data.queryClient}>
+  <h1>Wedding Manager</h1>
+
+  <a href="/">Home</a>
+  <a href="/test-graphql">GraphQL</a>
+  <a href="/test-rest">REST</a>
+
+  <main>
+    <slot />
+  </main>
+</QueryClientProvider>
