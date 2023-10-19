@@ -18,10 +18,7 @@ const config = {
     csp: {
       directives: {
         'default-src': ['none'],
-        'script-src': [
-          'self',
-          'sha256-G0murOYd/Rc301JZ6TfliZmezUZ3+TA1dvss17p0Jlc=', // Cloudflare Rocket Loader
-        ],
+        'script-src': ['self'],
         'connect-src': [
           'self',
           // TODO: Figure out how to dynamically use env vars here at runtime
