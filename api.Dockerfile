@@ -112,7 +112,7 @@ RUN \
     # Create non-root user/group (1000:1000) for app and delete www-data
     && useradd --create-home --shell /bin/bash app \
     && mkdir --parents /app \
-    && chown -R app:app /app \
+    && chown --recursive app:app /app \
     # Delete the www-data user and use default 1000 (which also happens to
     # match vagrant's default user to avoid permission issues)
     && find / -user 33 ! -path '/proc/*' -exec chown -h app {} \; \
@@ -330,7 +330,7 @@ RUN \
     \
     # Prepare compose cache folder
     && mkdir --parents /var/cache/composer/cache \
-    && chown -R app:app /var/cache/composer
+    && chown --recursive app:app /var/cache/composer
 
 WORKDIR /app
 

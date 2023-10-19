@@ -45,7 +45,7 @@ if [ "$1" = 'node' ] || [ "$1" = 'supervisord' ]; then
       # AND baseDir is not a directory (or does not exist)
       if ! { [ "$arg" = "$baseDir" ] || [ -d "$baseDir" ];}; then
         # Creates leading directories
-        mkdir -p "${arg%/*}"
+        mkdir --parents "${arg%/*}"
       fi
 
       # Touch file in-place without cd into dir

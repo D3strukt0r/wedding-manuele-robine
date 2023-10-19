@@ -35,7 +35,7 @@ auto_envsubst() {
 
   # Print the first file with the stream suffix, this will be false if there are none
   if test -n "$(find "/etc/nginx" -name "*$stream_suffix" -print -quit)"; then
-    mkdir -p "$stream_output_dir"
+    mkdir --parents "$stream_output_dir"
     if [ ! -w "$stream_output_dir" ]; then
       entrypoint_error "/etc/nginx exists, but $stream_output_dir is not writable"
       return 0
@@ -46,7 +46,7 @@ auto_envsubst() {
       output_path="$stream_output_dir/${relative_path%"$stream_suffix"}"
       subdir=$(dirname "$relative_path")
       # create a subdirectory where the template file exists
-      mkdir -p "$stream_output_dir/$subdir"
+      mkdir --parents "$stream_output_dir/$subdir"
       entrypoint_info "Running envsubst on $template to $output_path"
       envsubst "$defined_envs" < "$template" > "$output_path"
     done
