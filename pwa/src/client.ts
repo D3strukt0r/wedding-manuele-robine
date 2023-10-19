@@ -1,17 +1,10 @@
 import { HoudiniClient } from '$houdini';
-import { browser } from '$app/environment';
+import axios from 'axios';
 
-let url;
-if (browser) {
-  const { env } = await import('$env/dynamic/public');
-  url = env.PUBLIC_API_URL;
-} else {
-  const { env } = await import('$env/dynamic/private');
-  url = env.API_URL;
-}
+// This script is loaded by client and server
 
 export default new HoudiniClient({
-   url,
+   url: axios.defaults.baseURL,
 
   // uncomment this to configure the network call (for things like authentication)
   // for more information, please visit here: https://www.houdinigraphql.com/guides/authentication

@@ -1,4 +1,6 @@
 import type { Handle } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
+import axios from 'axios';
 
 // https://kit.svelte.dev/docs/hooks#server-hooks-handle
 // https://edoverflow.com/2023/sveltekit-security-headers/
@@ -17,10 +19,14 @@ const securityHeaders = {
 }
 
 export const handle: Handle = async ({ event, resolve }) => {
+  // Set different base URLs for client and server
+  axios.defaults.baseURL = env.API_URL;
+
+  // Apply security headers to every response
   const response = await resolve(event);
   Object.entries(securityHeaders).forEach(
     ([header, value]) => response.headers.set(header, value)
   );
 
   return response;
-}
+};

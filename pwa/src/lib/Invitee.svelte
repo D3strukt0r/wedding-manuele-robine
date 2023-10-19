@@ -7,7 +7,7 @@
 
   const invitee = createQuery<Invitee, Error>({
     queryKey: ['invitee', inviteeId],
-    queryFn: () => api().getInviteeById(inviteeId),
+    queryFn: () => api.getInviteeById(inviteeId),
   })
 </script>
 

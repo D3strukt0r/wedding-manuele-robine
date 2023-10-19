@@ -1,31 +1,13 @@
 import type { Invitee } from './types'
-import { browser } from '$app/environment';
+import axios from 'axios';
 
-export const getApiUrl = async () => {
-  let url: string;
-  if (browser) {
-    const { env } = await import('$env/dynamic/public');
-    url = env.PUBLIC_API_URL;
-  } else {
-    const { env } = await import('$env/dynamic/private');
-    url = env.API_URL;
-  }
-  return url;
-};
-
-export const api = (customFetch = fetch) => ({
+export const api = {
   getInvitees: async (limit: number) => {
-    const response = await customFetch(
-      `${await getApiUrl()}/api/invitees`,
-    )
-    const data = (await response.json()) as Invitee[]
-    return data.filter((x) => x.id <= limit)
+    const { data } = await axios.get<Invitee[]>('/api/invitees');
+    return data.filter((x) => x.id <= limit);
   },
   getInviteeById: async (id: number): Promise<Invitee> => {
-    const response = await customFetch(
-      `${await getApiUrl()}/api/invitees/${id}`,
-    )
-    const data = (await response.json()) as Invitee
-    return data
+    const { data } = await axios.get<Invitee>(`/api/invitees/${id}`);
+    return data;
   },
-})
+};

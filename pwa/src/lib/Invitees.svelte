@@ -11,10 +11,8 @@
     Error
   >({
     queryKey: ['invitees', limit],
-    queryFn: () => api().getInvitees(limit),
+    queryFn: () => api.getInvitees(limit),
   })
-
-  console.log($invitees.data)
 </script>
 
 <div>
