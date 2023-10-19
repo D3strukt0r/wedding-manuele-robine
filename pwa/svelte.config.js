@@ -19,7 +19,7 @@ const config = {
       directives: {
         'default-src': ['none'],
         'script-src': ['self'],
-        'connect-src': ['self', /*process.env.PUBLIC_API_URL*/], // TODO: Fix Connect url for GraphQL
+        'connect-src': ['self', 'https://api.weddingmanager.test', 'https://api-wedding-manager.d3strukt0r.dev'], // TODO: Figure out how to dynamically use env vars here at runtime
         'img-src': ['self'],
         'manifest-src': ['self'],
         'style-src': ['self', 'unsafe-inline'],

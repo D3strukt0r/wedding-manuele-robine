@@ -7,7 +7,7 @@ services:
       target: prod
       platforms:
         - linux/amd64
-        - linux/arm64
+        #- linux/arm64
 
   api:
     build:
@@ -17,4 +17,4 @@ services:
       target: prod
       platforms:
         - linux/amd64
-        - linux/arm64
+        #- linux/arm64
