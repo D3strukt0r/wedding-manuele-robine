@@ -18,8 +18,16 @@ const config = {
     csp: {
       directives: {
         'default-src': ['none'],
-        'script-src': ['self'],
-        'connect-src': ['self', 'https://api.weddingmanager.test', 'https://api-wedding-manager.d3strukt0r.dev'], // TODO: Figure out how to dynamically use env vars here at runtime
+        'script-src': [
+          'self',
+          'sha256-G0murOYd/Rc301JZ6TfliZmezUZ3+TA1dvss17p0Jlc=', // Cloudflare Rocket Loader
+        ],
+        'connect-src': [
+          'self',
+          // TODO: Figure out how to dynamically use env vars here at runtime
+          'https://api.weddingmanager.test',
+          'https://api-wedding-manager.d3strukt0r.dev',
+        ],
         'img-src': ['self'],
         'manifest-src': ['self'],
         'style-src': ['self', 'unsafe-inline'],
