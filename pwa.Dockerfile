@@ -48,6 +48,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         supervisor \
         # For the wait-for.sh which uses nc to check for server
         netcat-traditional \
+        # For the 'top' command
+        procps \
         # For the dig command
         dnsutils >/dev/null \
     \
@@ -120,7 +122,15 @@ FROM base AS build
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm-store \
     pnpm install --frozen-lockfile
-COPY pwa/.browserslistrc pwa/houdini.config.js pwa/schema.graphql pwa/svelte.config.js pwa/tsconfig.json pwa/vite.config.ts ./
+COPY pwa/.browserslistrc \
+     pwa/houdini.config.js \
+     pwa/postcss.config.js \
+     pwa/schema.graphql \
+     pwa/svelte.config.js \
+     pwa/tailwind.config.js \
+     pwa/tsconfig.json \
+     pwa/vite.config.ts \
+     ./
 COPY pwa/src src
 COPY pwa/static static
 RUN pnpm run build
@@ -133,6 +143,7 @@ COPY pwa .
 RUN \
     # Clean up after copying files to /app
     rm -rf \
+        '$houdini' \
         .docker \
         .svelte-kit \
         src \
@@ -143,11 +154,16 @@ RUN \
         .eslintignore \
         .eslintrc.cjs \
         .gitignore \
+        .graphqlrc.yaml \
         .npmrc \
         .prettierignore \
         .prettierrc.cjs \
+        houdini.config.js \
         playwright.config.ts \
+        postcss.config.js \
         README.md \
+        schema.graphql \
         svelte.config.js \
+        tailwind.config.js \
         tsconfig.json \
         vite.config.ts

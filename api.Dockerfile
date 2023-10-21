@@ -60,6 +60,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         postgresql-client \
         # Required for healthcheck
         libfcgi-bin \
+        # For the 'top' command
+        procps \
         # For the wait-for.sh which uses nc to check for server
         netcat-traditional >/dev/null \
     \
