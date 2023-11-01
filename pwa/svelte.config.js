@@ -25,7 +25,10 @@ const config = {
           'https://api.weddingmanager.test',
           'https://api-wedding-manager.d3strukt0r.dev',
         ],
-        'img-src': ['self'],
+        'img-src': [
+          'self',
+          'https://images.unsplash.com',
+        ],
         'manifest-src': ['self'],
         'style-src': ['self', 'unsafe-inline'],
         'font-src': ['self'],

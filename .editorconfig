@@ -76,7 +76,7 @@ ij_continuation_indent_size = 4
 # ij_editorconfig_space_before_comma = false
 # ij_editorconfig_spaces_around_assignment_operators = true
 
-[{*.ats,*.cts,*.mts,*.ts}]
+[{*.ats,*.cts,*.mts,*.ts,*.svelte}]
 # ij_continuation_indent_size = 4
 # ij_visual_guides =
 # ij_typescript_align_imports = false
