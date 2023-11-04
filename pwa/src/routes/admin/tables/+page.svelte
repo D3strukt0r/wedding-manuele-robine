@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+    import {Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell} from 'flowbite-svelte';
   import { goto } from '$app/navigation';
   import { useQueryClient, createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
@@ -11,7 +11,7 @@
 
   let limit = 10;
 
-  const cards = createQuery<TableType[], Error>({
+  const tables = createQuery<TableType[], Error>({
     queryKey: ['tables', limit],
     queryFn: () => api.tables.list(limit),
   });
@@ -21,10 +21,10 @@
   }
 </script>
 
-{#if $cards.status === 'loading'}
+{#if $tables.status === 'loading'}
   <span>{$t('Laden ...')}</span>
-{:else if $cards.status === 'error'}
-  <span>{$t('Error: ')}{$cards.error.message}</span>
+{:else if $tables.status === 'error'}
+  <span>{$t('Error: ')}{$tables.error.message}</span>
 {:else}
   <Table hoverable={true}>
     <TableHead>
@@ -35,27 +35,26 @@
       </TableHeadCell>
     </TableHead>
     <TableBody>
-      {#each $cards.data ?? [] as card, i (card.id)}
-        <TableBodyRow on:click={() => gotoDetailPage(card.id)}>
-          <TableBodyCell>{card.id}</TableBodyCell>
-          <TableBodyCell>{card.seats}</TableBodyCell>
+      {#each $tables.data ?? [] as table, i (table.id)}
+        <TableBodyRow on:click={() => gotoDetailPage(table.id)}>
+          <TableBodyCell>{table.id}</TableBodyCell>
+          <TableBodyCell>{table.seats}</TableBodyCell>
           <TableBodyCell>
-            <a
-              href={`./cards/${card.id}`}
-              class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-              style={
+            <Button
+              on:click={() => gotoDetailPage(table.id)}
+              color={
                 // We can use the queryCache here to show bold links for ones that are cached
-                client.getQueryData(['card', card.id])
-                  ? 'font-weight: bold'
-                  : 'cursor: pointer'
+                client.getQueryData(['table', table.id]) ? 'green' : undefined
               }
-            >{$t('Ansehen')}</a>
+            >
+              {$t('Ansehen')}
+            </Button>
           </TableBodyCell>
         </TableBodyRow>
       {/each}
     </TableBody>
   </Table>
-  {#if $cards.isFetching}
+  {#if $tables.isFetching}
     <div style="color:darkgreen; font-weight:700">
       {$t('Im hintergrund aktualisieren ...')}
     </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+  import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
   import { goto } from '$app/navigation';
   import { useQueryClient, createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
@@ -40,16 +40,15 @@
           <TableBodyCell>{card.id}</TableBodyCell>
           <TableBodyCell>{card.loginCode}</TableBodyCell>
           <TableBodyCell>
-            <a
-              href={`./cards/${card.id}`}
-              class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-              style={
+            <Button
+              on:click={() => gotoDetailPage(card.id)}
+              color={
                 // We can use the queryCache here to show bold links for ones that are cached
-                client.getQueryData(['card', card.id])
-                  ? 'font-weight: bold'
-                  : 'cursor: pointer'
+                client.getQueryData(['card', card.id]) ? 'green' : undefined
               }
-            >{$t('Ansehen')}</a>
+            >
+              {$t('Ansehen')}
+            </Button>
           </TableBodyCell>
         </TableBodyRow>
       {/each}
