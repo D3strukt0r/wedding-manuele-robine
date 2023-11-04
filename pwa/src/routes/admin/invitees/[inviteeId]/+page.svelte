@@ -4,18 +4,21 @@
   import { api } from '$lib/api';
   import type { Invitee } from '$lib/types';
   import { getLocalization } from '$lib/i18n';
+  import { goto } from "$app/navigation";
+  import { Button } from 'flowbite-svelte';
   const {t} = getLocalization();
 
   export let data: PageData;
 
   const invitee = createQuery<Invitee, Error>({
     queryKey: ['invitee', data.inviteeId],
-    queryFn: () => api.getInviteeById(data.inviteeId),
+    queryFn: () => api.invitees.show(data.inviteeId),
   })
 </script>
 
 <div>
-  <p><a class="button" href="../invitees">{$t('Zurück')}</a></p>
+  <Button on:click={() => goto('../invitees')}>{$t('Zurück')}</Button>
+  <br />
   <br />
 </div>
 {#if !data.inviteeId || $invitee.isLoading}

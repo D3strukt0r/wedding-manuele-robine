@@ -4,45 +4,49 @@
   import { useQueryClient, createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import { getLocalization } from '$lib/i18n';
+  import type { Card } from '$lib/types';
   const {t} = getLocalization();
 
   const client = useQueryClient();
 
   let limit = 10;
 
-  const invitees = createQuery<
-    { id: number; firstname: string; lastname: string }[],
-    Error
-  >({
-    queryKey: ['invitees', limit],
-    queryFn: () => api.getInvitees(limit),
+  const cards = createQuery<Card[], Error>({
+    queryKey: ['cards', limit],
+    queryFn: () => api.cards.list(limit),
   });
+
+  function gotoDetailPage(id: number): void {
+      goto(`./cards/${id}`);
+  }
 </script>
 
-{#if $invitees.status === 'loading'}
+{#if $cards.status === 'loading'}
   <span>{$t('Laden ...')}</span>
-{:else if $invitees.status === 'error'}
-  <span>{$t('Error: ')}{$invitees.error.message}</span>
+{:else if $cards.status === 'error'}
+  <span>{$t('Error: ')}{$cards.error.message}</span>
 {:else}
   <Table hoverable={true}>
     <TableHead>
-      <TableHeadCell>{$t('Name')}</TableHeadCell>
+      <TableHeadCell>{$t('ID')}</TableHeadCell>
+      <TableHeadCell>{$t('Login Code')}</TableHeadCell>
       <TableHeadCell>
-        <span class="sr-only">{$('Aktionen')}</span>
+        <span class="sr-only">{$t('Aktionen')}</span>
       </TableHeadCell>
     </TableHead>
-    <TableBody class="divide-y">
-      {#each $invitees.data as invitee, i (invitee.id)}
-        <TableBodyRow on:click={() => goto(`./invitees/${invitee.id}`)}>
-          <TableBodyCell>{invitee.firstname} {invitee.lastname}</TableBodyCell>
+    <TableBody>
+      {#each $cards.data ?? [] as card, i (card.id)}
+        <TableBodyRow on:click={() => gotoDetailPage(card.id)}>
+          <TableBodyCell>{card.id}</TableBodyCell>
+          <TableBodyCell>{card.loginCode}</TableBodyCell>
           <TableBodyCell>
             <a
-              href={`./invitees/${invitee.id}`}
+              href={`./cards/${card.id}`}
               class="font-medium text-primary-600 hover:underline dark:text-primary-500"
               style={
                 // We can use the queryCache here to show bold links for ones that are cached
-                client.getQueryData(['invitee', invitee.id])
-                  ? 'font-weight: bold; color: indianred'
+                client.getQueryData(['card', card.id])
+                  ? 'font-weight: bold'
                   : 'cursor: pointer'
               }
             >{$t('Ansehen')}</a>
@@ -51,7 +55,7 @@
       {/each}
     </TableBody>
   </Table>
-  {#if $invitees.isFetching}
+  {#if $cards.isFetching}
     <div style="color:darkgreen; font-weight:700">
       {$t('Im hintergrund aktualisieren ...')}
     </div>

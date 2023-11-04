@@ -20,7 +20,7 @@ class Table
     #[ORM\Column]
     private int $seats;
 
-    #[ORM\OneToMany(mappedBy: 'tableToSit', targetEntity: Invitee::class)]
+    #[ORM\OneToMany(mappedBy: 'table', targetEntity: Invitee::class)]
     private Collection $invitees;
 
     public function __construct(int $seats)

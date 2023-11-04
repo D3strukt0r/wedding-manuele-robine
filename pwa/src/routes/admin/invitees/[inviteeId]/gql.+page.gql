@@ -1,0 +1,7 @@
+query Invitee($inviteeId: ID!) {
+  invitee(id: $inviteeId) {
+    id
+    firstname,
+    lastname
+  }
+}

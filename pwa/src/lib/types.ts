@@ -3,3 +3,13 @@ export type Invitee = {
   firstname: string
   lastname: string
 }
+
+export type Card = {
+  id: number
+  loginCode: string
+}
+
+export type Table = {
+  id: number
+  seats: number
+}
