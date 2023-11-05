@@ -12,4 +12,5 @@ export type Card = {
 export type Table = {
   id: number
   seats: number
+  invitees_id: number[]
 }

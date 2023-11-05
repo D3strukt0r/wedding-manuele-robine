@@ -8,11 +8,11 @@ use OpenApi\Attributes as OA;
 readonly class UpdateTableDto
 {
     public function __construct(
-        /** @var array<int> */
-        #[Assert\NotNull]
-        public array $invitees,
-
         #[Assert\NotNull]
         public int $seats,
+
+        /** @var array<int> */
+        #[Assert\NotNull]
+        public array $invitees_id = [],
     ) {}
 }

@@ -2,26 +2,52 @@
   import type { PageData } from './$types';
   import {createQuery, useQueryClient} from '@tanstack/svelte-query';
   import { api } from '$lib/api';
-  import type { Table } from '$lib/types';
+  import type {Invitee, Table} from '$lib/types';
   import { getLocalization } from '$lib/i18n';
   import { goto } from "$app/navigation";
-  import {Button, Modal} from 'flowbite-svelte';
+  import {Button, Modal, Label, NumberInput, Li, List, MultiSelect} from 'flowbite-svelte';
   import {ExclamationCircleOutline} from "flowbite-svelte-icons";
+  import type {SelectOptionType} from "flowbite-svelte/dist/types";
   const {t} = getLocalization();
   const client = useQueryClient();
 
   export let data: PageData;
   let deletePopupOpen = false;
+  let editModalOpen = false;
 
   const table = createQuery<Table, Error>({
     queryKey: ['table', data.tableId],
     queryFn: () => api.tables.show(data.tableId),
   });
 
+  let selectedInvitees: number[] = $table?.data?.invitees_id ?? [];
+
+  let limit = 10;
+  const invitees = createQuery<Invitee[], Error>({
+    queryKey: ['invitees', limit],
+    queryFn: () => api.invitees.list(limit),
+  });
+  $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
+
   async function deleteCard() {
-      await api.tables.delete(data.tableId);
-      await client.invalidateQueries({ queryKey: ['tables'] });
-      await goto('../tables');
+    await api.tables.delete(data.tableId);
+    await client.invalidateQueries({ queryKey: ['tables'] });
+    await goto('../tables');
+  }
+
+  async function updateCard(event: SubmitEvent) {
+    const formData = new FormData(event.target as HTMLFormElement);
+    const values = Object.fromEntries(formData) as unknown as Omit<Table, 'id'>;
+
+    // Normalize values
+    values.seats = +values.seats;
+    values.invitees_id = selectedInvitees;
+
+    await api.tables.update(+data.tableId, values);
+
+    editModalOpen = false;
+    await client.invalidateQueries({ queryKey: ['tables'] });
+    await client.invalidateQueries({ queryKey: ['table', data.tableId] });
   }
 </script>
 
@@ -37,13 +63,40 @@
   <span>{$t('Error: ')}{$table.error.message}</span>
 {/if}
 {#if $table.isSuccess}
-  <h1>{$table.data.id}</h1>
   <div>
+    <p>{$t('ID: ')}{$table.data.id}</p>
     <p>{$t('Sitzplätze: ')}{$table.data.seats}</p>
+    <p>{$t('Eingeladene: ')}</p>
+    <List tag="ul" class="space-y-1">
+      {#each $table.data.invitees_id as invitee_id}
+        {@const invitee = $invitees.data?.find((invitee) => invitee.id === invitee_id)}
+        <Li>{invitee?.firstname} {invitee?.lastname} ({$t('ID: ')}{invitee?.id})</Li>
+      {:else}
+        <Li>{$t('Niemand sitzt am Tisch')}</Li>
+      {/each}
+    </List>
   </div>
   <div>{$table.isFetching ? $t('Im hintergrund aktualisieren ...') : ' '}</div>
-{/if}
 
+  <br />
+  <div>
+    <Button on:click={() => (editModalOpen = true)}>{$t('Bearbeiten')}</Button>
+    <Modal bind:open={editModalOpen} size="sm" autoclose={false} class="w-full">
+      <form class="flex flex-col space-y-6" method="POST" action="?/update" on:submit|preventDefault={updateCard}>
+        <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Tisch bearbeiten')}</h3>
+        <Label class="space-y-2">
+          <span>{$t('Sitzplätze')}</span>
+          <NumberInput name="seats" placeholder={$table.data.seats} value={$table.data.seats} required />
+        </Label>
+        <Label class="space-y-2">
+          <span>{$t('Eingeladene')}</span>
+          <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required size="lg" />
+        </Label>
+        <Button type="submit" class="w-full1">{$t('Bearbeiten')}</Button>
+      </form>
+    </Modal>
+  </div>
+{/if}
 
 <br />
 <div>

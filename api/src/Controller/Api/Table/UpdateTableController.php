@@ -45,7 +45,7 @@ class UpdateTableController extends AbstractController
 
         $inviteesIs = $table->getInvitees();
         $inviteesToBe = [];
-        foreach ($dto->invitees as $inviteeId) {
+        foreach ($dto->invitees_id as $inviteeId) {
             $inviteesToBe[$inviteeId] = $this->inviteeRepository->find($inviteeId);
         }
 
@@ -60,7 +60,7 @@ class UpdateTableController extends AbstractController
             }
         }
         foreach ($inviteesIs->toArray() as $invitee) {
-            if (!in_array($invitee->getId(), $dto->invitees, true)) {
+            if (!in_array($invitee->getId(), $dto->invitees_id, true)) {
                 $table->removeInvitee($invitee);
             }
         }

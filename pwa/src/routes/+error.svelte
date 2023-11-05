@@ -1,12 +1,14 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import { getLocalization } from '$lib/i18n';
+  const {t} = getLocalization();
 
   const code = $page.status;
   let message: string,
       help: string;
   if (code === 404) {
-    message = `Page not found (${$page.error.message})`;
-    help = 'Sorry, we couldn’t find the page you’re looking for.';
+    message = `${$t('Seite nicht gefunden')} (${$page.error.message})`;
+    help = $t('Leider konnten wir die von Ihnen gesuchte Seite nicht finden.');
   } else {
     message = $page.error.message
   }
@@ -30,7 +32,7 @@
     <h1 class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-5xl">{message}</h1>
     <p class="mt-4 text-base text-white/70 sm:mt-6">{help}</p>
     <div class="mt-10 flex justify-center">
-      <a href="#" class="text-sm font-semibold leading-7 text-white"><span aria-hidden="true">&larr;</span> Back to home</a>
+      <a href="/" class="text-sm font-semibold leading-7 text-white"><span aria-hidden="true">&larr;</span> {$t('Zurück zur Startseite')}</a>
     </div>
   </div>
 </main>
