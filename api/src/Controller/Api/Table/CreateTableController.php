@@ -36,7 +36,7 @@ class CreateTableController extends AbstractController
     public function __invoke(#[MapRequestPayload] CreateTableDto $dto): JsonResponse
     {
         $table = new Table($dto->seats);
-        foreach ($dto->invitees as $invitee) {
+        foreach ($dto->invitees_id as $invitee) {
             $table->addInvitee($this->inviteeRepository->find($invitee));
         }
         $this->tableRepository->save($table, true);

@@ -7,7 +7,6 @@
   import { goto } from "$app/navigation";
   import {Button, Modal, Label, NumberInput, Li, List, MultiSelect} from 'flowbite-svelte';
   import {ExclamationCircleOutline} from "flowbite-svelte-icons";
-  import type {SelectOptionType} from "flowbite-svelte/dist/types";
   const {t} = getLocalization();
   const client = useQueryClient();
 
@@ -29,13 +28,13 @@
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
-  async function deleteCard() {
+  async function deleteTable() {
     await api.tables.delete(data.tableId);
     await client.invalidateQueries({ queryKey: ['tables'] });
     await goto('../tables');
   }
 
-  async function updateCard(event: SubmitEvent) {
+  async function updateTable(event: SubmitEvent) {
     const formData = new FormData(event.target as HTMLFormElement);
     const values = Object.fromEntries(formData) as unknown as Omit<Table, 'id'>;
 
@@ -51,10 +50,9 @@
   }
 </script>
 
-<div>
+<div class="mb-4">
   <Button on:click={() => goto('../tables')}>{$t('Zurück')}</Button>
 </div>
-<br />
 
 {#if !data.tableId || $table.isLoading}
   <span>{$t('Laden ...')}</span>
@@ -78,11 +76,10 @@
   </div>
   <div>{$table.isFetching ? $t('Im hintergrund aktualisieren ...') : ' '}</div>
 
-  <br />
-  <div>
-    <Button on:click={() => (editModalOpen = true)}>{$t('Bearbeiten')}</Button>
+  <div class="mt-4 flex">
+    <Button on:click={() => (editModalOpen = true)} class="mr-4">{$t('Bearbeiten')}</Button>
     <Modal bind:open={editModalOpen} size="sm" autoclose={false} class="w-full">
-      <form class="flex flex-col space-y-6" method="POST" action="?/update" on:submit|preventDefault={updateCard}>
+      <form class="flex flex-col space-y-6" method="POST" action="?/update" on:submit|preventDefault={updateTable}>
         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Tisch bearbeiten')}</h3>
         <Label class="space-y-2">
           <span>{$t('Sitzplätze')}</span>
@@ -95,18 +92,15 @@
         <Button type="submit" class="w-full1">{$t('Bearbeiten')}</Button>
       </form>
     </Modal>
+
+    <Button on:click={() => (deletePopupOpen = true)}>{$t('Löschen')}</Button>
+    <Modal bind:open={deletePopupOpen} size="xs" autoclose>
+      <div class="text-center">
+        <ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
+        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{$t('Sind Sie sicher, dass Sie diese Karte löschen möchten?')}</h3>
+        <Button color="red" class="mr-2" on:click={deleteTable}>{$t('Ja, ich bin sicher')}</Button>
+        <Button color="alternative">{$t('Nein, abbrechen')}</Button>
+      </div>
+    </Modal>
   </div>
 {/if}
-
-<br />
-<div>
-  <Button on:click={() => (deletePopupOpen = true)}>{$t('Löschen')}</Button>
-  <Modal bind:open={deletePopupOpen} size="xs" autoclose>
-    <div class="text-center">
-      <ExclamationCircleOutline class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" />
-      <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">{$t('Sind Sie sicher, dass Sie diese Karte löschen möchten?')}</h3>
-      <Button color="red" class="mr-2" on:click={deleteCard}>{$t('Ja, ich bin sicher')}</Button>
-      <Button color="alternative">{$t('Nein, abbrechen')}</Button>
-    </div>
-  </Modal>
-</div>
