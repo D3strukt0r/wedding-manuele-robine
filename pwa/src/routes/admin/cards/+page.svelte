@@ -6,7 +6,6 @@
   import { getLocalization } from '$lib/i18n';
   import type { Card } from '$lib/types';
   const {t} = getLocalization();
-
   const client = useQueryClient();
 
   let limit = 10;

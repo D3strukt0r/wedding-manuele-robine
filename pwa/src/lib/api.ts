@@ -11,6 +11,9 @@ export const api = {
       const { data } = await axios.get<Invitee>(`/api/invitees/${id}`);
       return data;
     },
+    delete: async (id: number): Promise<void> => {
+      await axios.delete(`/api/invitees/${id}`);
+    },
   },
   cards: {
     list: async (limit: number) => {
@@ -21,6 +24,9 @@ export const api = {
       const { data } = await axios.get<Card>(`/api/cards/${id}`);
       return data;
     },
+    delete: async (id: number): Promise<void> => {
+      await axios.delete(`/api/cards/${id}`);
+    },
   },
   tables: {
     list: async (limit: number) => {
@@ -30,6 +36,9 @@ export const api = {
     show: async (id: number): Promise<Table> => {
       const { data } = await axios.get<Table>(`/api/tables/${id}`);
       return data;
+    },
+    delete: async (id: number): Promise<void> => {
+      await axios.delete(`/api/tables/${id}`);
     },
   },
 };
