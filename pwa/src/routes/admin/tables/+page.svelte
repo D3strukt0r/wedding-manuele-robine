@@ -49,8 +49,6 @@
     values.seats = +values.seats;
     values.invitees_id = selectedInvitees;
 
-    console.log(values)
-
     await api.tables.create(values);
 
     createModalOpen = false;

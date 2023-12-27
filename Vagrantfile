@@ -1,5 +1,15 @@
 require 'yaml'
 
+# https://stackoverflow.com/a/38702906/4156752
+class Hash
+    def deep_merge(other)
+        self.merge(other) { |key, value1, value2| value1.is_a?(Hash) && value2.is_a?(Hash) ? value1.deep_merge(value2) : value2}
+    end
+    def deep_merge!(other)
+        self.merge!(other) { |key, value1, value2| value1.is_a?(Hash) && value2.is_a?(Hash) ? value1.deep_merge(value2) : value2}
+    end
+end
+
 # Requires Ruby >=2.3.0 (25.12.2015) because of the dig method (https://docs.ruby-lang.org/en/2.3.0/Array.html#method-i-dig)
 Vagrant.require_version '>= 2.1.0' # (03.05.2018) because of Triggers (https://developer.hashicorp.com/vagrant/docs/triggers)
 
@@ -7,13 +17,14 @@ Vagrant.configure('2') do |config|
     # --------------------------------------------------------------------------
     # Load configuration
     # --------------------------------------------------------------------------
-    if File.file?('.vagrant.config.yml')
-        settings = YAML.load(File.read('.vagrant.config.yml'))
-    elsif File.file?('.vagrant.config.yml.dist')
-        settings = YAML.load(File.read('.vagrant.config.yml.dist'))
-    else
-        settings = {}
+    settingsFallback = settingsDist = settingsCustom = {}
+    if File.exist?('.vagrant.config.yml.dist')
+        settingsDist = YAML.load(File.read('.vagrant.config.yml.dist'))
     end
+    if File.exist?('.vagrant.config.yml')
+        settingsCustom = YAML.load(File.read('.vagrant.config.yml'))
+    end
+    settings = settingsFallback.deep_merge(settingsDist).deep_merge(settingsCustom)
 
     # --------------------------------------------------------------------------
     # Configure the machine
@@ -134,10 +145,10 @@ Vagrant.configure('2') do |config|
         config.vbguest.auto_update = false
     end
 
-    # Add custom PS1 (Terminal becomes weird with Emoji 📦, so don't use it for now)
+    # Add custom PS1
     config.vm.provision 'custom-ps1', type: 'shell', privileged: false, inline: <<-SCRIPT
         set -e -u -x -o pipefail
-        echo 'export PS1="\\e[38;5;46m\\u@\\h\\e[0m:\\e[38;5;33m\\w\\e[0m\\\\$ "' >> ~/.bashrc
+        echo 'export PS1='\''📦 ${debian_chroot:+($debian_chroot)}\\[\\e[38;5;46m\\]\\u@\\h\\[\\e[0m\\]:\\[\\e[38;5;33m\\]\\w\\[\\e[0m\\]\\\\$ '\' >> ~/.bashrc
     SCRIPT
 
     config.vm.provision 'enable-ssh-password-auth', type: 'shell', privileged: false, inline: <<-SCRIPT

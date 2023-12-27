@@ -275,7 +275,7 @@ RUN \
     && chmod +x phive.phar \
     && mv phive.phar /usr/local/bin/phive \
     && mkdir --parents ~/.phive \
-    && phive --home ~/.phive --no-progress install --trust-gpg-keys CF1A108D0E7AE720,31C7E470E2138192,E82B2FB314E9906E --target /usr/local/bin \
+    && phive --home ~/.phive --no-progress install --trust-gpg-keys 5E6DDE998AB73B8E,31C7E470E2138192,E82B2FB314E9906E --target /usr/local/bin \
         phpcs \
         phpcbf \
         php-cs-fixer \
