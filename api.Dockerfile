@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.2
+ARG PHP_VERSION=8.3
 
 # -----------------------------------------------------------------------------
 # Base image with common dependencies for prod & dev and php & nginx installation
