@@ -106,7 +106,7 @@ RUN \
     && { \
         # Add custom PS1
         # https://strasis.com/documentation/limelight-xe/reference/ecma-48-sgr-codes
-        echo 'export PS1="🐳 \e[38;5;46m\u@\h\e[0m:\e[38;5;33m\w\e[0m\\$ "'; \
+        echo 'export PS1="🐳 ${debian_chroot:+($debian_chroot)}\[\e[38;5;46m\]\u@\h\[\e[0m\]:\[\e[38;5;33m\]\w\[\e[0m\]\\$ "'; \
         # Add bash auto completion
         echo 'source /etc/profile.d/bash_completion.sh'; \
     } >>"$HOME/.bashrc" \
@@ -121,7 +121,7 @@ RUN \
     && userdel www-data \
     && { \
         # Same as above (except bash completion, because it's already in the bashrc)
-        echo 'export PS1="🐳 \e[38;5;46m\u@\h\e[0m:\e[38;5;33m\w\e[0m\\$ "'; \
+        echo 'export PS1="🐳 ${debian_chroot:+($debian_chroot)}\[\e[38;5;46m\]\u@\h\[\e[0m\]:\[\e[38;5;33m\]\w\[\e[0m\]\\$ "'; \
     } >>/home/app/.bashrc \
     \
     # Forward request and error logs to docker log collector
