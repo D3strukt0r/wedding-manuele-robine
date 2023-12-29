@@ -48,7 +48,8 @@ if [[ $driver == 'mysql' ]]; then
   until [ $elapsed_seconds -gt $DEPS_TIMEOUT ] || mysql --host="$host" --port="$port" --user="$user" --password="$password" -e "SELECT 1" >/dev/null 2>&1; do
     current_time="$(date -u +%s)"
     elapsed_seconds=$((current_time - start_time))
-    entrypoint_warn "Still waiting for db to be ready... Or maybe the db is not reachable. $((DEPS_TIMEOUT - elapsed_seconds)) seconds left"
+    # TODO: Show message in a debug mode
+    #entrypoint_warn "Still waiting for db to be ready... Or maybe the db is not reachable. $((DEPS_TIMEOUT - elapsed_seconds)) seconds left"
     sleep 1
   done
 elif [[ $driver == 'pgsql' ]]; then
@@ -56,7 +57,8 @@ elif [[ $driver == 'pgsql' ]]; then
   until [ $elapsed_seconds -gt $DEPS_TIMEOUT ] || pg_isready --host="$host" --port="$port" --username="$user" --dbname="$database" >/dev/null 2>&1; do
     current_time="$(date -u +%s)"
     elapsed_seconds=$((current_time - start_time))
-    entrypoint_warn "Still waiting for db to be ready... Or maybe the db is not reachable. $((DEPS_TIMEOUT - elapsed_seconds)) seconds left"
+    # TODO: Show message in a debug mode
+    #entrypoint_warn "Still waiting for db to be ready... Or maybe the db is not reachable. $((DEPS_TIMEOUT - elapsed_seconds)) seconds left"
     sleep 1
   done
 else

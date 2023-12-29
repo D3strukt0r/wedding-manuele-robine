@@ -39,7 +39,8 @@ elapsed_seconds=$((current_time - start_time))
 until [ $elapsed_seconds -gt $DEPS_TIMEOUT ] || curl "$proto://$host:$port/ping" >/dev/null 2>&1; do
   current_time="$(date -u +%s)"
   elapsed_seconds=$((current_time - start_time))
-  entrypoint_warn "Still waiting for api to be ready... Or maybe the api is not reachable. $((DEPS_TIMEOUT - elapsed_seconds)) seconds left"
+  # TODO: Show message in a debug mode
+  #entrypoint_warn "Still waiting for api to be ready... Or maybe the api is not reachable. $((DEPS_TIMEOUT - elapsed_seconds)) seconds left"
   sleep 1
 done
 
