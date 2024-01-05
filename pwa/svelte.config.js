@@ -24,6 +24,7 @@ const config = {
           // TODO: Figure out how to dynamically use env vars here at runtime
           'https://api.weddingmanager.test',
           'https://api-wedding-manager.d3strukt0r.dev',
+          'https://api.manuele-robine.wedding',
         ],
         'img-src': [
           'self',

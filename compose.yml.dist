@@ -24,6 +24,10 @@ services:
     environment:
       API_URL: http://api
       PUBLIC_API_URL: https://api.weddingmanager.test
+
+      # https://kit.svelte.dev/docs/adapter-node#environment-variables-origin-protocolheader-and-hostheader
+      # Required to work with forms (Fixes: "Cross-site POST form submissions are forbidden")
+      ORIGIN: https://weddingmanager.test
     depends_on:
       - api
       - traefik
