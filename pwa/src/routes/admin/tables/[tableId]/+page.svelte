@@ -19,8 +19,6 @@
     queryFn: () => api.tables.show(data.tableId),
   });
 
-  let selectedInvitees: number[] = $table?.data?.invitees_id ?? [];
-
   let limit = 10;
   const invitees = createQuery<Invitee[], Error>({
     queryKey: ['invitees', limit],
@@ -34,6 +32,7 @@
     await goto('../tables');
   }
 
+  let selectedInvitees: number[] = $table?.data?.invitees_id ?? [];
   async function updateTable(event: SubmitEvent) {
     const formData = new FormData(event.target as HTMLFormElement);
     const values = Object.fromEntries(formData) as unknown as Omit<Table, 'id'>;
@@ -89,7 +88,7 @@
           <span>{$t('Eingeladene')}</span>
           <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required size="lg" />
         </Label>
-        <Button type="submit" class="w-full1">{$t('Bearbeiten')}</Button>
+        <Button type="submit" class="w-full1">{$t('Speichern')}</Button>
       </form>
     </Modal>
 

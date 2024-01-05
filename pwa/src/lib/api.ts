@@ -22,9 +22,16 @@ export const api = {
       // return data.filter((x) => x.id <= limit);
       return data;
     },
+    create: async (card: Omit<Card, 'id'>): Promise<void> => {
+      const { data } = await axios.post(`/api/cards`, card);
+      return data;
+    },
     show: async (id: number): Promise<Card> => {
       const { data } = await axios.get<Card>(`/api/cards/${id}`);
       return data;
+    },
+    update: async (id: number, card: Omit<Card, 'id'>): Promise<void> => {
+      await axios.put(`/api/cards/${id}`, card);
     },
     delete: async (id: number): Promise<void> => {
       await axios.delete(`/api/cards/${id}`);

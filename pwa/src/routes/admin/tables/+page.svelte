@@ -21,8 +21,8 @@
   const client = useQueryClient();
 
   let createModalOpen = false;
-  let limit = 10;
 
+  let limit = 10;
   const tables = createQuery<TableType[], Error>({
     queryKey: ['tables', limit],
     queryFn: () => api.tables.list(limit),
@@ -34,7 +34,6 @@
     queryFn: () => api.invitees.list(limit2),
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
-
 
   function gotoDetailPage(id: number): void {
       goto(`./tables/${id}`);

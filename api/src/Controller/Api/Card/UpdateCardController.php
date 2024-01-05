@@ -48,7 +48,7 @@ class UpdateCardController extends AbstractController
 
         $inviteesIs = $card->getInvitees();
         $inviteesToBe = [];
-        foreach ($dto->invitees as $inviteeId) {
+        foreach ($dto->invitees_id as $inviteeId) {
             $inviteesToBe[$inviteeId] = $this->inviteeRepository->find($inviteeId);
         }
 
@@ -63,7 +63,7 @@ class UpdateCardController extends AbstractController
             }
         }
         foreach ($inviteesIs->toArray() as $invitee) {
-            if (!in_array($invitee->getId(), $dto->invitees, true)) {
+            if (!in_array($invitee->getId(), $dto->invitees_id, true)) {
                 $card->removeInvitee($invitee);
             }
         }

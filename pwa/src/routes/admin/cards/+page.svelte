@@ -1,24 +1,70 @@
 <script lang="ts">
-  import { Button, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+  import {
+    Button,
+    Label,
+    Modal, MultiSelect,
+    Table,
+    TableBody,
+    TableBodyCell,
+    TableBodyRow,
+    TableHead,
+    TableHeadCell
+  } from 'flowbite-svelte';
   import { goto } from '$app/navigation';
   import { useQueryClient, createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import { getLocalization } from '$lib/i18n';
-  import type { Card } from '$lib/types';
+  import type {Card, Invitee} from '$lib/types';
   const {t} = getLocalization();
   const client = useQueryClient();
 
-  let limit = 10;
+  let createModalOpen = false;
 
+  let limit = 10;
   const cards = createQuery<Card[], Error>({
     queryKey: ['cards', limit],
     queryFn: () => api.cards.list(limit),
   });
 
+  let limit2 = 10;
+  const invitees = createQuery<Invitee[], Error>({
+    queryKey: ['invitees', limit2],
+    queryFn: () => api.invitees.list(limit2),
+  });
+  $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
+
   function gotoDetailPage(id: number): void {
       goto(`./cards/${id}`);
   }
+
+  let selectedInvitees: number[] = [];
+  async function createCard(event: SubmitEvent) {
+    const formData = new FormData(event.target as HTMLFormElement);
+    const values = Object.fromEntries(formData) as unknown as Omit<Card, 'id'>;
+
+    // Normalize values
+    values.invitees_id = selectedInvitees;
+
+    await api.cards.create(values);
+
+    createModalOpen = false;
+    await client.invalidateQueries({ queryKey: ['cards'] });
+  }
 </script>
+
+<div class="flex justify-end mb-4">
+  <Button on:click={() => (createModalOpen = true)} class="ml-auto">{$t('Erstellen')}</Button>
+  <Modal bind:open={createModalOpen} size="sm" autoclose={false} class="w-full">
+    <form class="flex flex-col space-y-6" method="POST" action="?/create" on:submit|preventDefault={createCard}>
+      <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Karte erstellen')}</h3>
+      <Label class="space-y-2">
+        <span>{$t('Eingeladene')}</span>
+        <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required size="lg" />
+      </Label>
+      <Button type="submit" class="w-full1">{$t('Erstellen')}</Button>
+    </form>
+  </Modal>
+</div>
 
 {#if $cards.status === 'loading'}
   <span>{$t('Laden ...')}</span>

@@ -9,6 +9,6 @@ readonly class CreateCardDto
     public function __construct(
         /** @var array<int> */
         #[Assert\NotNull]
-        public array $invitees,
+        public array $invitees_id = [],
     ) {}
 }

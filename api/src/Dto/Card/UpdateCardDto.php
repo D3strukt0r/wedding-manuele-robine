@@ -10,7 +10,7 @@ readonly class UpdateCardDto
     public function __construct(
         /** @var array<int> */
         #[Assert\NotNull]
-        public array $invitees,
+        public array $invitees_id = [],
 
         #[Assert\NotNull]
         #[OA\Property(example: false)]

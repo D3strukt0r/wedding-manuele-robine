@@ -41,7 +41,7 @@ class CreateCardController extends AbstractController
         $uid = $client->generateId();
 
         $card = new Card($uid);
-        foreach ($dto->invitees as $invitee) {
+        foreach ($dto->invitees_id as $invitee) {
             $card->addInvitee($this->inviteeRepository->find($invitee));
         }
         $this->cardRepository->save($card, true);
