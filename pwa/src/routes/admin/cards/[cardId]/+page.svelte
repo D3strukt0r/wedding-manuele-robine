@@ -5,7 +5,7 @@
   import type {Card, Invitee} from '$lib/types';
   import { getLocalization } from '$lib/i18n';
   import { goto } from "$app/navigation";
-  import {Button, Label, Li, List, Modal, MultiSelect} from 'flowbite-svelte';
+  import {Button, Checkbox, Helper, Label, Li, List, Modal, MultiSelect} from 'flowbite-svelte';
   import { ExclamationCircleOutline } from "flowbite-svelte-icons";
   const {t} = getLocalization();
   const client = useQueryClient();
@@ -38,6 +38,7 @@
     const values = Object.fromEntries(formData) as unknown as Omit<Card, 'id'>;
 
     // Normalize values
+    values.renewLoginCode = !!values.renewLoginCode;
     values.invitees_id = selectedInvitees;
 
     await api.cards.update(+data.cardId, values);
@@ -80,7 +81,10 @@
     <Modal bind:open={editModalOpen} size="sm" autoclose={false} class="w-full">
       <form class="flex flex-col space-y-6" method="POST" action="?/update" on:submit|preventDefault={updateCard}>
         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Karte bearbeiten')}</h3>
-        <!-- TODO: Add checkbox for `renewLoginCode` -->
+        <Label class="space-y-2">
+          <Checkbox name="renewLoginCode" aria-describedby="helper-renew-token">{$t('Login Code Erneuern')}</Checkbox>
+          <Helper id="helper-renew-token" class="ps-6">{$t('Achtung: Wenn die Karten bereits gedruckt wurden, können die Eingeladenen Personen sich nicht mehr mit dem Code einloggen!')}</Helper>
+        </Label>
         <Label class="space-y-2">
           <span>{$t('Eingeladene')}</span>
           <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required size="lg" />
