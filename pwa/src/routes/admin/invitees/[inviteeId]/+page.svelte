@@ -38,9 +38,17 @@
 {/if}
 {#if $invitee.isSuccess}
   <h1>{$invitee.data.firstname} {$invitee.data.lastname}</h1>
-  <div>
-    <p>...</p>
-  </div>
+  <p>{$t('Email: ')}{$invitee.data.email ?? $t('Keine')}</p>
+  <p>{$t('Wird kommen? ')}{$invitee.data.will_come ? $t('Ja') : $t('Nein')}</p>
+  <!-- TODO: Food -->
+  <p>{$t('Allergien: ')}{$invitee.data.allergies ?? $t('Keine')}</p>
+  {#if $invitee.data.table_id}
+    <p>{$t('Tisch: ')}<a href={`./../tables/${$invitee.data.table_id}`}>{$invitee.data.table_id}</a></p>
+  {/if}
+  {#if $invitee.data.card_id}
+    <p>{$t('Karte: ')}<a href={`./../cards/${$invitee.data.card_id}`}>{$invitee.data.card_id}</a></p>
+  {/if}
+  <p></p>
   <div>{$invitee.isFetching ? $t('Im hintergrund aktualisieren ...') : ' '}</div>
 {/if}
 

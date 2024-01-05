@@ -8,9 +8,16 @@ export const api = {
       // return data.filter((x) => x.id <= limit);
       return data;
     },
+    create: async (invitee: Omit<Invitee, 'id'>): Promise<void> => {
+      const { data } = await axios.post(`/api/invitees`, invitee);
+      return data;
+    },
     show: async (id: number): Promise<Invitee> => {
       const { data } = await axios.get<Invitee>(`/api/invitees/${id}`);
       return data;
+    },
+    update: async (id: number, invitee: Omit<Invitee, 'id'>): Promise<void> => {
+      await axios.put(`/api/invitees/${id}`, invitee);
     },
     delete: async (id: number): Promise<void> => {
       await axios.delete(`/api/invitees/${id}`);
