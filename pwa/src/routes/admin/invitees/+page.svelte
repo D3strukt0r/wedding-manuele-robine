@@ -1,8 +1,8 @@
 <script lang="ts">
   import {
-    Button, Checkbox, Helper, Input,
+    Button, Checkbox, Input,
     Label,
-    Modal, MultiSelect, NumberInput,
+    Modal, Select,
     Table,
     TableBody,
     TableBodyCell,
@@ -14,7 +14,7 @@
   import { useQueryClient, createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import { getLocalization } from '$lib/i18n';
-  import type { Invitee } from "$lib/types";
+  import type {Card, Invitee} from "$lib/types";
   const {t} = getLocalization();
   const client = useQueryClient();
 
@@ -26,6 +26,20 @@
     queryFn: () => api.invitees.list(limit),
   });
 
+  let limit2 = 10;
+  const tables = createQuery<Table[], Error>({
+    queryKey: ['tables', limit2],
+    queryFn: () => api.tables.list(limit2),
+  });
+  $: tableItems = $tables.data?.map((table) => ({ value: table.id, name: `X (ID: ${table.id})` })) ?? [];
+
+  let limit3 = 10;
+  const cards = createQuery<Card[], Error>({
+    queryKey: ['cards', limit3],
+    queryFn: () => api.cards.list(limit3),
+  });
+  $: cardItems = $cards.data?.map((card) => ({ value: card.id, name: `X (ID: ${card.id})` })) ?? [];
+
   function gotoDetailPage(id: number): void {
       goto(`./invitees/${id}`);
   }
@@ -36,6 +50,8 @@
 
     // Normalize values
     values.willCome = !!values.willCome;
+    values.tableId = +values.tableId;
+    values.cardId = +values.cardId;
 
     await api.invitees.create(values);
 
@@ -69,8 +85,14 @@
         <span>{$t('Allergien')}</span>
         <Input type="text" name="allergies" placeholder={$t('Gluten, Lactose, etc.')} />
       </Label>
-      <!-- TODO: Tisch `tableId` -->
-      <!-- TODO: Karte `cardId` -->
+      <Label class="space-y-2">
+        <span>{$t('Tisch')}</span>
+        <Select name="tableId" items={tableItems} placeholder={$t('Option auswählen ...')} />
+      </Label>
+      <Label class="space-y-2">
+        <span>{$t('Karte')}</span>
+        <Select name="cardId" items={cardItems} placeholder={$t('Option auswählen ...')} />
+      </Label>
       <Button type="submit" class="w-full1">{$t('Erstellen')}</Button>
     </form>
   </Modal>
@@ -85,6 +107,8 @@
     <TableHead>
       <TableHeadCell>{$t('ID')}</TableHeadCell>
       <TableHeadCell>{$t('Name')}</TableHeadCell>
+      <TableHeadCell>{$t('Tisch (ID)')}</TableHeadCell>
+      <TableHeadCell>{$t('Karte (ID)')}</TableHeadCell>
       <TableHeadCell>
         <span class="sr-only">{$t('Aktionen')}</span>
       </TableHeadCell>
@@ -94,6 +118,16 @@
         <TableBodyRow on:click={() => gotoDetailPage(invitee.id)}>
           <TableBodyCell>{invitee.id}</TableBodyCell>
           <TableBodyCell>{invitee.firstname} {invitee.lastname}</TableBodyCell>
+          <TableBodyCell>
+            {#if invitee.table_id}
+              <a href={`./tables/${invitee.table_id}`}>{invitee.table_id}</a>
+            {/if}
+          </TableBodyCell>
+          <TableBodyCell>
+            {#if invitee.card_id}
+              <a href={`./cards/${invitee.card_id}`}>{invitee.card_id}</a>
+            {/if}
+          </TableBodyCell>
           <TableBodyCell>
             <Button
               on:click={() => gotoDetailPage(invitee.id)}

@@ -59,7 +59,7 @@
       <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Karte erstellen')}</h3>
       <Label class="space-y-2">
         <span>{$t('Eingeladene')}</span>
-        <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required size="lg" />
+        <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required />
       </Label>
       <Button type="submit" class="w-full1">{$t('Erstellen')}</Button>
     </form>

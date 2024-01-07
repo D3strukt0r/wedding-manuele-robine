@@ -86,7 +86,7 @@
         </Label>
         <Label class="space-y-2">
           <span>{$t('Eingeladene')}</span>
-          <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required size="lg" />
+          <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required />
         </Label>
         <Button type="submit" class="w-full1">{$t('Speichern')}</Button>
       </form>
