@@ -8,7 +8,7 @@ export const load: PageLoad = async ({ parent, params }) => {
 
   await queryClient.prefetchQuery({
     queryKey: ['table', tableId],
-    queryFn: () => api.tables.show(tableId),
+    queryFn: () => api.admin.tables.show(tableId),
   });
 
   return { tableId };

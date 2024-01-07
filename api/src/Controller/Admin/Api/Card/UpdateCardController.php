@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Admin\Api\Card;
 
 use App\Dto\Card\UpdateCardDto;
 use App\Entity\Card;
@@ -15,9 +15,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class UpdateCardController extends AbstractController
 {
@@ -28,7 +27,7 @@ class UpdateCardController extends AbstractController
 
     #[Route(
         path: '/cards/{card_id}',
-        name: 'api_card_update',
+        name: 'api_admin_card_update',
         requirements: ['card_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
@@ -37,7 +36,7 @@ class UpdateCardController extends AbstractController
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
-    #[OA\Tag('Card')]
+    #[OA\Tag('Admin/Card')]
     public function __invoke(
         #[MapEntity(id: 'card_id')] Card $card,
         #[MapRequestPayload] UpdateCardDto $dto

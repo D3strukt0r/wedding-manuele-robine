@@ -4,7 +4,15 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-api:
-    resource: ../src/Controller/Api/
+common_api:
+    resource: ../src/Controller/Common/Api/
     type: attribute
-    prefix: api
+    prefix: common/api
+admin_api:
+    resource: ../src/Controller/Admin/Api/
+    type: attribute
+    prefix: admin/api
+public_api:
+    resource: ../src/Controller/Public/Api/
+    type: attribute
+    prefix: public/api

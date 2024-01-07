@@ -6,6 +6,6 @@ export const load: PageLoad = async ({ parent }) => {
 
   await queryClient.prefetchQuery({
     queryKey: ['invitees', 10],
-    queryFn: () => api.invitees.list(10),
+    queryFn: () => api.admin.invitees.list(10),
   })
 }

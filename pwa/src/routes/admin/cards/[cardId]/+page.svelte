@@ -16,18 +16,18 @@
 
   const card = createQuery<Card, Error>({
     queryKey: ['card', data.cardId],
-    queryFn: () => api.cards.show(data.cardId),
+    queryFn: () => api.admin.cards.show(data.cardId),
   });
 
   let limit = 10;
   const invitees = createQuery<Invitee[], Error>({
     queryKey: ['invitees', limit],
-    queryFn: () => api.invitees.list(limit),
+    queryFn: () => api.admin.invitees.list(limit),
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
   async function deleteCard() {
-    await api.cards.delete(data.cardId);
+    await api.admin.cards.delete(data.cardId);
     await client.invalidateQueries({ queryKey: ['cards'] });
     await goto('../cards');
   }
@@ -41,7 +41,7 @@
     values.renewLoginCode = !!values.renewLoginCode;
     values.invitees_id = selectedInvitees;
 
-    await api.cards.update(+data.cardId, values);
+    await api.admin.cards.update(+data.cardId, values);
 
     editModalOpen = false;
     await client.invalidateQueries({ queryKey: ['cards'] });

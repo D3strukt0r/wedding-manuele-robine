@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Admin\Api\Card;
 
 use App\Dto\Card\CreateCardDto;
 use App\Entity\Card;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class CreateCardController extends AbstractController
 {
@@ -26,14 +26,14 @@ class CreateCardController extends AbstractController
 
     #[Route(
         path: '/cards',
-        name: 'api_card_create',
+        name: 'api_admin_card_create',
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateCardDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
-    #[OA\Tag('Card')]
+    #[OA\Tag('Admin/Card')]
     public function __invoke(#[MapRequestPayload] CreateCardDto $dto): JsonResponse
     {
         $client = new Client();

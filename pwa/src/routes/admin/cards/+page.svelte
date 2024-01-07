@@ -23,13 +23,13 @@
   let limit = 10;
   const cards = createQuery<Card[], Error>({
     queryKey: ['cards', limit],
-    queryFn: () => api.cards.list(limit),
+    queryFn: () => api.admin.cards.list(limit),
   });
 
   let limit2 = 10;
   const invitees = createQuery<Invitee[], Error>({
     queryKey: ['invitees', limit2],
-    queryFn: () => api.invitees.list(limit2),
+    queryFn: () => api.admin.invitees.list(limit2),
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
@@ -45,7 +45,7 @@
     // Normalize values
     values.invitees_id = selectedInvitees;
 
-    await api.cards.create(values);
+    await api.admin.cards.create(values);
 
     createModalOpen = false;
     await client.invalidateQueries({ queryKey: ['cards'] });

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Card;
+namespace App\Controller\Admin\Api\Card;
 
 use App\Entity\Card;
 use App\Repository\CardRepository;
@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DeleteCardController extends AbstractController
 {
@@ -20,14 +20,14 @@ class DeleteCardController extends AbstractController
 
     #[Route(
         path: '/cards/{card_id}',
-        name: 'api_card_delete',
+        name: 'api_admin_card_delete',
         requirements: ['card_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_DELETE],
     )]
     #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
-    #[OA\Tag('Card')]
+    #[OA\Tag('Admin/Card')]
     public function __invoke(#[MapEntity(id: 'card_id')] Card $card): JsonResponse
     {
         $this->cardRepository->remove($card, true);

@@ -23,22 +23,28 @@
   let limit = 10;
   const invitees = createQuery<Invitee[], Error>({
     queryKey: ['invitees', limit],
-    queryFn: () => api.invitees.list(limit),
+    queryFn: () => api.admin.invitees.list(limit),
   });
 
   let limit2 = 10;
   const tables = createQuery<Table[], Error>({
     queryKey: ['tables', limit2],
-    queryFn: () => api.tables.list(limit2),
+    queryFn: () => api.admin.tables.list(limit2),
   });
   $: tableItems = $tables.data?.map((table) => ({ value: table.id, name: `X (ID: ${table.id})` })) ?? [];
 
   let limit3 = 10;
   const cards = createQuery<Card[], Error>({
     queryKey: ['cards', limit3],
-    queryFn: () => api.cards.list(limit3),
+    queryFn: () => api.admin.cards.list(limit3),
   });
   $: cardItems = $cards.data?.map((card) => ({ value: card.id, name: `X (ID: ${card.id})` })) ?? [];
+
+  const foods = createQuery<Card[], Error>({
+    queryKey: ['enum', 'food'],
+    queryFn: () => api.common.lookup.type('food'),
+  });
+  $: foodItems = $foods.data?.map((food) => ({ value: food, name: $t(`enum.food.${food}`) })) ?? [];
 
   function gotoDetailPage(id: number): void {
       goto(`./invitees/${id}`);
@@ -53,7 +59,7 @@
     values.tableId = +values.tableId;
     values.cardId = +values.cardId;
 
-    await api.invitees.create(values);
+    await api.admin.invitees.create(values);
 
     createModalOpen = false;
     await client.invalidateQueries({ queryKey: ['invitees'] });
@@ -80,7 +86,10 @@
       <Label class="space-y-2">
         <Checkbox name="willCome">{$t('Wird kommen?')}</Checkbox>
       </Label>
-      <!-- TODO: Essenspreferenz `food` -->
+      <Label class="space-y-2">
+        <span>{$t('Essenspräferenz')}</span>
+        <Select name="food" items={foodItems} placeholder={$t('Option auswählen ...')} />
+      </Label>
       <Label class="space-y-2">
         <span>{$t('Allergien')}</span>
         <Input type="text" name="allergies" placeholder={$t('Gluten, Lactose, etc.')} />

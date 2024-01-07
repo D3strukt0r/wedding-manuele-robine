@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Table;
+namespace App\Controller\Admin\Api\Table;
 
 use App\Dto\Table\UpdateTableDto;
 use App\Entity\Invitee;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class UpdateTableController extends AbstractController
 {
@@ -27,7 +27,7 @@ class UpdateTableController extends AbstractController
 
     #[Route(
         path: '/tables/{table_id}',
-        name: 'api_table_update',
+        name: 'api_admin_table_update',
         requirements: ['table_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
@@ -36,7 +36,7 @@ class UpdateTableController extends AbstractController
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
-    #[OA\Tag('Table')]
+    #[OA\Tag('Admin/Table')]
     public function __invoke(
         #[MapEntity(id: 'table_id')] Table $table,
         #[MapRequestPayload] UpdateTableDto $dto

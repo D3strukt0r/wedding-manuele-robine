@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Table;
+namespace App\Controller\Admin\Api\Table;
 
 use App\Entity\Table;
 use App\Repository\TableRepository;
@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DeleteTableController extends AbstractController
 {
@@ -20,14 +20,14 @@ class DeleteTableController extends AbstractController
 
     #[Route(
         path: '/tables/{table_id}',
-        name: 'api_table_delete',
+        name: 'api_admin_table_delete',
         requirements: ['table_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_DELETE],
     )]
     #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
-    #[OA\Tag('Table')]
+    #[OA\Tag('Admin/Table')]
     public function __invoke(#[MapEntity(id: 'table_id')] Table $table): JsonResponse
     {
         $this->tableRepository->remove($table, true);

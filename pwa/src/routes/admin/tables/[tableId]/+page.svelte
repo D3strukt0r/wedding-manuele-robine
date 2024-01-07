@@ -16,18 +16,18 @@
 
   const table = createQuery<Table, Error>({
     queryKey: ['table', data.tableId],
-    queryFn: () => api.tables.show(data.tableId),
+    queryFn: () => api.admin.tables.show(data.tableId),
   });
 
   let limit = 10;
   const invitees = createQuery<Invitee[], Error>({
     queryKey: ['invitees', limit],
-    queryFn: () => api.invitees.list(limit),
+    queryFn: () => api.admin.invitees.list(limit),
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
   async function deleteTable() {
-    await api.tables.delete(data.tableId);
+    await api.admin.tables.delete(data.tableId);
     await client.invalidateQueries({ queryKey: ['tables'] });
     await goto('../tables');
   }
@@ -41,7 +41,7 @@
     values.seats = +values.seats;
     values.invitees_id = selectedInvitees;
 
-    await api.tables.update(+data.tableId, values);
+    await api.admin.tables.update(+data.tableId, values);
 
     editModalOpen = false;
     await client.invalidateQueries({ queryKey: ['tables'] });

@@ -8,7 +8,7 @@ export const load: PageLoad = async ({ parent, params }) => {
 
   await queryClient.prefetchQuery({
     queryKey: ['card', cardId],
-    queryFn: () => api.cards.show(cardId),
+    queryFn: () => api.admin.cards.show(cardId),
   });
 
   return { cardId };

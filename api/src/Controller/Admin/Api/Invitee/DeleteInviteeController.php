@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Invitee;
+namespace App\Controller\Admin\Api\Invitee;
 
 use App\Entity\Invitee;
 use App\Repository\InviteeRepository;
@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DeleteInviteeController extends AbstractController
 {
@@ -20,14 +20,14 @@ class DeleteInviteeController extends AbstractController
 
     #[Route(
         path: '/invitees/{invitee_id}',
-        name: 'api_invitee_delete',
+        name: 'api_admin_invitee_delete',
         requirements: ['invitee_id' => '\d+'],
         options: ['expose' => true],
         methods: [Request::METHOD_DELETE],
     )]
     #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
-    #[OA\Tag('Invitee')]
+    #[OA\Tag('Admin/Invitee')]
     public function __invoke(#[MapEntity(id: 'invitee_id')] Invitee $invitee): JsonResponse
     {
         $this->inviteeRepository->remove($invitee, true);

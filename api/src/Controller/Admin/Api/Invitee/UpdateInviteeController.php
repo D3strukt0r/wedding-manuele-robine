@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace App\Controller\Api\Invitee;
+namespace App\Controller\Admin\Api\Invitee;
 
-use App\Dto\Invitee\CreateInviteeDto;
+use App\Dto\Invitee\UpdateInviteeDto;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-class CreateInviteeController extends AbstractController
+class UpdateInviteeController extends AbstractController
 {
     public function __construct(
         private readonly InviteeRepository $inviteeRepository,
@@ -27,17 +27,21 @@ class CreateInviteeController extends AbstractController
     ) {}
 
     #[Route(
-        path: '/invitees',
-        name: 'api_invitee_create',
+        path: '/invitees/{invitee_id}',
+        name: 'api_admin_invitee_update',
+        requirements: ['invitee_id' => '\d+'],
         options: ['expose' => true],
-        methods: [Request::METHOD_POST],
+        methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateInviteeDto::class)))]
-    #[OA\Response(response: Response::HTTP_CREATED, description: 'Success case')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateInviteeDto::class)))]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
-    #[OA\Tag('Invitee')]
-    public function __invoke(#[MapRequestPayload] CreateInviteeDto $dto): JsonResponse
-    {
+    #[OA\Tag('Admin/Invitee')]
+    public function __invoke(
+        #[MapEntity(id: 'invitee_id')] Invitee $invitee,
+        #[MapRequestPayload] UpdateInviteeDto $dto
+    ): JsonResponse {
         $table = $dto->tableId ? $this->tableRepository->find($dto->tableId) : null;
         $card = $dto->cardId ? $this->cardRepository->find($dto->cardId) : null;
 
@@ -45,7 +49,7 @@ class CreateInviteeController extends AbstractController
             throw new UnprocessableEntityHttpException(sprintf('Card with ID %s or table with ID %s not found', $dto->cardId, $dto->tableId));
         }
 
-        $invitee = Invitee::create($dto);
+        $invitee->update($dto);
         $invitee->setTable($table);
         $invitee->setCard($card);
 
@@ -61,6 +65,6 @@ class CreateInviteeController extends AbstractController
             'allergies' => $invitee->getAllergies(),
             'table_id' => $invitee->getTable()?->getId(),
             'card_id' => $invitee->getCard()?->getId(),
-        ], Response::HTTP_CREATED);
+        ]);
     }
 }
