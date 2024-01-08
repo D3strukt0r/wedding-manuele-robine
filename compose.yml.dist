@@ -80,6 +80,7 @@ services:
       # Entrypoint scripts to run only locally (install deps, etc.)
       - ./api/.docker/rootfs-local/docker-entrypoint.d/02_composer-install.sh:/docker-entrypoint.d/02_composer-install.sh
       - ./api/.docker/rootfs-local/docker-entrypoint.d/06_test-cache-clear.sh:/docker-entrypoint.d/06_test-cache-clear.sh
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/45_jwt-keys.sh:/docker-entrypoint.d/45_jwt-keys.sh
 
       # Forward XDebug log to console
       - ./api/.docker/rootfs-local/etc/supervisor/conf.d/xdebug-log.conf:/etc/supervisor/conf.d/xdebug-log.conf
@@ -98,6 +99,7 @@ services:
       APP_URL: https://api.weddingmanager.test
       TRUSTED_PROXIES: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       CORS_ALLOW_ORIGIN: ^https?://(weddingmanager\.test|localhost|127\.0\.0\.1)(:[0-9]+)?$
+      JWT_PASSPHRASE: b67fb4e4ee2322b294c1d52804cc5eff2486d37f25465c3811773e322d75f3c2
     depends_on:
       - db
       - mailpit

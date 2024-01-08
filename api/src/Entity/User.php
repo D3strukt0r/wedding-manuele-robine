@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -27,10 +28,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: false)]
     private string $password;
 
-    public function __construct(string $username, string $password)
+    public function __construct(string $username, UserPasswordHasherInterface $passwordHasher, string $password)
     {
         $this->username = $username;
-        $this->password = $password;
+        $this->password = $passwordHasher->hashPassword($this, $password);
     }
 
     public function getId(): ?int
@@ -60,9 +61,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = Role::USER->value;
 
         return array_unique($roles);
+    }
+
+    /**
+     * @param array<Role> $roles
+     */
+    public function setRoles(array $roles): void
+    {
+        $this->roles = array_map(static fn(Role $role) => $role->value, $roles);
     }
 
     /**

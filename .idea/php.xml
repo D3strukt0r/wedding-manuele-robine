@@ -155,6 +155,10 @@
       <path value="$PROJECT_DIR$/api/vendor/nelmio/cors-bundle" />
       <path value="$PROJECT_DIR$/api/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/api/vendor/hidehalo/nanoid-php" />
+      <path value="$PROJECT_DIR$/api/vendor/namshi/jose" />
+      <path value="$PROJECT_DIR$/api/vendor/lcobucci/clock" />
+      <path value="$PROJECT_DIR$/api/vendor/lcobucci/jwt" />
+      <path value="$PROJECT_DIR$/api/vendor/lexik/jwt-authentication-bundle" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

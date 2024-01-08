@@ -4,15 +4,14 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-common_api:
+api_common_login_check:
+    path: /common/api/login_check
+
+api_common:
     resource: ../src/Controller/Common/Api/
     type: attribute
     prefix: common/api
-admin_api:
+api_admin:
     resource: ../src/Controller/Admin/Api/
     type: attribute
     prefix: admin/api
-public_api:
-    resource: ../src/Controller/Public/Api/
-    type: attribute
-    prefix: public/api
