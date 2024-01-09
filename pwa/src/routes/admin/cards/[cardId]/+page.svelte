@@ -2,10 +2,10 @@
   import type { PageData } from './$types';
   import {createQuery, useQueryClient} from '@tanstack/svelte-query';
   import { api } from '$lib/api';
-  import type {Card, Invitee} from '$lib/types';
+  import type {Card, Invitee, User} from '$lib/types';
   import { getLocalization } from '$lib/i18n';
   import { goto } from "$app/navigation";
-  import {Button, Checkbox, Helper, Label, Li, List, Modal, MultiSelect} from 'flowbite-svelte';
+  import {Button, Checkbox, Helper, Label, Li, List, Modal, MultiSelect, Select} from 'flowbite-svelte';
   import { ExclamationCircleOutline } from "flowbite-svelte-icons";
   const {t} = getLocalization();
   const client = useQueryClient();
@@ -26,6 +26,13 @@
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
+  let limit3 = 10;
+  const users = createQuery<User[], Error>({
+    queryKey: ['users', limit3],
+    queryFn: () => api.admin.users.list(limit3),
+  });
+  $: usersItems = $users.data?.map((user) => ({ value: user.id, name: `${user.username} (ID: ${user.id})` })) ?? [];
+
   async function deleteCard() {
     await api.admin.cards.delete(data.cardId);
     await client.invalidateQueries({ queryKey: ['cards'] });
@@ -38,7 +45,7 @@
     const values = Object.fromEntries(formData) as unknown as Omit<Card, 'id'>;
 
     // Normalize values
-    values.renewLoginCode = !!values.renewLoginCode;
+    values.userLoginId = +values.userLoginId;
     values.invitees_id = selectedInvitees;
 
     await api.admin.cards.update(+data.cardId, values);
@@ -63,7 +70,15 @@
 {#if $card.isSuccess}
   <h1>{$card.data.id}</h1>
   <div>
-    <p>{$t('Login Code: ')}{$card.data.loginCode}</p>
+    <p>
+      {$t('Benutzer ID für Login: ')}
+      {#if $card.data.user_login_id}
+        {@const user = $users.data?.find((user) => user.id === $card.data.user_login_id)}
+        <a href={`../users/${user?.id}`}>{user?.username} ({$t('ID: ')}{user?.id})</a>
+      {:else}
+        {$t('Keiner')}
+      {/if}
+    </p>
     <p>{$t('Eingeladene: ')}</p>
     <List tag="ul" class="space-y-1">
       {#each $card.data.invitees_id as invitee_id}
@@ -82,12 +97,12 @@
       <form class="flex flex-col space-y-6" method="POST" action="?/update" on:submit|preventDefault={updateCard}>
         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Karte bearbeiten')}</h3>
         <Label class="space-y-2">
-          <Checkbox name="renewLoginCode" aria-describedby="helper-renew-token">{$t('Login Code Erneuern')}</Checkbox>
-          <Helper id="helper-renew-token" class="ps-6">{$t('Achtung: Wenn die Karten bereits gedruckt wurden, können die Eingeladenen Personen sich nicht mehr mit dem Code einloggen!')}</Helper>
+          <span>{$t('Benutzer für Login')}</span>
+          <Select name="userLoginId" items={usersItems} value={$card.data.user_login_id} placeholder={$t('Option auswählen ...')} />
         </Label>
         <Label class="space-y-2">
           <span>{$t('Eingeladene')}</span>
-          <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required />
+          <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} />
         </Label>
         <Button type="submit" class="w-full1">{$t('Speichern')}</Button>
       </form>

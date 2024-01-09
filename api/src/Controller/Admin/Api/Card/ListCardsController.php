@@ -30,7 +30,7 @@ class ListCardsController extends AbstractController
     {
         return $this->json(array_map(static fn (Card $card) => [
             'id' => $card->getId(),
-            'loginCode' => $card->getLoginCode(),
+            'user_login_id' => $card->getUserLogin()?->getId(),
             'invitees_id' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ], $this->cardRepository->findAll()));
     }

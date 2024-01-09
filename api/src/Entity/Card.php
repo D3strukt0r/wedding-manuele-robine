@@ -16,36 +16,21 @@ class Card
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private string $loginCode;
-
     #[ORM\OneToMany(mappedBy: 'card', targetEntity: Invitee::class)]
     private Collection $invitees;
 
-    public function __construct(string $loginCode)
+    #[ORM\OneToOne(inversedBy: 'card', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $userLogin = null;
+
+    public function __construct()
     {
         $this->invitees = new ArrayCollection();
-
-        $this->loginCode = $loginCode;
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getLoginCode(): string
-    {
-        return $this->loginCode;
-    }
-
-    public function renewLoginCode(): static
-    {
-        $client = new Client();
-
-        $this->loginCode = $client->generateId();
-
-        return $this;
     }
 
     /**
@@ -76,5 +61,15 @@ class Card
         }
 
         return $this;
+    }
+
+    public function getUserLogin(): ?User
+    {
+        return $this->userLogin;
+    }
+
+    public function setUserLogin(?User $userLogin): void
+    {
+        $this->userLogin = $userLogin;
     }
 }

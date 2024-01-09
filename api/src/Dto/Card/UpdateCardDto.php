@@ -12,8 +12,7 @@ readonly class UpdateCardDto
         #[Assert\NotNull]
         public array $invitees_id = [],
 
-        #[Assert\NotNull]
-        #[OA\Property(example: false)]
-        public bool $renewLoginCode = false,
+        #[OA\Property(example: 1)]
+        public ?int $userLoginId,
     ) {}
 }

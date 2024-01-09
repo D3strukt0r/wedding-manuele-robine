@@ -7,6 +7,7 @@ use App\Entity\Card;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
+use App\Repository\UserRepository;
 use Hidehalo\Nanoid\Client;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
@@ -22,6 +23,7 @@ class CreateCardController extends AbstractController
     public function __construct(
         private readonly CardRepository $cardRepository,
         private readonly InviteeRepository $inviteeRepository,
+        private readonly UserRepository $userRepository,
     ) {}
 
     #[Route(
@@ -36,19 +38,17 @@ class CreateCardController extends AbstractController
     #[OA\Tag('Admin/Card')]
     public function __invoke(#[MapRequestPayload] CreateCardDto $dto): JsonResponse
     {
-        $client = new Client();
-
-        $uid = $client->generateId();
-
-        $card = new Card($uid);
+        $card = new Card();
         foreach ($dto->invitees_id as $invitee) {
             $card->addInvitee($this->inviteeRepository->find($invitee));
         }
+        $user = $this->userRepository->find($dto->userLoginId);
+        $card->setUserLogin($user);
         $this->cardRepository->save($card, true);
 
         return $this->json([
             'id' => $card->getId(),
-            'loginCode' => $card->getLoginCode(),
+            'user_login_id' => $card->getUserLogin()?->getId(),
             'invitees_id' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ], Response::HTTP_CREATED);
     }

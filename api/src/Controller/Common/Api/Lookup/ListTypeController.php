@@ -3,6 +3,7 @@
 namespace App\Controller\Common\Api\Lookup;
 
 use App\Entity\Food;
+use App\Entity\Role;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,6 +27,7 @@ class ListTypeController extends AbstractController
     {
         $matchedType = match($type) {
             'food' => Food::class,
+            'role' => Role::class,
             default => null,
         };
 

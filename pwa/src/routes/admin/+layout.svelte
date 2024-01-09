@@ -19,6 +19,16 @@
   auth.subscribe((value) => {
     axios.defaults.headers.common['Authorization'] = `Bearer ${value.jwt}`;
   });
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response.status === 401) {
+        auth.set({jwt: null});
+      }
+
+      return Promise.reject(error);
+    },
+  );
 
   async function login(event: SubmitEvent) {
     const formData = new FormData(event.target as HTMLFormElement);
@@ -42,6 +52,7 @@
         <NavLi href="/admin/invitees">{$t('site.invitees')}</NavLi>
         <NavLi href="/admin/cards">{$t('site.cards')}</NavLi>
         <NavLi href="/admin/tables">{$t('site.tables')}</NavLi>
+        <NavLi href="/admin/users">{$t('site.users')}</NavLi>
       </NavUl>
     </Navbar>
     <slot />

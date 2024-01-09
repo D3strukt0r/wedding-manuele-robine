@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Dto\User\UpdateUserDto;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -27,6 +28,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(nullable: false)]
     private string $password;
+
+    #[ORM\OneToOne(mappedBy: 'userLogin', cascade: ['persist', 'remove'])]
+    private ?Card $card = null;
 
     public function __construct(string $username, UserPasswordHasherInterface $passwordHasher, string $password)
     {
@@ -89,5 +93,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function update(UpdateUserDto $dto, ?UserPasswordHasherInterface $passwordHasher = null): void
+    {
+        $this->username = $dto->username;
+        if ($passwordHasher && $dto->newPassword) {
+            $this->password = $passwordHasher->hashPassword($this, $dto->newPassword);
+        }
+        $this->setRoles($dto->roles);
+    }
+
+    public function getCard(): ?Card
+    {
+        return $this->card;
+    }
+
+    public function setCard(Card $card): static
+    {
+        // set the owning side of the relation if necessary
+        if ($card->getUserLogin() !== $this) {
+            $card->setUserLogin($this);
+        }
+
+        $this->card = $card;
+
+        return $this;
     }
 }

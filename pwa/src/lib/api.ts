@@ -1,4 +1,4 @@
-import type {Card, Invitee, Table} from './types'
+import type {Card, Invitee, Table, User} from './types'
 import axios from 'axios';
 
 export const api = {
@@ -21,18 +21,19 @@ export const api = {
         // return data.filter((x) => x.id <= limit);
         return data;
       },
-      create: async (invitee: Omit<Invitee, 'id'>): Promise<void> => {
-        const { data } = await axios.post(`/admin/api/invitees`, invitee);
+      create: async (invitee: Omit<Invitee, 'id'>) => {
+        const { data } = await axios.post<Invitee>(`/admin/api/invitees`, invitee);
         return data;
       },
-      show: async (id: number): Promise<Invitee> => {
+      show: async (id: number) => {
         const { data } = await axios.get<Invitee>(`/admin/api/invitees/${id}`);
         return data;
       },
-      update: async (id: number, invitee: Omit<Invitee, 'id'>): Promise<void> => {
-        await axios.put(`/admin/api/invitees/${id}`, invitee);
+      update: async (id: number, invitee: Omit<Invitee, 'id'>) => {
+        const { data } = await axios.put<Invitee>(`/admin/api/invitees/${id}`, invitee);
+        return data;
       },
-      delete: async (id: number): Promise<void> => {
+      delete: async (id: number) => {
         await axios.delete(`/admin/api/invitees/${id}`);
       },
     },
@@ -42,18 +43,19 @@ export const api = {
         // return data.filter((x) => x.id <= limit);
         return data;
       },
-      create: async (card: Omit<Card, 'id'>): Promise<void> => {
-        const { data } = await axios.post(`/admin/api/cards`, card);
+      create: async (card: Omit<Card, 'id'>) => {
+        const { data } = await axios.post<Card>(`/admin/api/cards`, card);
         return data;
       },
-      show: async (id: number): Promise<Card> => {
+      show: async (id: number) => {
         const { data } = await axios.get<Card>(`/admin/api/cards/${id}`);
         return data;
       },
-      update: async (id: number, card: Omit<Card, 'id'>): Promise<void> => {
-        await axios.put(`/admin/api/cards/${id}`, card);
+      update: async (id: number, card: Omit<Card, 'id'>) => {
+        const { data } = await axios.put<Card>(`/admin/api/cards/${id}`, card);
+        return data;
       },
-      delete: async (id: number): Promise<void> => {
+      delete: async (id: number) => {
         await axios.delete(`/admin/api/cards/${id}`);
       },
     },
@@ -63,19 +65,42 @@ export const api = {
         // return data.filter((x) => x.id <= limit);
         return data;
       },
-      create: async (table: Omit<Table, 'id'>): Promise<void> => {
-        const { data } = await axios.post(`/admin/api/tables`, table);
+      create: async (table: Omit<Table, 'id'>) => {
+        const { data } = await axios.post<Table>(`/admin/api/tables`, table);
         return data;
       },
-      show: async (id: number): Promise<Table> => {
+      show: async (id: number) => {
         const { data } = await axios.get<Table>(`/admin/api/tables/${id}`);
         return data;
       },
-      update: async (id: number, table: Omit<Table, 'id'>): Promise<void> => {
-        await axios.put(`/admin/api/tables/${id}`, table);
+      update: async (id: number, table: Omit<Table, 'id'>) => {
+        const { data } = await axios.put<Table>(`/admin/api/tables/${id}`, table);
+        return data;
       },
-      delete: async (id: number): Promise<void> => {
+      delete: async (id: number) => {
         await axios.delete(`/admin/api/tables/${id}`);
+      },
+    },
+    users: {
+      list: async (limit: number) => {
+        const { data } = await axios.get<User[]>('/admin/api/users');
+        // return data.filter((x) => x.id <= limit);
+        return data;
+      },
+      create: async (table: Omit<User, 'id'>) => {
+        const { data } = await axios.post<User>(`/admin/api/users`, table);
+        return data;
+      },
+      show: async (id: number) => {
+        const { data } = await axios.get<User>(`/admin/api/users/${id}`);
+        return data;
+      },
+      update: async (id: number, table: Omit<User, 'id'>) => {
+        const { data } = await axios.put<User>(`/admin/api/users/${id}`, table);
+        return data;
+      },
+      delete: async (id: number) => {
+        await axios.delete(`/admin/api/users/${id}`);
       },
     },
   },

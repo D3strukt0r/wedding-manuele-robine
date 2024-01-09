@@ -7,6 +7,7 @@ use App\Entity\Card;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
+use App\Repository\UserRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -23,6 +24,7 @@ class UpdateCardController extends AbstractController
     public function __construct(
         private readonly CardRepository $cardRepository,
         private readonly InviteeRepository $inviteeRepository,
+        private readonly UserRepository $userRepository,
     ) {}
 
     #[Route(
@@ -41,9 +43,8 @@ class UpdateCardController extends AbstractController
         #[MapEntity(id: 'card_id')] Card $card,
         #[MapRequestPayload] UpdateCardDto $dto
     ): JsonResponse {
-        if ($dto->renewLoginCode) {
-            $card->renewLoginCode();
-        }
+        $user = $this->userRepository->find($dto->userLoginId);
+        $card->setUserLogin($user);
 
         $inviteesIs = $card->getInvitees();
         $inviteesToBe = [];
@@ -71,7 +72,7 @@ class UpdateCardController extends AbstractController
 
         return $this->json([
             'id' => $card->getId(),
-            'loginCode' => $card->getLoginCode(),
+            'user_login_id' => $card->getUserLogin()?->getId(),
             'invitees_id' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
         ]);
     }

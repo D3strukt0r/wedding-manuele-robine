@@ -2,7 +2,7 @@
   import {
     Button,
     Label,
-    Modal, MultiSelect,
+    Modal, MultiSelect, Select,
     Table,
     TableBody,
     TableBodyCell,
@@ -14,7 +14,7 @@
   import { useQueryClient, createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import { getLocalization } from '$lib/i18n';
-  import type {Card, Invitee} from '$lib/types';
+  import type {Card, Invitee, User} from '$lib/types';
   const {t} = getLocalization();
   const client = useQueryClient();
 
@@ -33,6 +33,13 @@
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
+  let limit3 = 10;
+  const users = createQuery<User[], Error>({
+    queryKey: ['users', limit3],
+    queryFn: () => api.admin.users.list(limit3),
+  });
+  $: usersItems = $users.data?.map((user) => ({ value: user.id, name: `${user.username} (ID: ${user.id})` })) ?? [];
+
   function gotoDetailPage(id: number): void {
       goto(`./cards/${id}`);
   }
@@ -43,6 +50,7 @@
     const values = Object.fromEntries(formData) as unknown as Omit<Card, 'id'>;
 
     // Normalize values
+    values.userLoginId = +values.userLoginId;
     values.invitees_id = selectedInvitees;
 
     await api.admin.cards.create(values);
@@ -57,6 +65,10 @@
   <Modal bind:open={createModalOpen} size="sm" autoclose={false} class="w-full">
     <form class="flex flex-col space-y-6" method="POST" action="?/create" on:submit|preventDefault={createCard}>
       <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Karte erstellen')}</h3>
+      <Label class="space-y-2">
+        <span>{$t('Benutzer für Login')}</span>
+        <Select name="userLoginId" items={usersItems} placeholder={$t('Option auswählen ...')} />
+      </Label>
       <Label class="space-y-2">
         <span>{$t('Eingeladene')}</span>
         <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required />
@@ -74,7 +86,7 @@
   <Table hoverable={true}>
     <TableHead>
       <TableHeadCell>{$t('ID')}</TableHeadCell>
-      <TableHeadCell>{$t('Login Code')}</TableHeadCell>
+      <TableHeadCell>{$t('User Login ID')}</TableHeadCell>
       <TableHeadCell>
         <span class="sr-only">{$t('Aktionen')}</span>
       </TableHeadCell>
@@ -83,7 +95,7 @@
       {#each $cards.data ?? [] as card, i (card.id)}
         <TableBodyRow on:click={() => gotoDetailPage(card.id)}>
           <TableBodyCell>{card.id}</TableBodyCell>
-          <TableBodyCell>{card.loginCode}</TableBodyCell>
+          <TableBodyCell>{card.user_login_id}</TableBodyCell>
           <TableBodyCell>
             <Button
               on:click={() => gotoDetailPage(card.id)}

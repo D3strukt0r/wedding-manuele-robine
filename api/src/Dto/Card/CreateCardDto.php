@@ -3,6 +3,7 @@
 namespace App\Dto\Card;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use OpenApi\Attributes as OA;
 
 readonly class CreateCardDto
 {
@@ -10,5 +11,8 @@ readonly class CreateCardDto
         /** @var array<int> */
         #[Assert\NotNull]
         public array $invitees_id = [],
+
+        #[OA\Property(example: 1)]
+        public ?int $userLoginId,
     ) {}
 }
