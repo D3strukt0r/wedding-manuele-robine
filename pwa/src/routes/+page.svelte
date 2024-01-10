@@ -106,12 +106,13 @@
             }
           },
           {
-            returnDetailedScanResult: true,
-            highlightScanRegion: true,
+            preferredCamera: 'environment',
             maxScansPerSecond: 2,
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+            returnDetailedScanResult: true,
           },
         );
-        await qrScanner.setCamera('environment');
 
         qrScannerEnabled = true;
         await qrScanner.start();

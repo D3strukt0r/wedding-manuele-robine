@@ -14,16 +14,15 @@
   import { useQueryClient, createQuery } from '@tanstack/svelte-query';
   import { api } from '$lib/api';
   import { getLocalization } from '$lib/i18n';
-  import type {Card, Invitee, User} from '$lib/types';
+  import type {Card, User} from '$lib/types';
   const {t} = getLocalization();
   const client = useQueryClient();
 
   let createModalOpen = false;
 
-  let limit = 10;
   const users = createQuery<User[], Error>({
-    queryKey: ['users', limit],
-    queryFn: () => api.admin.users.list(limit),
+    queryKey: ['users'],
+    queryFn: () => api.admin.users.list(),
   });
 
   const roles = createQuery<Card[], Error>({

@@ -16,9 +16,8 @@ export const api = {
   },
   admin: {
     invitees: {
-      list: async (limit: number) => {
+      list: async () => {
         const { data } = await axios.get<Invitee[]>('/admin/api/invitees');
-        // return data.filter((x) => x.id <= limit);
         return data;
       },
       create: async (invitee: Omit<Invitee, 'id'>) => {
@@ -38,9 +37,8 @@ export const api = {
       },
     },
     cards: {
-      list: async (limit: number) => {
+      list: async () => {
         const { data } = await axios.get<Card[]>('/admin/api/cards');
-        // return data.filter((x) => x.id <= limit);
         return data;
       },
       create: async (card: Omit<Card, 'id'>) => {
@@ -60,9 +58,8 @@ export const api = {
       },
     },
     tables: {
-      list: async (limit: number) => {
+      list: async () => {
         const { data } = await axios.get<Table[]>('/admin/api/tables');
-        // return data.filter((x) => x.id <= limit);
         return data;
       },
       create: async (table: Omit<Table, 'id'>) => {
@@ -82,9 +79,8 @@ export const api = {
       },
     },
     users: {
-      list: async (limit: number) => {
+      list: async () => {
         const { data } = await axios.get<User[]>('/admin/api/users');
-        // return data.filter((x) => x.id <= limit);
         return data;
       },
       create: async (table: Omit<User, 'id'>) => {

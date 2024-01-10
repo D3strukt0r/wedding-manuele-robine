@@ -19,17 +19,15 @@
     queryFn: () => api.admin.invitees.show(data.inviteeId),
   });
 
-  let limit2 = 10;
   const tables = createQuery<Table[], Error>({
-    queryKey: ['tables', limit2],
-    queryFn: () => api.admin.tables.list(limit2),
+    queryKey: ['tables'],
+    queryFn: () => api.admin.tables.list(),
   });
   $: tableItems = $tables.data?.map((table) => ({ value: table.id, name: `X (ID: ${table.id})` })) ?? [];
 
-  let limit3 = 10;
   const cards = createQuery<Card[], Error>({
-    queryKey: ['cards', limit3],
-    queryFn: () => api.admin.cards.list(limit3),
+    queryKey: ['cards'],
+    queryFn: () => api.admin.cards.list(),
   });
   $: cardItems = $cards.data?.map((card) => ({ value: card.id, name: `X (ID: ${card.id})` })) ?? [];
 

@@ -22,16 +22,14 @@
 
   let createModalOpen = false;
 
-  let limit = 10;
   const tables = createQuery<TableType[], Error>({
-    queryKey: ['tables', limit],
-    queryFn: () => api.admin.tables.list(limit),
+    queryKey: ['tables'],
+    queryFn: () => api.admin.tables.list(),
   });
 
-  let limit2 = 10;
   const invitees = createQuery<Invitee[], Error>({
-    queryKey: ['invitees', limit2],
-    queryFn: () => api.admin.invitees.list(limit2),
+    queryKey: ['invitees'],
+    queryFn: () => api.admin.invitees.list(),
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 

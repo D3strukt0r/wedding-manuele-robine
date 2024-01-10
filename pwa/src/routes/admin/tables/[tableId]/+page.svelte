@@ -19,10 +19,9 @@
     queryFn: () => api.admin.tables.show(data.tableId),
   });
 
-  let limit = 10;
   const invitees = createQuery<Invitee[], Error>({
-    queryKey: ['invitees', limit],
-    queryFn: () => api.admin.invitees.list(limit),
+    queryKey: ['invitees'],
+    queryFn: () => api.admin.invitees.list(),
   });
   $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
