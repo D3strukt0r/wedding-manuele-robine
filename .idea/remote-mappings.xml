@@ -3,17 +3,17 @@
   <component name="RemoteMappingsManager">
     <list>
       <list>
-        <remote-mappings server-id="php@ff7eb03a-9854-4726-b07c-e66e6539ed1e">
-          <settings>
-            <list>
-              <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/html" />
-            </list>
-          </settings>
-        </remote-mappings>
         <remote-mappings server-id="php@c97d3750-4fcf-40fb-aa18-7493e210a817">
           <settings>
             <list>
               <mapping local-root="$PROJECT_DIR$" remote-root="/app" />
+            </list>
+          </settings>
+        </remote-mappings>
+        <remote-mappings server-id="php@ff7eb03a-9854-4726-b07c-e66e6539ed1e">
+          <settings>
+            <list>
+              <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/html" />
             </list>
           </settings>
         </remote-mappings>
