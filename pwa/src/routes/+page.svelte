@@ -21,6 +21,71 @@
     return url.protocol === "http:" || url.protocol === "https:";
   }
 
+  async function enableQrClickHandler() {
+    qrEnableElem.classList.add('disabled');
+
+    if (await QrScanner.hasCamera()) {
+      let removeScannedClassDeBouncer;
+      let qrScanner = new QrScanner(
+        qrReaderSourceElem,
+        async (result) => {
+          if (scanInProgress) {
+            return;
+          }
+          scanInProgress = true;
+
+          // Reset before clearing timeouts (stuck in animation otherwise)
+          showScannedInfoSuccess = false;
+          showScannedInfoError = false;
+
+          if (!isValidHttpUrl(result.data)) {
+            showScannedInfoError = true;
+            // Update de-bouncer for reducing updates
+            clearTimeout(removeScannedClassDeBouncer);
+            removeScannedClassDeBouncer = setTimeout(() => {
+              showScannedInfoError = false;
+            }, 1000); // Timeout amount is the de-bouncer
+            scanInProgress = false;
+            return;
+          }
+
+          const url = new URL(result.data);
+          const username = url.searchParams.get('username');
+          const password = url.searchParams.get('password');
+
+          showScannedInfoSuccess = true;
+          // Update de-bouncer for reducing updates
+          clearTimeout(removeScannedClassDeBouncer);
+          removeScannedClassDeBouncer = setTimeout(() => {
+            showScannedInfoSuccess = false;
+          }, 1000); // Timeout amount is the de-bouncer
+
+          try {
+            const response = await api.common.login({ username, password });
+            auth.set({jwt: response.token});
+            qrScanner.destroy();
+            qrScanner = null;
+            qrEnableElem.removeEventListener('click', enableQrClickHandler);
+          } finally {
+            scanInProgress = false;
+          }
+        },
+        {
+          preferredCamera: 'environment',
+          maxScansPerSecond: 2,
+          highlightScanRegion: true,
+          highlightCodeOutline: true,
+          returnDetailedScanResult: true,
+        },
+      );
+
+      qrScannerEnabled = true;
+      await qrScanner.start();
+    } else {
+      cameraUnavailable = true;
+    }
+  }
+
   let qrEnableElem: HTMLDivElement;
   let qrReaderSourceElem: HTMLVideoElement;
   let showScannedInfoSuccess: boolean = false;
@@ -38,6 +103,7 @@
     (error) => {
       if (error.response.status === 401) {
         auth.set({jwt: null});
+        qrEnableElem.addEventListener('click', enableQrClickHandler);
       }
 
       return Promise.reject(error);
@@ -58,69 +124,6 @@
       }
     }
 
-    async function enableQrClickHandler() {
-      qrEnableElem.classList.add('disabled');
-
-      if (await QrScanner.hasCamera()) {
-        let removeScannedClassDeBouncer;
-        const qrScanner = new QrScanner(
-          qrReaderSourceElem,
-          async (result) => {
-            if (scanInProgress) {
-              return;
-            }
-            scanInProgress = true;
-
-            // Reset before clearing timeouts (stuck in animation otherwise)
-            showScannedInfoSuccess = false;
-            showScannedInfoError = false;
-
-            if (!isValidHttpUrl(result.data)) {
-              showScannedInfoError = true;
-              // Update de-bouncer for reducing updates
-              clearTimeout(removeScannedClassDeBouncer);
-              removeScannedClassDeBouncer = setTimeout(() => {
-                showScannedInfoError = false;
-              }, 1000); // Timeout amount is the de-bouncer
-              scanInProgress = false;
-              return;
-            }
-
-            const url = new URL(result.data);
-            const username = url.searchParams.get('username');
-            const password = url.searchParams.get('password');
-
-            showScannedInfoSuccess = true;
-            // Update de-bouncer for reducing updates
-            clearTimeout(removeScannedClassDeBouncer);
-            removeScannedClassDeBouncer = setTimeout(() => {
-              showScannedInfoSuccess = false;
-            }, 1000); // Timeout amount is the de-bouncer
-
-            try {
-              const response = await api.common.login({ username, password });
-              auth.set({jwt: response.token});
-              qrEnableElem.removeEventListener('click', enableQrClickHandler);
-            } finally {
-              scanInProgress = false;
-            }
-          },
-          {
-            preferredCamera: 'environment',
-            maxScansPerSecond: 2,
-            highlightScanRegion: true,
-            highlightCodeOutline: true,
-            returnDetailedScanResult: true,
-          },
-        );
-
-        qrScannerEnabled = true;
-        await qrScanner.start();
-      } else {
-        cameraUnavailable = true;
-      }
-    }
-
     if (qrEnableElem) {
       qrEnableElem.addEventListener('click', enableQrClickHandler);
     }
@@ -128,11 +131,6 @@
     return () => {
       if (qrEnableElem) {
         qrEnableElem.removeEventListener('click', enableQrClickHandler);
-      }
-
-      if (qrScanner) {
-        qrScanner.destroy();
-        qrScanner = null;
       }
     }
   });
