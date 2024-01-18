@@ -148,7 +148,7 @@ Vagrant.configure('2') do |config|
     # Add custom PS1
     config.vm.provision 'custom-ps1', type: 'shell', privileged: false, inline: <<-SCRIPT
         set -e -u -x -o pipefail
-        echo 'export PS1='\''📦 ${debian_chroot:+($debian_chroot)}\\[\\e[38;5;46m\\]\\u@\\h\\[\\e[0m\\]:\\[\\e[38;5;33m\\]\\w\\[\\e[0m\\]\\\\$ '\' >> ~/.bashrc
+        echo 'export PS1='\\''📦 ${debian_chroot:+($debian_chroot)}\\[\\e[38;5;46m\\]\\u@\\h\\[\\e[0m\\]:\\[\\e[38;5;33m\\]\\w\\[\\e[0m\\]\\\\$ '\\' >> ~/.bashrc
     SCRIPT
 
     config.vm.provision 'enable-ssh-password-auth', type: 'shell', privileged: false, inline: <<-SCRIPT
