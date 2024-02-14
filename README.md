@@ -1,11 +1,11 @@
-# Wedding Manager
+# Wedding for Manuele & Robine
 
 The wedding page and manager for my own wedding. Might make it more customizable in the future.
 
-[![License -> GitHub](https://img.shields.io/github/license/D3strukt0r/wedding-manager?label=License)](LICENSE.txt)
+[![License -> GitHub](https://img.shields.io/github/license/D3strukt0r/wedding-manuele-robine?label=License)](LICENSE.txt)
 [![Static Badge](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa)](CODE_OF_CONDUCT.md)
 
-[![Version -> GitHub release (with filter)](https://img.shields.io/github/v/release/D3strukt0r/wedding-manager?label=GitHub%20Release)][gh-releases]
+[![Version -> GitHub release (with filter)](https://img.shields.io/github/v/release/D3strukt0r/wedding-manuele-robine?label=GitHub%20Release)][gh-releases]
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ What things you need to install the software and how to install them
 Clone the project
 
 ```shell
-git clone git@github.com:D3strukt0r/wedding-manager.git
+git clone git@github.com:D3strukt0r/wedding-manuele-robine.git
 cd emoji-helper
 ```
 
@@ -76,6 +76,6 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 
 A list of used libraries and code with their licenses can be seen in the [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) file.
 
-[gh-releases]: https://github.com/D3strukt0r/wedding-manager/releases
-[gh-tags]: https://github.com/D3strukt0r/wedding-manager/tags
-[gh-contributors]: https://github.com/D3strukt0r/wedding-manager/graphs/contributors
+[gh-releases]: https://github.com/D3strukt0r/wedding-manuele-robine/releases
+[gh-tags]: https://github.com/D3strukt0r/wedding-manuele-robine/tags
+[gh-contributors]: https://github.com/D3strukt0r/wedding-manuele-robine/graphs/contributors

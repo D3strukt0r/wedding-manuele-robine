@@ -22,8 +22,8 @@ const config = {
         'connect-src': [
           'self',
           // TODO: Figure out how to dynamically use env vars here at runtime
-          'https://api.weddingmanager.test',
-          'https://api-wedding-manager.d3strukt0r.dev',
+          'https://api.wedding-manuele-robine.test',
+          'https://api-wedding-manuele-robine.d3strukt0r.dev',
           'https://api.manuele-robine.wedding',
         ],
         'img-src': [

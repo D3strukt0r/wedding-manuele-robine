@@ -62,7 +62,7 @@ for e in "${manualEnvs[@]}"; do
     missing_manual_settings=1
     case $e in
       API_URL)
-        : "${!e:=https://api.weddingmanager.test}"
+        : "${!e:=https://api.wedding-manuele-robine.test}"
         entrypoint_error "$e=${!e}"
         ;;
       PUBLIC_API_URL)

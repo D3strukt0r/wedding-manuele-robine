@@ -255,19 +255,19 @@ Vagrant.configure('2') do |config|
     config.vm.provision 'copy-necessary-dist-files', type: 'shell', privileged: false, run: 'always', inline: <<-SCRIPT
         set -e -u -x -o pipefail
         if [ ! -f /vagrant/compose.yml ]; then
-            cp /vagrant/compose.yml.dist /vagrant/compose.yml
+            cp /vagrant/compose.vm.yml.dist /vagrant/compose.yml
         fi
     SCRIPT
 
     # Run mkcert on host if cert files don't exist yet or incomplete
     if not File.exist?('./.docker/certs/cert.pem') || File.exist?('./.docker/certs/key.pem')
-        system('mkcert -cert-file ./.docker/certs/cert.pem -key-file ./.docker/certs/key.pem localhost weddingmanager.test api.weddingmanager.test traefik.weddingmanager.test phpmyadmin.weddingmanager.test mailpit.weddingmanager.test')
+        system('mkcert -cert-file ./.docker/certs/cert.pem -key-file ./.docker/certs/key.pem localhost wedding-manuele-robine.test "*.wedding-manuele-robine.test"')
     end
 
     config.vm.provision 'check-certificates', type: 'shell', privileged: false, run: 'always', inline: <<-SCRIPT
         set -e -u -x -o pipefail
         if [ ! -f /vagrant/.docker/certs/cert.pem ] || [ ! -f /vagrant/.docker/certs/cert.pem ]; then
-            echo "Certificate files are missing. Please run 'mkcert -cert-file ./.docker/certs/cert.pem -key-file ./.docker/certs/key.pem localhost weddingmanager.test api.weddingmanager.test traefik.weddingmanager.test phpmyadmin.weddingmanager.test mailpit.weddingmanager.test' on the host machine."
+            echo "Certificate files are missing. Please run 'mkcert -cert-file ./.docker/certs/cert.pem -key-file ./.docker/certs/key.pem localhost wedding-manuele-robine.test "*.wedding-manuele-robine.test"' on the host machine."
         fi
     SCRIPT
 
