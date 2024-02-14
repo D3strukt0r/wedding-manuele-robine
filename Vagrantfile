@@ -79,14 +79,14 @@ Vagrant.configure('2') do |config|
     # --------------------------------------------------------------------------
     # Configure the synced folders
     # --------------------------------------------------------------------------
-    # Function to check if Composer is installed on the host machine
+    # TODO: Function to check if Composer is installed on the host machine
     #def composer_installed?
     #    system("composer --version > /dev/null 2>&1")
     #end
     # Get the path of the Composer cache if Composer is installed
     #composer_cache_path = composer_installed? ? `composer config cache-dir --global`.strip : nil
 
-    # Function to check if Yarn is installed on the host machine
+    # TODO: Function to check if Yarn is installed on the host machine
     #def yarn_installed?
     #  system("yarn --version > /dev/null 2>&1")
     #end
@@ -104,7 +104,7 @@ Vagrant.configure('2') do |config|
             nfs_udp: false, # UDP not allowed in NFSv4
             mount_options: ['rw', 'tcp', 'nolock', 'async']
 
-        # Set up synced folder using NFS if Composer/Yarn cache path is available
+        # TODO: Set up synced folder using NFS if Composer/Yarn cache path is available
         #if composer_cache_path
         #    config.vm.synced_folder composer_cache_path, "/home/vagrant/data/composer",
         #        type: 'nfs',
@@ -287,32 +287,13 @@ Vagrant.configure('2') do |config|
 
         sudo apt-get update -qq
 
-        sudo apt-get -qq install \
-            locales >/dev/null
-        sudo sed -i -e '/de_CH.UTF-8 UTF-8/s/^# //' /etc/locale.gen
-        sudo sed -i -e '/de_CH ISO-8859-1/s/^# //' /etc/locale.gen
-        sudo sed -i -e '/de_DE.UTF-8 UTF-8/s/^# //' /etc/locale.gen
-        sudo sed -i -e '/de_DE ISO-8859-1/s/^# //' /etc/locale.gen
-        sudo locale-gen >/dev/null
-        export LANGUAGE=de_CH.UTF-8
-        export LANG=de_CH.UTF-8
-        echo 'export LANGUAGE=de_CH.UTF-8' >> ~/.bashrc
-        echo 'export LANG=de_CH.UTF-8' >> ~/.bashrc
-
-        sudo apt-get dist-upgrade -qq >/dev/null
-    SCRIPT
-
-    # Use default timezone Europe/Zurich
-    config.vm.provision 'set-timezone', type: 'shell', privileged: false, inline: <<-SCRIPT
-        set -e -u -x -o pipefail
-        sudo ln --symbolic --force /usr/share/zoneinfo/Europe/Zurich /etc/localtime
+        # TODO: dist-upgrade locks the machine during bios update
+        #sudo apt-get dist-upgrade -qq >/dev/null
     SCRIPT
 
     # Fixes "fatal: detected dubious ownership in repository at '/vagrant'"
     config.vm.provision 'fix-git-error-ownership', type: 'shell', privileged: false, inline: <<-SCRIPT
         set -e -u -x -o pipefail
-        export LANGUAGE=de_CH.UTF-8
-        export LANG=de_CH.UTF-8
         sudo apt-get -qq install \
             git >/dev/null
         git config --global --add safe.directory /vagrant
@@ -320,8 +301,6 @@ Vagrant.configure('2') do |config|
 
     config.vm.provision 'install-docker-and-compose', type: 'shell', privileged: false, reset: true, inline: <<-SCRIPT
         set -e -u -x -o pipefail
-        export LANGUAGE=de_CH.UTF-8
-        export LANG=de_CH.UTF-8
         # Setup repository
         sudo apt-get update -qq
         sudo apt-get -qq install \
@@ -385,7 +364,9 @@ Vagrant.configure('2') do |config|
             cd /vagrant
             eval "$(ssh-agent -s)"
             ssh-add -l > /dev/null || ssh-add
-            docker compose up --build --detach
+            docker compose pull
+            docker compose build
+            docker compose up --detach
         SCRIPT
         }
     end

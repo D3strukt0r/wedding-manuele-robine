@@ -19,17 +19,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update -qq \
     && apt-get dist-upgrade -qq >/dev/null \
     \
-    # Install locales first
     # apt-utils to fix "debconf: delaying package configuration, since apt-utils is not installed" but also needs "DEBIAN_FRONTEND=noninteractive"
     && apt-get -qq install \
-        apt-utils \
-        locales >/dev/null \
-    # Create locale files (uncomments the langauges we want to generate)
-    && sed -i -e '/de_CH.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
-    && sed -i -e '/de_CH ISO-8859-1/s/^# //' /etc/locale.gen \
-    && sed -i -e '/de_DE.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
-    && sed -i -e '/de_DE ISO-8859-1/s/^# //' /etc/locale.gen \
-    && locale-gen \
+        apt-utils >/dev/null \
     \
     # Install additional packages
     && apt-get -qq install \
@@ -62,11 +54,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         nodejs >/dev/null
 
 RUN \
-    # Set time zone
-    ln --symbolic --force /usr/share/zoneinfo/Europe/Zurich /etc/localtime \
-    \
     # Use Node.js corepack to enable pnpm
-    && corepack enable \
+    corepack enable \
     \
     # Smoke tests
     && node --version \
