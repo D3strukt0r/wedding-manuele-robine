@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin\Api\Invitee;
 
-use App\Dto\Invitee\CreateInviteeDto;
+use App\Dto\Invitee\InviteeCreateDto;
+use App\Dto\Invitee\InviteeShowDto;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -31,11 +33,13 @@ class CreateInviteeController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateInviteeDto::class)))]
-    #[OA\Response(response: Response::HTTP_CREATED, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: InviteeCreateDto::class)))]
+    #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns an invitee', content: new OA\JsonContent(ref: new Model(type: InviteeShowDto::class)))]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Invitee')]
-    public function __invoke(#[MapRequestPayload] CreateInviteeDto $dto): JsonResponse
+    public function __invoke(#[MapRequestPayload] InviteeCreateDto $dto): JsonResponse
     {
         $table = $dto->tableId ? $this->tableRepository->find($dto->tableId) : null;
         $card = $dto->cardId ? $this->cardRepository->find($dto->cardId) : null;
@@ -50,16 +54,6 @@ class CreateInviteeController extends AbstractController
 
         $this->inviteeRepository->save($invitee, true);
 
-        return $this->json([
-            'id' => $invitee->getId(),
-            'firstname' => $invitee->getFirstname(),
-            'lastname' => $invitee->getLastname(),
-            'email' => $invitee->getEmail(),
-            'will_come' => $invitee->willCome(),
-            'food' => $invitee->getFood(),
-            'allergies' => $invitee->getAllergies(),
-            'table_id' => $invitee->getTable()?->getId(),
-            'card_id' => $invitee->getCard()?->getId(),
-        ], Response::HTTP_CREATED);
+        return $this->json(new InviteeShowDto($invitee), Response::HTTP_CREATED);
     }
 }

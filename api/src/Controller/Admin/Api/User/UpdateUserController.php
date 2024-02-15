@@ -2,10 +2,12 @@
 
 namespace App\Controller\Admin\Api\User;
 
-use App\Dto\User\UpdateUserDto;
+use App\Dto\User\UserShowDto;
+use App\Dto\User\UserUpdateDto;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -31,14 +33,16 @@ class UpdateUserController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateUserDto::class)))]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UserUpdateDto::class)))]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Return a user', content: new OA\JsonContent(ref: new Model(type: UserShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/User')]
     public function __invoke(
         #[MapEntity(id: 'user_id')] User $user,
-        #[MapRequestPayload] UpdateUserDto $dto
+        #[MapRequestPayload] UserUpdateDto $dto
     ): JsonResponse {
         if (
             $user->getUsername() !== $dto->username
@@ -51,11 +55,6 @@ class UpdateUserController extends AbstractController
 
         $this->userRepository->save($user, true);
 
-        return $this->json([
-            'id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'plainPassword' => $dto->newPassword,
-            'roles' => $user->getRoles(),
-        ]);
+        return $this->json(new UserShowDto($user, $dto->newPassword));
     }
 }

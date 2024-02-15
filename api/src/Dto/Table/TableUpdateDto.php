@@ -3,8 +3,9 @@
 namespace App\Dto\Table;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use OpenApi\Attributes as OA;
 
-readonly class CreateTableDto
+readonly class TableUpdateDto
 {
     public function __construct(
         #[Assert\NotNull]
@@ -12,6 +13,6 @@ readonly class CreateTableDto
 
         /** @var array<int> */
         #[Assert\NotNull]
-        public array $invitees_id = [],
+        public array $inviteeIds = [],
     ) {}
 }

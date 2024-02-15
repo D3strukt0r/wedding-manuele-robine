@@ -2,13 +2,15 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Card\UpdateCardDto;
+use App\Dto\Card\CardShowDto;
+use App\Dto\Card\CardUpdateDto;
 use App\Entity\Card;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\UserRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,21 +36,23 @@ class UpdateCardController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateCardDto::class)))]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CardUpdateDto::class)))]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Returns a card', content: new OA\JsonContent(ref: new Model(type: CardShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Card')]
     public function __invoke(
         #[MapEntity(id: 'card_id')] Card $card,
-        #[MapRequestPayload] UpdateCardDto $dto
+        #[MapRequestPayload] CardUpdateDto $dto
     ): JsonResponse {
         $user = $this->userRepository->find($dto->userLoginId);
         $card->setUserLogin($user);
 
         $inviteesIs = $card->getInvitees();
         $inviteesToBe = [];
-        foreach ($dto->invitees_id as $inviteeId) {
+        foreach ($dto->inviteeIds as $inviteeId) {
             $inviteesToBe[$inviteeId] = $this->inviteeRepository->find($inviteeId);
         }
 
@@ -63,17 +67,13 @@ class UpdateCardController extends AbstractController
             }
         }
         foreach ($inviteesIs->toArray() as $invitee) {
-            if (!in_array($invitee->getId(), $dto->invitees_id, true)) {
+            if (!in_array($invitee->getId(), $dto->inviteeIds, true)) {
                 $card->removeInvitee($invitee);
             }
         }
 
         $this->cardRepository->save($card, true);
 
-        return $this->json([
-            'id' => $card->getId(),
-            'user_login_id' => $card->getUserLogin()?->getId(),
-            'invitees_id' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
-        ]);
+        return $this->json(new CardShowDto($card));
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin\Api\Table;
 
-use App\Dto\Table\CreateTableDto;
+use App\Dto\Table\TableCreateDto;
+use App\Dto\Table\TableShowDto;
 use App\Entity\Invitee;
 use App\Entity\Table;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,22 +31,20 @@ class CreateTableController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateTableDto::class)))]
-    #[OA\Response(response: Response::HTTP_CREATED, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: TableCreateDto::class)))]
+    #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns a table', content: new OA\JsonContent(ref: new Model(type: TableShowDto::class)))]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Table')]
-    public function __invoke(#[MapRequestPayload] CreateTableDto $dto): JsonResponse
+    public function __invoke(#[MapRequestPayload] TableCreateDto $dto): JsonResponse
     {
         $table = new Table($dto->seats);
-        foreach ($dto->invitees_id as $invitee) {
+        foreach ($dto->inviteeIds as $invitee) {
             $table->addInvitee($this->inviteeRepository->find($invitee));
         }
         $this->tableRepository->save($table, true);
 
-        return $this->json([
-            'id' => $table->getId(),
-            'seats' => $table->getSeats(),
-            'invitees_id' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
-        ], Response::HTTP_CREATED);
+        return $this->json(new TableShowDto($table), Response::HTTP_CREATED);
     }
 }

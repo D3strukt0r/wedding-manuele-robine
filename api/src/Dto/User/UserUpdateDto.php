@@ -3,9 +3,10 @@
 namespace App\Dto\User;
 
 use App\Entity\Food;
+use App\Entity\Role;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class UpdateUserDto
+readonly class UserUpdateDto
 {
     public function __construct(
         #[Assert\NotNull]
@@ -13,6 +14,9 @@ readonly class UpdateUserDto
 
         public ?string $newPassword,
 
+        /**
+         * @var array<Role>
+         */
         public array $roles = [],
     ) {}
 }

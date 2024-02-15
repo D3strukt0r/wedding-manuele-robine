@@ -29,13 +29,13 @@
     queryKey: ['tables'],
     queryFn: () => api.admin.tables.list(),
   });
-  $: tableItems = $tables.data?.map((table) => ({ value: table.id, name: `X (ID: ${table.id})` })) ?? [];
+  $: tableItems = $tables.data?.records?.map((table) => ({ value: table.id, name: `X (ID: ${table.id})` })) ?? [];
 
   const cards = createQuery<Card[], Error>({
     queryKey: ['cards'],
     queryFn: () => api.admin.cards.list(),
   });
-  $: cardItems = $cards.data?.map((card) => ({ value: card.id, name: `X (ID: ${card.id})` })) ?? [];
+  $: cardItems = $cards.data?.records?.map((card) => ({ value: card.id, name: `X (ID: ${card.id})` })) ?? [];
 
   const foods = createQuery<Card[], Error>({
     queryKey: ['enum', 'food'],
@@ -120,18 +120,18 @@
       </TableHeadCell>
     </TableHead>
     <TableBody>
-      {#each $invitees.data ?? [] as invitee, i (invitee.id)}
+      {#each $invitees.data?.records ?? [] as invitee, i (invitee.id)}
         <TableBodyRow on:click={() => gotoDetailPage(invitee.id)}>
           <TableBodyCell>{invitee.id}</TableBodyCell>
           <TableBodyCell>{invitee.firstname} {invitee.lastname}</TableBodyCell>
           <TableBodyCell>
-            {#if invitee.table_id}
-              <a href={`./tables/${invitee.table_id}`}>{invitee.table_id}</a>
+            {#if invitee.tableId}
+              <a href={`./tables/${invitee.tableId}`}>{invitee.tableId}</a>
             {/if}
           </TableBodyCell>
           <TableBodyCell>
-            {#if invitee.card_id}
-              <a href={`./cards/${invitee.card_id}`}>{invitee.card_id}</a>
+            {#if invitee.cardId}
+              <a href={`./cards/${invitee.cardId}`}>{invitee.cardId}</a>
             {/if}
           </TableBodyCell>
           <TableBodyCell>

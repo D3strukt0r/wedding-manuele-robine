@@ -23,13 +23,13 @@
     queryKey: ['invitees'],
     queryFn: () => api.admin.invitees.list(),
   });
-  $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
+  $: inviteesItems = $invitees.data?.records?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
   const users = createQuery<User[], Error>({
     queryKey: ['users'],
     queryFn: () => api.admin.users.list(),
   });
-  $: usersItems = $users.data?.map((user) => ({ value: user.id, name: `${user.username} (ID: ${user.id})` })) ?? [];
+  $: usersItems = $users.data?.records?.map((user) => ({ value: user.id, name: `${user.username} (ID: ${user.id})` })) ?? [];
 
   async function deleteCard() {
     await api.admin.cards.delete(data.cardId);
@@ -37,14 +37,14 @@
     await goto('../cards');
   }
 
-  let selectedInvitees: number[] = $card?.data?.invitees_id ?? [];
+  let selectedInvitees: number[] = $card?.data?.inviteeIds ?? [];
   async function updateCard(event: SubmitEvent) {
     const formData = new FormData(event.target as HTMLFormElement);
     const values = Object.fromEntries(formData) as unknown as Omit<Card, 'id'>;
 
     // Normalize values
     values.userLoginId = +values.userLoginId;
-    values.invitees_id = selectedInvitees;
+    values.inviteeIds = selectedInvitees;
 
     await api.admin.cards.update(+data.cardId, values);
 
@@ -70,8 +70,8 @@
   <div>
     <p>
       {$t('Benutzer ID für Login: ')}
-      {#if $card.data.user_login_id}
-        {@const user = $users.data?.find((user) => user.id === $card.data.user_login_id)}
+      {#if $card.data.userLoginId}
+        {@const user = $users.data?.records?.find((user) => user.id === $card.data.userLoginId)}
         <a href={`../users/${user?.id}`}>{user?.username} ({$t('ID: ')}{user?.id})</a>
       {:else}
         {$t('Keiner')}
@@ -79,8 +79,8 @@
     </p>
     <p>{$t('Eingeladene: ')}</p>
     <List tag="ul" class="space-y-1">
-      {#each $card.data.invitees_id as invitee_id}
-        {@const invitee = $invitees.data?.find((invitee) => invitee.id === invitee_id)}
+      {#each $card.data.inviteeIds as inviteeId}
+        {@const invitee = $invitees.data?.records?.find((invitee) => invitee.id === inviteeId)}
         <Li>{invitee?.firstname} {invitee?.lastname} ({$t('ID: ')}{invitee?.id})</Li>
       {:else}
         <Li>{$t('Niemand sitzt am Tisch')}</Li>
@@ -96,11 +96,11 @@
         <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">{$t('Karte bearbeiten')}</h3>
         <Label class="space-y-2">
           <span>{$t('Benutzer für Login')}</span>
-          <Select name="userLoginId" items={usersItems} value={$card.data.user_login_id} placeholder={$t('Option auswählen ...')} />
+          <Select name="userLoginId" items={usersItems} value={$card.data.userLoginId} placeholder={$t('Option auswählen ...')} />
         </Label>
         <Label class="space-y-2">
           <span>{$t('Eingeladene')}</span>
-          <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} />
+          <MultiSelect name="inviteeIds" items={inviteesItems} bind:value={selectedInvitees} />
         </Label>
         <Button type="submit" class="w-full1">{$t('Speichern')}</Button>
       </form>

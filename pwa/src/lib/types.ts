@@ -3,23 +3,23 @@ export type Invitee = {
   firstname: string
   lastname: string
   email: string
-  will_come: boolean
+  willCome: boolean
   food: string
   allergies: string
-  table_id: number
-  card_id: number
+  tableId: number
+  cardId: number
 }
 
 export type Card = {
   id: number
-  user_login_id: string
-  invitees_id: number[]
+  userLoginId: string
+  inviteeIds: number[]
 }
 
 export type Table = {
   id: number
   seats: number
-  invitees_id: number[]
+  inviteeIds: number[]
 }
 
 export type User = {

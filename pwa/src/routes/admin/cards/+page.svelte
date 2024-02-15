@@ -29,13 +29,13 @@
     queryKey: ['invitees'],
     queryFn: () => api.admin.invitees.list(),
   });
-  $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
+  $: inviteesItems = $invitees.data?.records?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
   const users = createQuery<User[], Error>({
     queryKey: ['users'],
     queryFn: () => api.admin.users.list(),
   });
-  $: usersItems = $users.data?.map((user) => ({ value: user.id, name: `${user.username} (ID: ${user.id})` })) ?? [];
+  $: usersItems = $users.data?.records?.map((user) => ({ value: user.id, name: `${user.username} (ID: ${user.id})` })) ?? [];
 
   function gotoDetailPage(id: number): void {
       goto(`./cards/${id}`);
@@ -48,7 +48,7 @@
 
     // Normalize values
     values.userLoginId = +values.userLoginId;
-    values.invitees_id = selectedInvitees;
+    values.inviteeIds = selectedInvitees;
 
     await api.admin.cards.create(values);
 
@@ -68,7 +68,7 @@
       </Label>
       <Label class="space-y-2">
         <span>{$t('Eingeladene')}</span>
-        <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required />
+        <MultiSelect name="inviteeIds" items={inviteesItems} bind:value={selectedInvitees} required />
       </Label>
       <Button type="submit" class="w-full1">{$t('Erstellen')}</Button>
     </form>
@@ -89,10 +89,10 @@
       </TableHeadCell>
     </TableHead>
     <TableBody>
-      {#each $cards.data ?? [] as card, i (card.id)}
+      {#each $cards.data?.records ?? [] as card, i (card.id)}
         <TableBodyRow on:click={() => gotoDetailPage(card.id)}>
           <TableBodyCell>{card.id}</TableBodyCell>
-          <TableBodyCell>{card.user_login_id}</TableBodyCell>
+          <TableBodyCell>{card.userLoginId}</TableBodyCell>
           <TableBodyCell>
             <Button
               on:click={() => gotoDetailPage(card.id)}

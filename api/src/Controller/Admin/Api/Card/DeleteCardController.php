@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Api\Card;
 
 use App\Entity\Card;
 use App\Repository\CardRepository;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,8 +26,10 @@ class DeleteCardController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_DELETE],
     )]
-    #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Returns no content')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Card')]
     public function __invoke(#[MapEntity(id: 'card_id')] Card $card): JsonResponse
     {

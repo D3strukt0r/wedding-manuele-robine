@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Dto\Invitee\CreateInviteeDto;
-use App\Dto\Invitee\UpdateInviteeDto;
+use App\Dto\Invitee\InviteeCreateDto;
+use App\Dto\Invitee\InviteeUpdateDto;
 use App\Repository\InviteeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -51,12 +51,12 @@ class Invitee
         return $this->id;
     }
 
-    public function getFirstname(): ?string
+    public function getFirstname(): string
     {
         return $this->firstname;
     }
 
-    public function getLastname(): ?string
+    public function getLastname(): string
     {
         return $this->lastname;
     }
@@ -105,7 +105,7 @@ class Invitee
         return $this;
     }
 
-    public static function create(CreateInviteeDto $dto): self
+    public static function create(InviteeCreateDto $dto): self
     {
         $entity = new self(
             $dto->firstname,
@@ -119,7 +119,7 @@ class Invitee
         return $entity;
     }
 
-    public function update(UpdateInviteeDto $dto): void
+    public function update(InviteeUpdateDto $dto): void
     {
         $this->firstname = $dto->firstname;
         $this->lastname = $dto->lastname;

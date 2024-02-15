@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin\Api\Table;
 
-use App\Dto\Table\UpdateTableDto;
+use App\Dto\Table\TableShowDto;
+use App\Dto\Table\TableUpdateDto;
 use App\Entity\Invitee;
 use App\Entity\Table;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,20 +34,22 @@ class UpdateTableController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateTableDto::class)))]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: TableUpdateDto::class)))]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Returns a table', content: new OA\JsonContent(ref: new Model(type: TableShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Table')]
     public function __invoke(
         #[MapEntity(id: 'table_id')] Table $table,
-        #[MapRequestPayload] UpdateTableDto $dto
+        #[MapRequestPayload] TableUpdateDto $dto
     ): JsonResponse {
         $table->update($dto);
 
         $inviteesIs = $table->getInvitees();
         $inviteesToBe = [];
-        foreach ($dto->invitees_id as $inviteeId) {
+        foreach ($dto->inviteeIds as $inviteeId) {
             $inviteesToBe[$inviteeId] = $this->inviteeRepository->find($inviteeId);
         }
 
@@ -60,17 +64,13 @@ class UpdateTableController extends AbstractController
             }
         }
         foreach ($inviteesIs->toArray() as $invitee) {
-            if (!in_array($invitee->getId(), $dto->invitees_id, true)) {
+            if (!in_array($invitee->getId(), $dto->inviteeIds, true)) {
                 $table->removeInvitee($invitee);
             }
         }
 
         $this->tableRepository->save($table, true);
 
-        return $this->json([
-            'id' => $table->getId(),
-            'seats' => $table->getSeats(),
-            'invitees_id' => $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
-        ]);
+        return $this->json(new TableShowDto($table));
     }
 }

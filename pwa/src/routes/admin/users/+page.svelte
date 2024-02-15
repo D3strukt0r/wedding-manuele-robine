@@ -87,7 +87,7 @@
       </TableHeadCell>
     </TableHead>
     <TableBody>
-      {#each $users.data ?? [] as user, i (user.id)}
+      {#each $users.data?.records ?? [] as user, i (user.id)}
         <TableBodyRow on:click={() => gotoDetailPage(user.id)}>
           <TableBodyCell>{user.id}</TableBodyCell>
           <TableBodyCell>{user.username}</TableBodyCell>

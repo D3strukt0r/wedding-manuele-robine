@@ -2,12 +2,14 @@
 
 namespace App\Controller\Admin\Api\Invitee;
 
-use App\Dto\Invitee\UpdateInviteeDto;
+use App\Dto\Invitee\InviteeShowDto;
+use App\Dto\Invitee\InviteeUpdateDto;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,14 +35,16 @@ class UpdateInviteeController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateInviteeDto::class)))]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: InviteeUpdateDto::class)))]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Returns an invitee', content: new OA\JsonContent(ref: new Model(type: InviteeShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Invitee')]
     public function __invoke(
         #[MapEntity(id: 'invitee_id')] Invitee $invitee,
-        #[MapRequestPayload] UpdateInviteeDto $dto
+        #[MapRequestPayload] InviteeUpdateDto $dto
     ): JsonResponse {
         $table = $dto->tableId ? $this->tableRepository->find($dto->tableId) : null;
         $card = $dto->cardId ? $this->cardRepository->find($dto->cardId) : null;
@@ -55,16 +59,6 @@ class UpdateInviteeController extends AbstractController
 
         $this->inviteeRepository->save($invitee, true);
 
-        return $this->json([
-            'id' => $invitee->getId(),
-            'firstname' => $invitee->getFirstname(),
-            'lastname' => $invitee->getLastname(),
-            'email' => $invitee->getEmail(),
-            'will_come' => $invitee->willCome(),
-            'food' => $invitee->getFood(),
-            'allergies' => $invitee->getAllergies(),
-            'table_id' => $invitee->getTable()?->getId(),
-            'card_id' => $invitee->getCard()?->getId(),
-        ]);
+        return $this->json(new InviteeShowDto($invitee));
     }
 }

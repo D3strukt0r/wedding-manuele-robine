@@ -5,7 +5,7 @@ namespace App\Dto\Invitee;
 use App\Entity\Food;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class UpdateInviteeDto
+readonly class InviteeCreateDto
 {
     public function __construct(
         #[Assert\NotNull]

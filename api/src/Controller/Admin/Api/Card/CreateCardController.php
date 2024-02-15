@@ -2,7 +2,8 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Card\CreateCardDto;
+use App\Dto\Card\CardCreateDto;
+use App\Dto\Card\CardShowDto;
 use App\Entity\Card;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
@@ -10,6 +11,7 @@ use App\Repository\InviteeRepository;
 use App\Repository\UserRepository;
 use Hidehalo\Nanoid\Client;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,24 +34,22 @@ class CreateCardController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateCardDto::class)))]
-    #[OA\Response(response: Response::HTTP_CREATED, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CardCreateDto::class)))]
+    #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns a card', content: new OA\JsonContent(ref: new Model(type: CardShowDto::class)))]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Card')]
-    public function __invoke(#[MapRequestPayload] CreateCardDto $dto): JsonResponse
+    public function __invoke(#[MapRequestPayload] CardCreateDto $dto): JsonResponse
     {
         $card = new Card();
-        foreach ($dto->invitees_id as $invitee) {
+        foreach ($dto->inviteeIds as $invitee) {
             $card->addInvitee($this->inviteeRepository->find($invitee));
         }
         $user = $this->userRepository->find($dto->userLoginId);
         $card->setUserLogin($user);
         $this->cardRepository->save($card, true);
 
-        return $this->json([
-            'id' => $card->getId(),
-            'user_login_id' => $card->getUserLogin()?->getId(),
-            'invitees_id' => $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray(),
-        ], Response::HTTP_CREATED);
+        return $this->json(new CardShowDto($card), Response::HTTP_CREATED);
     }
 }

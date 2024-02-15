@@ -23,7 +23,7 @@
     queryKey: ['invitees'],
     queryFn: () => api.admin.invitees.list(),
   });
-  $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
+  $: inviteesItems = $invitees.data?.records?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
   async function deleteTable() {
     await api.admin.tables.delete(data.tableId);
@@ -31,14 +31,14 @@
     await goto('../tables');
   }
 
-  let selectedInvitees: number[] = $table?.data?.invitees_id ?? [];
+  let selectedInvitees: number[] = $table?.data?.inviteeIds ?? [];
   async function updateTable(event: SubmitEvent) {
     const formData = new FormData(event.target as HTMLFormElement);
     const values = Object.fromEntries(formData) as unknown as Omit<Table, 'id'>;
 
     // Normalize values
     values.seats = +values.seats;
-    values.invitees_id = selectedInvitees;
+    values.inviteeIds = selectedInvitees;
 
     await api.admin.tables.update(+data.tableId, values);
 
@@ -64,8 +64,8 @@
     <p>{$t('Sitzplätze: ')}{$table.data.seats}</p>
     <p>{$t('Eingeladene: ')}</p>
     <List tag="ul" class="space-y-1">
-      {#each $table.data.invitees_id as invitee_id}
-        {@const invitee = $invitees.data?.find((invitee) => invitee.id === invitee_id)}
+      {#each $table.data.inviteeIds as inviteeId}
+        {@const invitee = $invitees.data?.records?.find((invitee) => invitee.id === inviteeId)}
         <Li>{invitee?.firstname} {invitee?.lastname} ({$t('ID: ')}{invitee?.id})</Li>
       {:else}
         <Li>{$t('Niemand sitzt am Tisch')}</Li>
@@ -85,7 +85,7 @@
         </Label>
         <Label class="space-y-2">
           <span>{$t('Eingeladene')}</span>
-          <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required />
+          <MultiSelect name="inviteeIds" items={inviteesItems} bind:value={selectedInvitees} />
         </Label>
         <Button type="submit" class="w-full1">{$t('Speichern')}</Button>
       </form>

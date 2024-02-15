@@ -31,7 +31,7 @@
     queryKey: ['invitees'],
     queryFn: () => api.admin.invitees.list(),
   });
-  $: inviteesItems = $invitees.data?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
+  $: inviteesItems = $invitees.data?.records?.map((invitee) => ({ value: invitee.id, name: `${invitee.firstname} ${invitee.lastname} (ID: ${invitee.id})` })) ?? [];
 
   function gotoDetailPage(id: number): void {
       goto(`./tables/${id}`);
@@ -44,7 +44,7 @@
 
     // Normalize values
     values.seats = +values.seats;
-    values.invitees_id = selectedInvitees;
+    values.inviteeIds = selectedInvitees;
 
     await api.admin.tables.create(values);
 
@@ -64,7 +64,7 @@
       </Label>
       <Label class="space-y-2">
         <span>{$t('Eingeladene')}</span>
-        <MultiSelect name="invitees_id" items={inviteesItems} bind:value={selectedInvitees} required />
+        <MultiSelect name="inviteeIds" items={inviteesItems} bind:value={selectedInvitees} />
       </Label>
       <Button type="submit" class="w-full1">{$t('Erstellen')}</Button>
     </form>
@@ -85,7 +85,7 @@
       </TableHeadCell>
     </TableHead>
     <TableBody>
-      {#each $tables.data ?? [] as table, i (table.id)}
+      {#each $tables.data?.records ?? [] as table, i (table.id)}
         <TableBodyRow on:click={() => gotoDetailPage(table.id)}>
           <TableBodyCell>{table.id}</TableBodyCell>
           <TableBodyCell>{table.seats}</TableBodyCell>

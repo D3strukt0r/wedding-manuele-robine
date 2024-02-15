@@ -2,7 +2,10 @@
 
 namespace App\Controller\Admin\Api\User;
 
+use App\Dto\User\UserShowDto;
 use App\Entity\User;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,15 +23,13 @@ class ShowUserController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Returns a user', content: new OA\JsonContent(ref: new Model(type: UserShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/User')]
     public function __invoke(#[MapEntity(id: 'user_id')] User $user): JsonResponse
     {
-        return $this->json([
-            'id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'roles' => $user->getRoles(),
-        ]);
+        return $this->json(new UserShowDto($user));
     }
 }

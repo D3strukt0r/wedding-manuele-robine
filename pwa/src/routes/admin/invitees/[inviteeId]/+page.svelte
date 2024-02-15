@@ -23,13 +23,13 @@
     queryKey: ['tables'],
     queryFn: () => api.admin.tables.list(),
   });
-  $: tableItems = $tables.data?.map((table) => ({ value: table.id, name: `X (ID: ${table.id})` })) ?? [];
+  $: tableItems = $tables.data?.records?.map((table) => ({ value: table.id, name: `X (ID: ${table.id})` })) ?? [];
 
   const cards = createQuery<Card[], Error>({
     queryKey: ['cards'],
     queryFn: () => api.admin.cards.list(),
   });
-  $: cardItems = $cards.data?.map((card) => ({ value: card.id, name: `X (ID: ${card.id})` })) ?? [];
+  $: cardItems = $cards.data?.records?.map((card) => ({ value: card.id, name: `X (ID: ${card.id})` })) ?? [];
 
   const foods = createQuery<Card[], Error>({
     queryKey: ['enum', 'food'],
@@ -74,14 +74,14 @@
 {#if $invitee.isSuccess}
   <h1>{$invitee.data.firstname} {$invitee.data.lastname}</h1>
   <p>{$t('Email: ')}{$invitee.data.email ?? $t('Keine')}</p>
-  <p>{$t('Wird kommen? ')}{$invitee.data.will_come ? $t('Ja') : $t('Nein')}</p>
+  <p>{$t('Wird kommen? ')}{$invitee.data.willCome ? $t('Ja') : $t('Nein')}</p>
   <p>{$t('Essenspräferenz: ')}{$invitee.data.food ? $t(`enum.food.${$invitee.data.food}`) : $t('Keine')}</p>
   <p>{$t('Allergien: ')}{$invitee.data.allergies ?? $t('Keine')}</p>
-  {#if $invitee.data.table_id}
-    <p>{$t('Tisch: ')}<a href={`./../tables/${$invitee.data.table_id}`}>{$invitee.data.table_id}</a></p>
+  {#if $invitee.data.tableId}
+    <p>{$t('Tisch: ')}<a href={`./../tables/${$invitee.data.tableId}`}>{$invitee.data.tableId}</a></p>
   {/if}
-  {#if $invitee.data.card_id}
-    <p>{$t('Karte: ')}<a href={`./../cards/${$invitee.data.card_id}`}>{$invitee.data.card_id}</a></p>
+  {#if $invitee.data.cardId}
+    <p>{$t('Karte: ')}<a href={`./../cards/${$invitee.data.cardId}`}>{$invitee.data.cardId}</a></p>
   {/if}
   <p></p>
   <div>{$invitee.isFetching ? $t('Im hintergrund aktualisieren ...') : ' '}</div>
@@ -104,7 +104,7 @@
           <Input type="email" name="email" placeholder={$invitee.data.email} value={$invitee.data.email} />
         </Label>
         <Label class="space-y-2">
-          <Checkbox checked={$invitee.data.will_come === true} name="willCome">{$t('Wird kommen?')}</Checkbox>
+          <Checkbox checked={$invitee.data.willCome === true} name="willCome">{$t('Wird kommen?')}</Checkbox>
         </Label>
         <Label class="space-y-2">
           <span>{$t('Essenspräferenz')}</span>
@@ -116,11 +116,11 @@
         </Label>
         <Label class="space-y-2">
           <span>{$t('Tisch')}</span>
-          <Select name="tableId" items={tableItems} placeholder={$t('Option auswählen ...')} value={$invitee.data.table_id} />
+          <Select name="tableId" items={tableItems} placeholder={$t('Option auswählen ...')} value={$invitee.data.tableId} />
         </Label>
         <Label class="space-y-2">
           <span>{$t('Karte')}</span>
-          <Select name="cardId" items={cardItems} placeholder={$t('Option auswählen ...')} value={$invitee.data.card_id} />
+          <Select name="cardId" items={cardItems} placeholder={$t('Option auswählen ...')} value={$invitee.data.cardId} />
         </Label>
         <Button type="submit" class="w-full1">{$t('Speichern')}</Button>
       </form>

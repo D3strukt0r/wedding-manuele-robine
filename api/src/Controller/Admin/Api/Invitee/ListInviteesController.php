@@ -2,13 +2,18 @@
 
 namespace App\Controller\Admin\Api\Invitee;
 
+use App\Dto\Invitee\InviteeListDto;
+use App\Dto\Invitee\InviteesQueryDto;
 use App\Entity\Invitee;
 use App\Repository\InviteeRepository;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ListInviteesController extends AbstractController
@@ -23,20 +28,27 @@ class ListInviteesController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
-    #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
+    #[Security(name: 'Bearer')]
+    #[OA\Parameter(name: 'limit', in: 'query', description: 'The field used to limit the number of records returned', schema: new OA\Schema(type: 'integer'))]
+    #[OA\Parameter(name: 'offset', in: 'query', description: 'The field used to offset the records returned', schema: new OA\Schema(type: 'integer'))]
+    #[OA\Response(response: Response::HTTP_OK, description: 'Returns a list of invitees', content: new OA\JsonContent(properties: [
+        new OA\Property(property: 'total', type: 'integer'),
+        new OA\Property(property: 'offset', type: 'integer'),
+        new OA\Property(property: 'limit', type: 'integer'),
+        new OA\Property(property: 'records', type: 'array', items: new OA\Items(
+            ref: new Model(type: InviteeListDto::class)
+        )),
+    ]))]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Invitee')]
-    public function __invoke(): JsonResponse
+    public function __invoke(#[MapQueryString] InviteesQueryDto $query = new InviteesQueryDto()): JsonResponse
     {
-        return $this->json(array_map(static fn (Invitee $invitee) => [
-            'id' => $invitee->getId(),
-            'firstname' => $invitee->getFirstname(),
-            'lastname' => $invitee->getLastname(),
-            'email' => $invitee->getEmail(),
-            'will_come' => $invitee->willCome(),
-            'food' => $invitee->getFood(),
-            'allergies' => $invitee->getAllergies(),
-            'table_id' => $invitee->getTable()?->getId(),
-            'card_id' => $invitee->getCard()?->getId(),
-        ], $this->inviteeRepository->findAll()));
+        $invitees = $this->inviteeRepository->findBy([], [], $query->limit, $query->offset);
+        return $this->json([
+            'total' => $this->inviteeRepository->count([]),
+            'offset' => $query->offset,
+            'limit' => $query->limit,
+            'records' => array_map(static fn (Invitee $invitee) => new InviteeListDto($invitee), $invitees),
+        ]);
     }
 }

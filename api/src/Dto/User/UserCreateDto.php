@@ -5,7 +5,7 @@ namespace App\Dto\User;
 use App\Entity\Food;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class CreateUserDto
+readonly class UserCreateDto
 {
     public function __construct(
         #[Assert\NotNull]
@@ -13,6 +13,9 @@ readonly class CreateUserDto
 
         public ?string $password,
 
+        /**
+         * @var array<string>
+         */
         public array $roles = [],
     ) {}
 }
