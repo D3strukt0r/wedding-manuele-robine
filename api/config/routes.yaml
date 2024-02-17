@@ -4,9 +4,6 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-api_common_login_check:
-    path: /common/api/login_check
-
 api_common:
     resource: ../src/Controller/Common/Api/
     type: attribute
