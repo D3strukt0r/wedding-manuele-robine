@@ -28,7 +28,7 @@ services:
     Doctrine\Migrations\Version\DbalMigrationFactory: ~
     App\Migrations\Factory\MigrationFactoryDecorator:
         decorates: Doctrine\Migrations\Version\DbalMigrationFactory
-        arguments: ['@App\Migrations\Factory\MigrationFactoryDecorator.inner', '@service_container']
+        arguments: ['@App\Migrations\Factory\MigrationFactoryDecorator.inner', '@kernel']
 
     # Add GraphQL resolver
     # https://github.com/overblog/GraphQLBundle/blob/master/docs/definitions/resolver-map.md

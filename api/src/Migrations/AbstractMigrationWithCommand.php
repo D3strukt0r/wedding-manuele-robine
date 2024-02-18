@@ -5,20 +5,23 @@ namespace App\Migrations;
 use Doctrine\Migrations\AbstractMigration;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Abstract base class to use commands in fixtures.
  */
-abstract class AbstractMigrationWithCommand extends AbstractMigration implements ContainerAwareInterface
+abstract class AbstractMigrationWithCommand extends AbstractMigration
 {
-    use ContainerAwareTrait;
+    private KernelInterface $kernel;
+
+    public function setKernel(KernelInterface $kernel): void
+    {
+        $this->kernel = $kernel;
+    }
 
     protected function execCommand(string $command, array $options = []): void
     {
-        $kernel = $this->container->get('kernel');
-        $application = new Application($kernel);
+        $application = new Application($this->kernel);
         $application->setAutoExit(false);
 
         $options = array_merge([
