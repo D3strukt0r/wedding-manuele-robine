@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Api\User;
 
-use App\Dto\User\UserListDto;
-use App\Dto\User\UsersQueryDto;
+use App\Dto\Admin\User\UserListDto;
+use App\Dto\Admin\User\UsersQueryDto;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;

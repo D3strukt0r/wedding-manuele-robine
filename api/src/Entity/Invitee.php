@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Dto\Invitee\InviteeCreateDto;
-use App\Dto\Invitee\InviteeUpdateDto;
+use App\Dto\Admin\Invitee\InviteeCreateDto;
+use App\Dto\Admin\Invitee\InviteeUpdateDto;
 use App\Repository\InviteeRepository;
 use Doctrine\ORM\Mapping as ORM;
 

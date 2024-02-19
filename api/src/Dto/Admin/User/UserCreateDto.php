@@ -1,21 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace App\Dto\User;
+namespace App\Dto\Admin\User;
 
-use App\Entity\Food;
-use App\Entity\Role;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class UserUpdateDto
+readonly class UserCreateDto
 {
     public function __construct(
         #[Assert\NotNull]
         public string $username,
 
-        public ?string $newPassword,
+        public ?string $password,
 
         /**
-         * @var array<Role>
+         * @var array<string>
          */
         public array $roles = [],
     ) {}

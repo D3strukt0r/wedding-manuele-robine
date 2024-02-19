@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Dto\User\UserUpdateDto;
+use App\Dto\Admin\User\UserUpdateDto;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

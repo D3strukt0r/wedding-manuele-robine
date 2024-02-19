@@ -25,3 +25,4 @@ nelmio_api_doc:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
             - ^/common/api
             - ^/admin/api
+            - ^/invited/api

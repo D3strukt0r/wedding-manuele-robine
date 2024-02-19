@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Api\User;
 
-use App\Dto\User\UserCreateDto;
-use App\Dto\User\UserShowDto;
+use App\Dto\Admin\User\UserCreateDto;
+use App\Dto\Admin\User\UserShowDto;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\User\PasswordGenerator;

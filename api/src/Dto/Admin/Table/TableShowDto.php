@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Dto\Table;
+namespace App\Dto\Admin\Table;
 
 use App\Entity\Invitee;
 use App\Entity\Table;

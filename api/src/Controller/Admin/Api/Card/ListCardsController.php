@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Card\CardsQueryDto;
-use App\Dto\Card\CardListDto;
+use App\Dto\Admin\Card\CardListDto;
+use App\Dto\Admin\Card\CardsQueryDto;
 use App\Entity\Card;
 use App\Repository\CardRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;

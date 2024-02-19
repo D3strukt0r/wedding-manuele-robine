@@ -2,9 +2,8 @@
 
 namespace App\Controller\Admin\Api\Table;
 
-use App\Dto\Table\TableCreateDto;
-use App\Dto\Table\TableShowDto;
-use App\Entity\Invitee;
+use App\Dto\Admin\Table\TableCreateDto;
+use App\Dto\Admin\Table\TableShowDto;
 use App\Entity\Table;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Dto\Invitee;
+namespace App\Dto\Admin\Invitee;
 
 use App\Entity\Food;
 use Symfony\Component\Validator\Constraints as Assert;

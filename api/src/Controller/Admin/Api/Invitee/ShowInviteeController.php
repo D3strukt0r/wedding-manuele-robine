@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Api\Invitee;
 
-use App\Dto\Invitee\InviteeShowDto;
+use App\Dto\Admin\Invitee\InviteeShowDto;
 use App\Entity\Invitee;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;

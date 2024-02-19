@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Card\CardShowDto;
-use App\Dto\Card\CardUpdateDto;
+use App\Dto\Admin\Card\CardShowDto;
+use App\Dto\Admin\Card\CardUpdateDto;
 use App\Entity\Card;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;

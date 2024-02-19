@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Card\CardShowDto;
+use App\Dto\Admin\Card\CardShowDto;
 use App\Entity\Card;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;

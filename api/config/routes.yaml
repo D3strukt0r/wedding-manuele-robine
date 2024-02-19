@@ -12,3 +12,7 @@ api_admin:
     resource: ../src/Controller/Admin/Api/
     type: attribute
     prefix: admin/api
+api_invited:
+    resource: ../src/Controller/Invited/Api/
+    type: attribute
+    prefix: invited/api

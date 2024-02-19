@@ -2,14 +2,12 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Card\CardCreateDto;
-use App\Dto\Card\CardShowDto;
+use App\Dto\Admin\Card\CardCreateDto;
+use App\Dto\Admin\Card\CardShowDto;
 use App\Entity\Card;
-use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\UserRepository;
-use Hidehalo\Nanoid\Client;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;

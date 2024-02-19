@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Api\User;
 
-use App\Dto\User\UserShowDto;
+use App\Dto\Admin\User\UserShowDto;
 use App\Entity\User;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;

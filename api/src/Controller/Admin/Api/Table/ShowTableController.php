@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Api\Table;
 
-use App\Dto\Table\TableShowDto;
+use App\Dto\Admin\Table\TableShowDto;
 use App\Entity\Table;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;

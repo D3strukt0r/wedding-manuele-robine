@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace App\Dto\Table;
+namespace App\Dto\Admin\Card;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use OpenApi\Attributes as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class TableUpdateDto
+readonly class CardUpdateDto
 {
     public function __construct(
-        #[Assert\NotNull]
-        public int $seats,
+        #[OA\Property(example: 1)]
+        public ?int $userLoginId,
 
         /** @var array<int> */
         #[Assert\NotNull]

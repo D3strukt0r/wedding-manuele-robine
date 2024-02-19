@@ -100,4 +100,16 @@ export const api = {
       },
     },
   },
+  invited: {
+    invitees: {
+      list: async () => {
+        const { data } = await axios.get<Invitee[]>('/invited/api/invitees');
+        return data;
+      },
+      update: async (id: number, invitee: Omit<Invitee, 'id'>) => {
+        const { data } = await axios.put<Invitee>(`/invited/api/invitees/${id}`, invitee);
+        return data;
+      },
+    },
+  }
 };

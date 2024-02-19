@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace App\Dto\User;
+namespace App\Dto\Admin\Card;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class UsersQueryDto
+readonly class CardsQueryDto
 {
     public function __construct(
         #[Assert\LessThanOrEqual(500)]

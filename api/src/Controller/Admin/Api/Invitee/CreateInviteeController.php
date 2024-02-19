@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Api\Invitee;
 
-use App\Dto\Invitee\InviteeCreateDto;
-use App\Dto\Invitee\InviteeShowDto;
+use App\Dto\Admin\Invitee\InviteeCreateDto;
+use App\Dto\Admin\Invitee\InviteeShowDto;
 use App\Entity\Invitee;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;

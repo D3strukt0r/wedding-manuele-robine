@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace App\Dto\Card;
+namespace App\Dto\Admin\Card;
 
 use App\Entity\Card;
 use App\Entity\Invitee;
 
-readonly class CardShowDto
+readonly class CardListDto
 {
     public int $id;
 

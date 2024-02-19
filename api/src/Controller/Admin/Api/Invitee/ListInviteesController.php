@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Api\Invitee;
 
-use App\Dto\Invitee\InviteeListDto;
-use App\Dto\Invitee\InviteesQueryDto;
+use App\Dto\Admin\Invitee\InviteeListDto;
+use App\Dto\Admin\Invitee\InviteesQueryDto;
 use App\Entity\Invitee;
 use App\Repository\InviteeRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
