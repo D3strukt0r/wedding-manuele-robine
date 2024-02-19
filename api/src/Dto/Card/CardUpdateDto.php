@@ -8,11 +8,11 @@ use OpenApi\Attributes as OA;
 readonly class CardUpdateDto
 {
     public function __construct(
+        #[OA\Property(example: 1)]
+        public ?int $userLoginId,
+
         /** @var array<int> */
         #[Assert\NotNull]
         public array $inviteeIds = [],
-
-        #[OA\Property(example: 1)]
-        public ?int $userLoginId,
     ) {}
 }

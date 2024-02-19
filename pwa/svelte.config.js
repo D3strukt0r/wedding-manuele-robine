@@ -29,6 +29,7 @@ const config = {
         'img-src': [
           'self',
           'data:', // e.g. Checkbox Icon flowbite
+          'blob:',
           'https://images.unsplash.com',
         ],
         'manifest-src': ['self'],

@@ -345,9 +345,11 @@ FROM base AS prod
 COPY --from=prod-deps /usr/local/src/app .
 COPY api .
 RUN \
+    # Install assets \
+    DATABASE_URL="sqlite3:///dev/null" TRUSTED_PROXIES="" bin/console assets:install \
     # Further optimize php.ini for production
     # maximum number of files that can be stored in the cache (calculate with "find" and add buffer for var folder)
-    sed -i "s/^\(opcache.max_accelerated_files=\).*/\1\ $(($(find /usr/local/src/app -type f -print | grep -c php) + 1000))/" "$PHP_DIR/php.ini" \
+    && sed -i "s/^\(opcache.max_accelerated_files=\).*/\1\ $(($(find /usr/local/src/app -type f -print | grep -c php) + 1000))/" "$PHP_DIR/php.ini" \
     # In production servers, PHP files should never change, unless a new
     # application version is deployed. However, by default OPcache checks if
     # cached files have changed their contents since they were cached.

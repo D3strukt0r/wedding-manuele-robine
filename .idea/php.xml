@@ -31,7 +31,6 @@
       <path value="$PROJECT_DIR$/api/vendor/symfony/var-dumper" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/event-dispatcher-contracts" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/finder" />
-      <path value="$PROJECT_DIR$/api/vendor/symfony/polyfill-php83" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/phpunit-bridge" />
       <path value="$PROJECT_DIR$/api/vendor/twig/extra-bundle" />
@@ -143,7 +142,6 @@
       <path value="$PROJECT_DIR$/api/vendor/symfony/cache" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/polyfill-intl-icu" />
       <path value="$PROJECT_DIR$/api/vendor/nelmio/api-doc-bundle" />
-      <path value="$PROJECT_DIR$/api/vendor/doctrine/annotations" />
       <path value="$PROJECT_DIR$/api/vendor/zircote/swagger-php" />
       <path value="$PROJECT_DIR$/api/vendor/murtukov/php-code-generator" />
       <path value="$PROJECT_DIR$/api/vendor/overblog/graphql-bundle" />

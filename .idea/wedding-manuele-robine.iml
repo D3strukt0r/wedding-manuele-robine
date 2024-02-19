@@ -62,7 +62,6 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/polyfill-intl-grapheme" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/polyfill-php83" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/routing" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/runtime" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/service-contracts" />
@@ -130,7 +129,6 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/validator" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/web-link" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/twig/twig" />
-      <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/annotations" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/nelmio/api-doc-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/zircote/swagger-php" />
       <excludeFolder url="file://$MODULE_DIR$/api/var" />
