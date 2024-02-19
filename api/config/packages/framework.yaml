@@ -13,7 +13,7 @@ framework:
         # We save the sessions in a custom path and let the php-fpm image take care of cleaning them up every night
         # (via `CLEAR_SESSIONS_IN` env variable)
         handler_id: 'session.handler.native_file'
-        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+        save_path: '/var/cache/sessions/%kernel.environment%'
         # Improves the security of the cookies used for sessions
         cookie_secure: auto
         cookie_samesite: lax

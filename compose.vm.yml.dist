@@ -9,10 +9,10 @@ services:
     container_name: pwa
     volumes:
       # Mount app directory
-      - ./pwa:/app
+      - ./pwa:/usr/local/src/app
 
       # Store package manager cache in vagrant
-      - ~/data/pnpm:/var/cache/pnpm-store
+      - ~/data/pnpm:/var/cache/pnpm
 
       # Disable svelte-kit process and use vite dev server
       - ./.docker/rootfs-local/empty.txt:/etc/supervisor/conf.d/svelte-kit.conf
@@ -52,22 +52,22 @@ services:
     container_name: api
     volumes:
       # Mount app directory
-      - ./api:/app
+      - ./api:/usr/local/src/app
 
       # Move cache and sessions out of the way for better NFS performance
-      - ~/data/app/cache:/app/var/cache
-      - ~/data/app/sessions:/app/var/sessions
+      - ~/data/app/cache:/var/cache/app
+      - ~/data/app/sessions:/var/cache/sessions
 
       # Keep cache data for IDE Symfony Plugin
-      - ./api/var/cache/dev/translations:/app/var/cache/dev/translations
-      - ./api/var/cache/dev/twig:/app/var/cache/dev/twig
+      - ./api/var/cache/dev/translations:/var/cache/app/dev/translations
+      - ./api/var/cache/dev/twig:/var/cache/app/dev/twig
 
       # Store package manager cache in vagrant
       - ~/data/composer:/var/cache/composer/cache
 
       # Keep upload data
-      #- ~/data/app/data:/app/data
-      #- ~/data/app/public/media:/app/public/media
+      #- ~/data/app/data:/usr/local/src/app/data
+      #- ~/data/app/public/media:/usr/local/src/app/public/media
 
       # Mount the .ssh folder of the vagrant machine to the php container to
       # allow GIT access from within

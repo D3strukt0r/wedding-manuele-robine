@@ -28,7 +28,7 @@ if [ -f "$ENVFILE" ]; then
     source "$ENVFILE"
 fi
 
-test -d /app && cd /app
+test -d /usr/local/src/app && cd /usr/local/src/app
 
 CONSOLECMD=$*
 cron_info "Executing \"$CONSOLECMD\" (incl. timing information) ..."

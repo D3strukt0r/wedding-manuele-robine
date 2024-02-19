@@ -100,8 +100,7 @@ RUN \
     \
     # Create non-root user/group (1000:1000) for app and delete www-data
     && useradd --create-home --shell /bin/bash app \
-    && mkdir --parents /app \
-    && chown --recursive app:app /app \
+    && mkdir --parents /usr/local/src/app \
     # Delete the www-data user and use default 1000 (which also happens to
     # match vagrant's default user to avoid permission issues)
     && find / -user 33 ! -path '/proc/*' -exec chown -h app {} \; \
@@ -178,7 +177,7 @@ RUN \
     # Improve performance for prod with OPcache (https://symfony.com/doc/current/performance.html)
     # OPcache can compile and load classes at start-up and make them available to all requests until the server is restarted
     && sed -i '/^;opcache.preload/s/^;//' "$PHP_DIR/php.ini" \
-    && sed -i 's/^\(opcache.preload=\).*/\1\ \/app\/config\/preload.php/' "$PHP_DIR/php.ini" \
+    && sed -i 's/^\(opcache.preload=\).*/\1\ \/usr\/local\/src\/app\/config\/preload.php/' "$PHP_DIR/php.ini" \
     # required for opcache.preload
     && sed -i '/^;opcache.preload_user/s/^;//' "$PHP_DIR/php.ini" \
     && sed -i 's/^\(opcache.preload_user=\).*/\1\ app/' "$PHP_DIR/php.ini" \
@@ -204,9 +203,12 @@ COPY api/.docker/rootfs /
 ENV RUNTIME_ENVIRONMENT=prod \
     APP_ENV=prod \
     # Change composer cache dir to be outside /home/app/ (currently defaults to /home/app/.compose/cache) (https://getcomposer.org/doc/03-cli.md#composer-home)
-    COMPOSER_HOME=/var/cache/composer
+    COMPOSER_HOME=/var/cache/composer \
+    # Change default Symfony folders and fixed in "01_fix-file-permissions.sh"
+    APP_CACHE_DIR=/var/cache/app \
+    APP_LOG_DIR=/var/log/app
 
-WORKDIR /app
+WORKDIR /usr/local/src/app
 
 EXPOSE 80
 
@@ -261,8 +263,8 @@ RUN \
     && gpg --verify phive.phar.asc phive.phar \
     && chmod +x phive.phar \
     && mv phive.phar /usr/local/bin/phive \
-    && mkdir --parents ~/.phive \
-    && phive --home ~/.phive --no-progress install --trust-gpg-keys 5E6DDE998AB73B8E,31C7E470E2138192,E82B2FB314E9906E --target /usr/local/bin \
+    && mkdir --parents /var/cache/phive \
+    && phive --home /var/cache/phive --no-progress install --trust-gpg-keys 5E6DDE998AB73B8E,31C7E470E2138192,E82B2FB314E9906E --target /usr/local/bin \
         phpcs \
         phpcbf \
         php-cs-fixer \
@@ -315,20 +317,20 @@ RUN \
     \
     # Fix issue with GIT "detected dubious ownership in repository" error in
     # local development due to CVE-2022-24765 (https://github.com/git/git/commit/8959555cee7ec045958f9b6dd62e541affb7e7d9)
-    && git config --global --add safe.directory /app \
+    && git config --global --add safe.directory /usr/local/src/app \
     \
     # Prepare compose cache folder
     && mkdir --parents /var/cache/composer/cache \
     && chown --recursive app:app /var/cache/composer
 
-WORKDIR /app
+WORKDIR /usr/local/src/app
 
 # -----------------------------------------------------------------------------
 # Prod build
 # -----------------------------------------------------------------------------
 FROM base AS prod-deps
 COPY --from=composer /usr/local/bin/composer /usr/local/bin/composer
-COPY --chown=app:app api/composer.json api/composer.lock api/symfony.lock ./
+COPY api/composer.json api/composer.lock api/symfony.lock ./
 RUN --mount=type=cache,target=/var/cache/composer/cache \
     --mount=type=ssh,required=true \
     # Don't use ~/.ssh/known_hosts (see https://stackoverflow.com/a/73264002/4156752)
@@ -336,23 +338,23 @@ RUN --mount=type=cache,target=/var/cache/composer/cache \
     # Install composer dependencies (see https://stackoverflow.com/a/21921309/4156752)
     # https://symfony.com/doc/current/performance.html#optimize-composer-autoloader
     # https://getcomposer.org/doc/articles/autoloader-optimization.md \
-    # "--classmap-authoritative" doesn't work -> "Uncaught Error: Class "App\Kernel" not found in /app/bin/console:14"
+    # "--classmap-authoritative" doesn't work -> "Uncaught Error: Class "App\Kernel" not found in /usr/local/src/app/bin/console:14"
     && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
 FROM base AS prod
-COPY --from=prod-deps /app .
+COPY --from=prod-deps /usr/local/src/app .
 COPY api .
 RUN \
     # Further optimize php.ini for production
     # maximum number of files that can be stored in the cache (calculate with "find" and add buffer for var folder)
-    sed -i "s/^\(opcache.max_accelerated_files=\).*/\1\ $(($(find /app -type f -print | grep -c php) + 1000))/" "$PHP_DIR/php.ini" \
+    sed -i "s/^\(opcache.max_accelerated_files=\).*/\1\ $(($(find /usr/local/src/app -type f -print | grep -c php) + 1000))/" "$PHP_DIR/php.ini" \
     # In production servers, PHP files should never change, unless a new
     # application version is deployed. However, by default OPcache checks if
     # cached files have changed their contents since they were cached.
     && sed -i '/^;opcache.validate_timestamps/s/^;//' "$PHP_DIR/php.ini" \
     && sed -i 's/^\(opcache.validate_timestamps=\).*/\1\ 0/' "$PHP_DIR/php.ini" \
     \
-    # Clean up after copying files to /app
+    # Clean up after copying files to /usr/local/src/app
     && rm -rf \
         .docker \
         tests \

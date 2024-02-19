@@ -61,8 +61,8 @@ RUN \
     && node --version \
     && pnpm --version \
     \
-    # Change pnpm store dir to be outside /app (currently defaults to /app/.pnpm-store) (https://pnpm.io/configuring)
-    && pnpm config set store-dir /var/cache/pnpm-store \
+    # Change pnpm store dir to be outside /usr/local/src/app (currently defaults to /usr/local/src/app/.pnpm-store) (https://pnpm.io/configuring)
+    && pnpm config set store-dir /var/cache/pnpm \
     \
     && { \
         # Add custom PS1
@@ -74,8 +74,7 @@ RUN \
     \
     # Create non-root user/group (1000:1000) for app
     && useradd --create-home --shell /bin/bash app \
-    && mkdir --parents /app \
-    && chown --recursive app:app /app \
+    && mkdir --parents /usr/local/src/app \
     && { \
         # Same as above (except bash completion, because it's already in the bashrc)
         echo 'export PS1="🐳 ${debian_chroot:+($debian_chroot)}\[\e[38;5;46m\]\u@\h\[\e[0m\]:\[\e[38;5;33m\]\w\[\e[0m\]\\$ "'; \
@@ -84,7 +83,7 @@ RUN \
 COPY .docker/rootfs/common /
 COPY pwa/.docker/rootfs /
 
-WORKDIR /app
+WORKDIR /usr/local/src/app
 
 EXPOSE 80
 
@@ -103,13 +102,13 @@ FROM base AS dev
 # Keep prod dependencies in prod environemnt
 FROM base AS prod-deps
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm-store \
+RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm \
     pnpm install --prod --frozen-lockfile
 
 # Build PWA application
 FROM base AS build
 COPY pwa/package.json pwa/pnpm-lock.yaml ./
-RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm-store \
+RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm \
     pnpm install --frozen-lockfile
 COPY pwa/.browserslistrc \
      pwa/houdini.config.js \
@@ -126,11 +125,11 @@ RUN pnpm run build
 
 # Prod build
 FROM base AS prod
-COPY --from=prod-deps /app .
-COPY --from=build /app .
+COPY --from=prod-deps /usr/local/src/app .
+COPY --from=build /usr/local/src/app .
 COPY pwa .
 RUN \
-    # Clean up after copying files to /app
+    # Clean up after copying files to /usr/local/src/app
     rm -rf \
         '$houdini' \
         .docker \
