@@ -1,4 +1,5 @@
-PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+# See /etc/profile
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 LD_LIBRARY_PATH=/usr/local/lib
 
 # .---------------- minute (0 - 59)

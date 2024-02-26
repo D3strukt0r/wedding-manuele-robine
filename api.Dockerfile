@@ -133,7 +133,11 @@ RUN \
     # Add cronjob for root to clean PHP session files every night (if env var
     # CLEAR_SESSIONS_IN is set with the session files directory) user's app
     # cronjobs are usually overwritten by projects
-    && (crontab -l; echo '0 0 * * * clear-sessions.sh 2>&1 | tee -a /var/log/cron.log') | crontab - \
+    && ( \
+        crontab -l; \
+        echo 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'; \
+        echo '0 0 * * * clear-sessions.sh 2>&1 | tee -a /var/log/cron.log'; \
+    ) | crontab - \
     \
     # Setup PHP-FPM for Docker (https://github.com/docker-library/php/blob/master/8.2/bookworm/fpm/Dockerfile)
     # Forward errors to stderr
