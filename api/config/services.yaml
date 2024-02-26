@@ -26,13 +26,6 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    # Inject container to migration
-    # https://symfony.com/bundles/DoctrineMigrationsBundle/current/index.html#migration-dependencies
-    Doctrine\Migrations\Version\DbalMigrationFactory: ~
-    App\Migrations\Factory\MigrationFactoryDecorator:
-        decorates: Doctrine\Migrations\Version\DbalMigrationFactory
-        arguments: ['@App\Migrations\Factory\MigrationFactoryDecorator.inner', '@kernel']
-
     # Add GraphQL resolver
     # https://github.com/overblog/GraphQLBundle/blob/master/docs/definitions/resolver-map.md
     App\Resolver\AppResolverMap:
