@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Api\Invitee;
 
 use App\Entity\Invitee;
+use App\Entity\Role;
 use App\Repository\InviteeRepository;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DeleteInviteeController extends AbstractController
 {
@@ -26,6 +28,7 @@ class DeleteInviteeController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_DELETE],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Returns no content')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]

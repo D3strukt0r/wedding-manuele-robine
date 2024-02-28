@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Api\User;
 
 use App\Dto\Admin\User\UserCreateDto;
 use App\Dto\Admin\User\UserShowDto;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\User\PasswordGenerator;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CreateUserController extends AbstractController
 {
@@ -33,6 +35,7 @@ class CreateUserController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UserCreateDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns a user', content: new OA\JsonContent(ref: new Model(type: UserShowDto::class)))]

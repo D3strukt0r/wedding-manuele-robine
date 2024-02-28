@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Table;
 use App\Dto\Admin\Table\TableShowDto;
 use App\Dto\Admin\Table\TableUpdateDto;
 use App\Entity\Invitee;
+use App\Entity\Role;
 use App\Entity\Table;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UpdateTableController extends AbstractController
 {
@@ -34,6 +36,7 @@ class UpdateTableController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: TableUpdateDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns a table', content: new OA\JsonContent(ref: new Model(type: TableShowDto::class)))]

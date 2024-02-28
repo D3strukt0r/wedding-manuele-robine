@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Invitee;
 use App\Dto\Admin\Invitee\InviteeCreateDto;
 use App\Dto\Admin\Invitee\InviteeShowDto;
 use App\Entity\Invitee;
+use App\Entity\Role;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CreateInviteeController extends AbstractController
 {
@@ -33,6 +35,7 @@ class CreateInviteeController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: InviteeCreateDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns an invitee', content: new OA\JsonContent(ref: new Model(type: InviteeShowDto::class)))]

@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Api\Invitee;
 
 use App\Dto\Admin\Invitee\InviteeShowDto;
 use App\Entity\Invitee;
+use App\Entity\Role;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ShowInviteeController extends AbstractController
 {
@@ -23,6 +25,7 @@ class ShowInviteeController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns an invitee', content: new OA\JsonContent(ref: new Model(type: InviteeShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]

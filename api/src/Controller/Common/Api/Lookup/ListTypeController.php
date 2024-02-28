@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ListTypeController extends AbstractController
 {
@@ -20,6 +21,7 @@ class ListTypeController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Type not found')]
     #[OA\Tag('Common/Lookup')]

@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Invitee;
 use App\Dto\Admin\Invitee\InviteeShowDto;
 use App\Dto\Admin\Invitee\InviteeUpdateDto;
 use App\Entity\Invitee;
+use App\Entity\Role;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class UpdateInviteeController extends AbstractController
 {
@@ -35,6 +37,7 @@ class UpdateInviteeController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_PATCH, Request::METHOD_PUT],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: InviteeUpdateDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns an invitee', content: new OA\JsonContent(ref: new Model(type: InviteeShowDto::class)))]

@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Api\User;
 
 use App\Dto\Admin\User\UserListDto;
 use App\Dto\Admin\User\UsersQueryDto;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ListUsersController extends AbstractController
 {
@@ -28,6 +30,7 @@ class ListUsersController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\Parameter(name: 'limit', in: 'query', description: 'The field used to limit the number of records returned', schema: new OA\Schema(type: 'integer'))]
     #[OA\Parameter(name: 'offset', in: 'query', description: 'The field used to offset the records returned', schema: new OA\Schema(type: 'integer'))]

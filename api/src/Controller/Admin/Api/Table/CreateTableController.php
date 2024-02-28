@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Api\Table;
 
 use App\Dto\Admin\Table\TableCreateDto;
 use App\Dto\Admin\Table\TableShowDto;
+use App\Entity\Role;
 use App\Entity\Table;
 use App\Repository\InviteeRepository;
 use App\Repository\TableRepository;
@@ -16,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CreateTableController extends AbstractController
 {
@@ -30,6 +32,7 @@ class CreateTableController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: TableCreateDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns a table', content: new OA\JsonContent(ref: new Model(type: TableShowDto::class)))]

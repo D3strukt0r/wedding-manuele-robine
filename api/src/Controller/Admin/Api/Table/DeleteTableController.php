@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\Api\Table;
 
+use App\Entity\Role;
 use App\Entity\Table;
 use App\Repository\TableRepository;
 use Nelmio\ApiDocBundle\Annotation\Security;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DeleteTableController extends AbstractController
 {
@@ -26,6 +28,7 @@ class DeleteTableController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_DELETE],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Returns no content')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]

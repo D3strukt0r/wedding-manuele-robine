@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Card;
 use App\Dto\Admin\Card\CardListDto;
 use App\Dto\Admin\Card\CardsQueryDto;
 use App\Entity\Card;
+use App\Entity\Role;
 use App\Repository\CardRepository;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
@@ -15,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ListCardsController extends AbstractController
 {
@@ -28,6 +30,7 @@ class ListCardsController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_GET],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\Parameter(name: 'limit', in: 'query', description: 'The field used to limit the number of records returned', schema: new OA\Schema(type: 'integer'))]
     #[OA\Parameter(name: 'offset', in: 'query', description: 'The field used to offset the records returned', schema: new OA\Schema(type: 'integer'))]

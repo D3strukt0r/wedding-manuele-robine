@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Card;
 use App\Dto\Admin\Card\CardCreateDto;
 use App\Dto\Admin\Card\CardShowDto;
 use App\Entity\Card;
+use App\Entity\Role;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
 use App\Repository\UserRepository;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class CreateCardController extends AbstractController
 {
@@ -32,6 +34,7 @@ class CreateCardController extends AbstractController
         options: ['expose' => true],
         methods: [Request::METHOD_POST],
     )]
+    #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
     #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CardCreateDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns a card', content: new OA\JsonContent(ref: new Model(type: CardShowDto::class)))]
