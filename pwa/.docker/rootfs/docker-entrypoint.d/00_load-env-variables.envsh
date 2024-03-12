@@ -34,6 +34,7 @@ manualEnvs=(
 envs=(
   ENV
   "${manualEnvs[@]}"
+  NGINX_CLIENT_MAX_BODY_SIZE
   # For Svelte Kit (https://kit.svelte.dev/docs/adapter-node)
   HOST
   PORT
@@ -52,6 +53,7 @@ for e in "${envs[@]}"; do
 done
 
 # Set default values
+: "${NGINX_CLIENT_MAX_BODY_SIZE:=100M}"
 : "${ENV:=prod}"
 : "${HOST:=0.0.0.0}"
 : "${PORT:=80}"

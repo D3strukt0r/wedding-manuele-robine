@@ -38,6 +38,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         nano \
         # To run multiple processes simultaneously
         supervisor \
+        # For the envsubst command
+        gettext-base \
         # For the wait-for.sh which uses nc to check for server
         netcat-traditional \
         # For the 'top' command
@@ -51,7 +53,12 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list \
     && apt-get update -qq \
     && apt-get -qq install \
-        nodejs >/dev/null
+        nodejs >/dev/null \
+    \
+    # Install Nginx
+    && apt-get -qq install \
+        nginx \
+        brotli
 
 RUN \
     # Use Node.js corepack to enable pnpm
@@ -60,6 +67,7 @@ RUN \
     # Smoke tests
     && node --version \
     && pnpm --version \
+    && nginx -v \
     \
     # Change pnpm store dir to be outside /usr/local/src/app (currently defaults to /usr/local/src/app/.pnpm-store) (https://pnpm.io/configuring)
     && pnpm config set store-dir /var/cache/pnpm \
@@ -78,7 +86,15 @@ RUN \
     && { \
         # Same as above (except bash completion, because it's already in the bashrc)
         echo 'export PS1="🐳 ${debian_chroot:+($debian_chroot)}\[\e[38;5;46m\]\u@\h\[\e[0m\]:\[\e[38;5;33m\]\w\[\e[0m\]\\$ "'; \
-    } >>/home/app/.bashrc
+    } >>/home/app/.bashrc \
+    \
+    # Forward request and error logs to docker log collector
+    && ln --symbolic --force /dev/stdout /var/log/nginx/access.log \
+    && ln --symbolic --force /dev/stderr /var/log/nginx/error.log \
+    # Fix nginx package doesn't use file endings for sites
+    && mv /etc/nginx/sites-available/default /etc/nginx/sites-available/default.conf \
+    && rm /etc/nginx/sites-enabled/default \
+    && ln --symbolic --force ../sites-available/default.conf /etc/nginx/sites-enabled/default.conf
 
 COPY .docker/rootfs/common /
 COPY pwa/.docker/rootfs /
@@ -111,16 +127,15 @@ COPY pwa/package.json pwa/pnpm-lock.yaml ./
 RUN --mount=type=cache,id=pnpm,target=/var/cache/pnpm \
     pnpm install --frozen-lockfile
 COPY pwa/.browserslistrc \
-     pwa/houdini.config.js \
+     pwa/index.html \
      pwa/postcss.config.js \
-     pwa/schema.graphql \
-     pwa/svelte.config.js \
-     pwa/tailwind.config.js \
+     pwa/tailwind.config.ts \
      pwa/tsconfig.json \
+     pwa/tsconfig.node.json \
      pwa/vite.config.ts \
      ./
+COPY pwa/public public
 COPY pwa/src src
-COPY pwa/static static
 RUN pnpm run build
 
 # Prod build
@@ -131,27 +146,17 @@ COPY pwa .
 RUN \
     # Clean up after copying files to /usr/local/src/app
     rm -rf \
-        '$houdini' \
         .docker \
-        .svelte-kit \
+        public \
         src \
-        static \
-        tests \
     && rm -f \
         .browserslistrc \
-        .eslintignore \
         .eslintrc.cjs \
         .gitignore \
-        .graphqlrc.yaml \
-        .npmrc \
-        .prettierignore \
-        .prettierrc.cjs \
-        houdini.config.js \
-        playwright.config.ts \
+        index.html \
         postcss.config.js \
         README.md \
-        schema.graphql \
-        svelte.config.js \
-        tailwind.config.js \
+        tailwind.config.ts \
         tsconfig.json \
+        tsconfig.node.json \
         vite.config.ts

@@ -33,20 +33,16 @@ on:
       - api/symfony.lock
 
       - 'pwa/.docker/rootfs/**'
+      - 'pwa/public/**'
       - 'pwa/src/**'
-      - 'pwa/static/**'
-      - 'pwa/tests/**'
       - pwa/.browserslistrc
-      - pwa/.npmrc
-      - pwa/houdini.config.js
+      - pwa/index.html
       - pwa/package.json
-      - pwa/playwright.config.ts
       - pwa/pnpm-lock.yaml
       - pwa/postcss.config.js
-      - pwa/schema.graphql
-      - pwa/svelte.config.js
       - pwa/tailwind.config.js
       - pwa/tsconfig.json
+      - pwa/tsconfig.node.json
       - pwa/vite.config.ts
   pull_request:
     branches: [ master ]

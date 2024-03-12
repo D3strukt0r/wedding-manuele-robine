@@ -1,13 +1,10 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 import browserslistToEsbuild from 'browserslist-to-esbuild';
-import houdini from 'houdini/vite';
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    sveltekit(),
-    houdini(),
-  ],
+  plugins: [react()],
   build: {
     target: browserslistToEsbuild(),
   },
@@ -19,13 +16,4 @@ export default defineConfig({
       ignored: ['**/.pnpm-store/**'],
     },
   },
-  // https://vitest.dev
-  test: {
-    include: ['src/**/*.{test,spec}.{js,ts}']
-  },
-  resolve: {
-    alias: {
-      $houdini: './$houdini',
-    },
-  },
-});
+})

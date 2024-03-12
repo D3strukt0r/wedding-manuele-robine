@@ -15,7 +15,7 @@ services:
       - ~/data/pnpm:/var/cache/pnpm
 
       # Disable svelte-kit process and use vite dev server
-      - ./.docker/rootfs-local/empty.txt:/etc/supervisor/conf.d/svelte-kit.conf
+      - ./.docker/rootfs-local/empty.txt:/etc/supervisor/conf.d/nginx.conf
       - ./pwa/.docker/rootfs-local/etc/supervisor/conf.d/vite-dev-server.conf:/etc/supervisor/conf.d/vite-dev-server.conf
 
       # Entrypoint scripts to run only locally (install deps, etc.)
