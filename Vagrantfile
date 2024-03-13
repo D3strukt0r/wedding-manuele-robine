@@ -173,6 +173,12 @@ Vagrant.configure('2') do |config|
         puts 'RSA:   $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"'
         exit
     end
+    config.vm.provision 'fix-ssh-permissions', type: 'shell', privileged: false, reset: true, inline: <<-SCRIPT
+        set -e -u -x -o pipefail
+        if [ -f ~/.ssh/id_ed25519 ]; then
+            chmod 600 ~/.ssh/id_ed25519
+        fi
+    SCRIPT
     config.vm.provision 'update-known_hosts', type: 'shell', privileged: false, reset: true, inline: <<-SCRIPT
         set -e -u -x -o pipefail
         ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts
