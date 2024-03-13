@@ -36,7 +36,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                       href={item.route}
                       className={clsx(
                         item.route === current ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-50 hover:border-gray-100 hover:text-gray-200',
-                        'inline-flex items-center border-b-2 pt-1 text-sm font-medium uppercase',
+                        'inline-flex items-center border-b-2 pt-1 text-sm font-medium uppercase philosopher-regular',
                       )}
                     >
                       <span
@@ -79,7 +79,10 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                           {({active}) => (
                             <a
                               href="#"
-                              className={clsx(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                              className={clsx(
+                                'block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
+                                {'bg-gray-100': active}
+                              )}
                             >
                               {t('menu.logout')}
                             </a>
@@ -122,7 +125,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                   href={item.route}
                   className={clsx(
                     item.route === current ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
-                    'block border-l-4 pl-3 pr-4 text-base font-medium uppercase'
+                    'block border-l-4 pl-3 pr-4 text-base font-medium uppercase philosopher-regular'
                   )}
                 >
                   <span
@@ -141,7 +144,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                 <Disclosure.Button
                   as="a"
                   href="#"
-                  className="block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase"
+                  className="block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
                 >
                   {t('menu.logout')}
                 </Disclosure.Button>

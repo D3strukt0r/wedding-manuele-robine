@@ -88,7 +88,7 @@ export default function ManuAndSelection({id}: {id?: string}) {
           />
         </div>
         <div className="flex-1 m-8">
-          <h2 className="uppercase text-3xl mb-6">{t('homepage.menu.title')}</h2>
+          <h2 className="uppercase text-3xl mb-6 philosopher-regular">{t('homepage.menu.title')}</h2>
           <div className="md:hidden">
             {menuOptions.map((item, index) => (
               <Disclosure
@@ -106,9 +106,9 @@ export default function ManuAndSelection({id}: {id?: string}) {
                           {'rotate-180': open}
                         )}
                       />
-                      <span className="text-lg">{item.title}</span>
+                      <span className="text-lg philosopher-regular">{item.title}</span>
                     </Disclosure.Button>
-                    <Disclosure.Panel className="whitespace-pre-line ml-8">
+                    <Disclosure.Panel className="whitespace-pre-line ml-8 noto-sans-regular">
                       {item.text}
                     </Disclosure.Panel>
                   </>
@@ -117,10 +117,10 @@ export default function ManuAndSelection({id}: {id?: string}) {
             ))}
           </div>
           <div className="hidden md:block">
-            <h3 className="text-2xl mb-4">{t('homepage.menu.meat.title')}</h3>
-            <p className="whitespace-pre-line">{t('homepage.menu.meat.text')}</p>
-            <h3 className="text-2xl mb-4">{t('homepage.menu.vegetarian.title')}</h3>
-            <p className="whitespace-pre-line">{t('homepage.menu.vegetarian.text')}</p>
+            <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.menu.meat.title')}</h3>
+            <p className="whitespace-pre-line noto-sans-regular">{t('homepage.menu.meat.text')}</p>
+            <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.menu.vegetarian.title')}</h3>
+            <p className="whitespace-pre-line noto-sans-regular">{t('homepage.menu.vegetarian.text')}</p>
           </div>
         </div>
       </div>
