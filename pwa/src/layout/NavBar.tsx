@@ -16,7 +16,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
   const current = null; // TODO: get current route
 
   return (
-    <Disclosure as="nav" className="bg-red-dark shadow">
+    <Disclosure as="nav" className="sticky top-0 bg-black/75 shadow z-10">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
