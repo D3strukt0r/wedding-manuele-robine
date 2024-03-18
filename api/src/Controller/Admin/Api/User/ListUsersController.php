@@ -7,6 +7,7 @@ use App\Dto\Admin\User\UsersQueryDto;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -22,6 +23,7 @@ class ListUsersController extends AbstractController
 {
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly PermissionChecker $permissionChecker,
     ) {}
 
     #[Route(
@@ -51,7 +53,14 @@ class ListUsersController extends AbstractController
             'total' => $this->userRepository->count([]),
             'offset' => $query->offset,
             'limit' => $query->limit,
-            'records' => array_map(static fn (User $user) => new UserListDto($user), $users),
+            'records' => array_map(function (User $user) {
+                $actions = ($this->permissionChecker)([
+                    'update' => ['api_admin_user_update', ['user_id' => $user->getId()]],
+                    'delete' => ['api_admin_user_delete', ['user_id' => $user->getId()]],
+                ]);
+
+                return new UserListDto($user, $actions);
+            }, $users),
         ]);
     }
 }

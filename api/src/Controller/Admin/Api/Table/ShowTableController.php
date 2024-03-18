@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Table;
 use App\Dto\Admin\Table\TableShowDto;
 use App\Entity\Role;
 use App\Entity\Table;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -18,6 +19,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ShowTableController extends AbstractController
 {
+    public function __construct(
+        private readonly PermissionChecker $permissionChecker,
+    ) {}
+
     #[Route(
         path: '/tables/{table_id}',
         name: 'api_admin_table_show',
@@ -33,6 +38,11 @@ class ShowTableController extends AbstractController
     #[OA\Tag('Admin/Table')]
     public function __invoke(#[MapEntity(id: 'table_id')] Table $table): JsonResponse
     {
-        return $this->json(new TableShowDto($table));
+        $actions = ($this->permissionChecker)([
+            'update' => ['api_admin_table_update', ['table_id' => $table->getId()]],
+            'delete' => ['api_admin_table_delete', ['table_id' => $table->getId()]],
+        ]);
+
+        return $this->json(new TableShowDto($table, $actions));
     }
 }

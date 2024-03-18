@@ -7,6 +7,7 @@ use App\Dto\Admin\Card\CardsQueryDto;
 use App\Entity\Card;
 use App\Entity\Role;
 use App\Repository\CardRepository;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -22,6 +23,7 @@ class ListCardsController extends AbstractController
 {
     public function __construct(
         private readonly CardRepository $cardRepository,
+        private readonly PermissionChecker $permissionChecker,
     ) {}
 
     #[Route(
@@ -51,7 +53,14 @@ class ListCardsController extends AbstractController
             'total' => $this->cardRepository->count([]),
             'offset' => $query->offset,
             'limit' => $query->limit,
-            'records' => array_map(static fn (Card $card) => new CardListDto($card), $cards),
+            'records' => array_map(function (Card $card) {
+                $actions = ($this->permissionChecker)([
+                    'update' => ['api_admin_card_update', ['card_id' => $card->getId()]],
+                    'delete' => ['api_admin_card_delete', ['card_id' => $card->getId()]],
+                ]);
+
+                return new CardListDto($card, $actions);
+            }, $cards),
         ]);
     }
 }

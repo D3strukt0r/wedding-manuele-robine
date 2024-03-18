@@ -7,6 +7,7 @@ use App\Dto\Admin\Invitee\InviteesQueryDto;
 use App\Entity\Invitee;
 use App\Entity\Role;
 use App\Repository\InviteeRepository;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -22,6 +23,7 @@ class ListInviteesController extends AbstractController
 {
     public function __construct(
         private readonly InviteeRepository $inviteeRepository,
+        private readonly PermissionChecker $permissionChecker,
     ) {}
 
     #[Route(
@@ -51,7 +53,14 @@ class ListInviteesController extends AbstractController
             'total' => $this->inviteeRepository->count([]),
             'offset' => $query->offset,
             'limit' => $query->limit,
-            'records' => array_map(static fn (Invitee $invitee) => new InviteeListDto($invitee), $invitees),
+            'records' => array_map(function (Invitee $invitee) {
+                $actions = ($this->permissionChecker)([
+                    'update' => ['api_admin_invitee_update', ['invitee_id' => $invitee->getId()]],
+                    'delete' => ['api_admin_invitee_delete', ['invitee_id' => $invitee->getId()]],
+                ]);
+
+                return new InviteeListDto($invitee, $actions);
+            }, $invitees),
         ]);
     }
 }

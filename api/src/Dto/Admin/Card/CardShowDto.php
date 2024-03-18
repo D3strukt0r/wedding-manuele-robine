@@ -14,10 +14,16 @@ readonly class CardShowDto
     /** @var array<int> */
     public array $inviteeIds;
 
-    public function __construct(Card $card)
+    /**
+     * @var array<string, bool>
+     */
+    public array $actions;
+
+    public function __construct(Card $card, ?array $actions = null)
     {
         $this->id = $card->getId();
         $this->userLoginId = $card->getUserLogin()?->getId();
         $this->inviteeIds = $card->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray();
+        $this->actions = $actions ?? [];
     }
 }

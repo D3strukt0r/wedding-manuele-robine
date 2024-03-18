@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Invitee;
 use App\Dto\Admin\Invitee\InviteeShowDto;
 use App\Entity\Invitee;
 use App\Entity\Role;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -18,6 +19,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ShowInviteeController extends AbstractController
 {
+    public function __construct(
+        private readonly PermissionChecker $permissionChecker,
+    ) {}
+
     #[Route(
         path: '/invitees/{invitee_id}',
         name: 'api_admin_invitee_show',
@@ -33,6 +38,11 @@ class ShowInviteeController extends AbstractController
     #[OA\Tag('Admin/Invitee')]
     public function __invoke(#[MapEntity(id: 'invitee_id')] Invitee $invitee): JsonResponse
     {
-        return $this->json(new InviteeShowDto($invitee));
+        $actions = ($this->permissionChecker)([
+            'update' => ['api_admin_invitee_update', ['invitee_id' => $invitee->getId()]],
+            'delete' => ['api_admin_invitee_delete', ['invitee_id' => $invitee->getId()]],
+        ]);
+
+        return $this->json(new InviteeShowDto($invitee, $actions));
     }
 }

@@ -7,6 +7,7 @@ use App\Dto\Admin\Table\TablesQueryDto;
 use App\Entity\Role;
 use App\Entity\Table;
 use App\Repository\TableRepository;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -22,6 +23,7 @@ class ListTablesController extends AbstractController
 {
     public function __construct(
         private readonly TableRepository $tableRepository,
+        private readonly PermissionChecker $permissionChecker,
     ) {}
 
     #[Route(
@@ -51,7 +53,14 @@ class ListTablesController extends AbstractController
             'total' => $this->tableRepository->count([]),
             'offset' => $query->offset,
             'limit' => $query->limit,
-            'records' => array_map(static fn (Table $table) => new TableListDto($table), $tables),
+            'records' => array_map(function (Table $table) {
+                $actions = ($this->permissionChecker)([
+                    'update' => ['api_admin_table_update', ['table_id' => $table->getId()]],
+                    'delete' => ['api_admin_table_delete', ['table_id' => $table->getId()]],
+                ]);
+
+                return new TableListDto($table, $actions);
+            }, $tables),
         ]);
     }
 }

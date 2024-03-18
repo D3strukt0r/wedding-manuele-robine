@@ -26,6 +26,10 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    # "access_map" is private, so we have to manually give access to it
+    App\Service\PathRoles:
+        arguments: ['@security.access_map']
+
     # Add GraphQL resolver
     # https://github.com/overblog/GraphQLBundle/blob/master/docs/definitions/resolver-map.md
     App\Resolver\AppResolverMap:

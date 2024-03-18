@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\Card;
 use App\Dto\Admin\Card\CardShowDto;
 use App\Entity\Card;
 use App\Entity\Role;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -18,6 +19,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ShowCardController extends AbstractController
 {
+    public function __construct(
+        private readonly PermissionChecker $permissionChecker,
+    ) {}
+
     #[Route(
         path: '/cards/{card_id}',
         name: 'api_admin_card_show',
@@ -33,6 +38,11 @@ class ShowCardController extends AbstractController
     #[OA\Tag('Admin/Card')]
     public function __invoke(#[MapEntity(id: 'card_id')] Card $card): JsonResponse
     {
-        return $this->json(new CardShowDto($card));
+        $actions = ($this->permissionChecker)([
+            'update' => ['api_admin_card_update', ['card_id' => $card->getId()]],
+            'delete' => ['api_admin_card_delete', ['card_id' => $card->getId()]],
+        ]);
+
+        return $this->json(new CardShowDto($card, $actions));
     }
 }

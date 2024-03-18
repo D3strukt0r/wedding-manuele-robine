@@ -25,7 +25,12 @@ readonly class InviteeShowDto
 
     public ?int $cardId;
 
-    public function __construct(Invitee $invitee)
+    /**
+     * @var array<string, bool>
+     */
+    public array $actions;
+
+    public function __construct(Invitee $invitee, ?array $actions = null)
     {
         $this->id = $invitee->getId();
         $this->firstname = $invitee->getFirstname();
@@ -36,5 +41,6 @@ readonly class InviteeShowDto
         $this->allergies = $invitee->getAllergies();
         $this->tableId = $invitee->getTable()?->getId();
         $this->cardId = $invitee->getCard()?->getId();
+        $this->actions = $actions ?? [];
     }
 }

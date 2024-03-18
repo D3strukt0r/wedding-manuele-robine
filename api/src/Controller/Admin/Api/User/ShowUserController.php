@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Api\User;
 use App\Dto\Admin\User\UserShowDto;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Service\PermissionChecker;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
@@ -18,6 +19,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ShowUserController extends AbstractController
 {
+    public function __construct(
+        private readonly PermissionChecker $permissionChecker,
+    ) {}
+
     #[Route(
         path: '/users/{user_id}',
         name: 'api_admin_user_show',
@@ -33,6 +38,11 @@ class ShowUserController extends AbstractController
     #[OA\Tag('Admin/User')]
     public function __invoke(#[MapEntity(id: 'user_id')] User $user): JsonResponse
     {
-        return $this->json(new UserShowDto($user));
+        $actions = ($this->permissionChecker)([
+            'update' => ['api_admin_user_update', ['user_id' => $user->getId()]],
+            'delete' => ['api_admin_user_delete', ['user_id' => $user->getId()]],
+        ]);
+
+        return $this->json(new UserShowDto($user, actions: $actions));
     }
 }

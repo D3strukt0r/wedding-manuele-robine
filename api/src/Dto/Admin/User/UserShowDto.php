@@ -17,11 +17,17 @@ readonly class UserShowDto
      */
     public array $roles;
 
-    public function __construct(User $user, ?string $plainPassword = null)
+    /**
+     * @var array<string, bool>
+     */
+    public array $actions;
+
+    public function __construct(User $user, ?string $plainPassword = null, ?array $actions = null)
     {
         $this->id = $user->getId();
         $this->username = $user->getUsername();
         $this->plainPassword = $plainPassword;
         $this->roles = $user->getRoles();
+        $this->actions = $actions ?? [];
     }
 }

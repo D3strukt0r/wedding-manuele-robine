@@ -14,10 +14,16 @@ readonly class TableShowDto
     /** @var array<int> */
     public array $inviteeIds;
 
-    public function __construct(Table $table)
+    /**
+     * @var array<string, bool>
+     */
+    public array $actions;
+
+    public function __construct(Table $table, ?array $actions = null)
     {
         $this->id = $table->getId();
         $this->seats = $table->getSeats();
         $this->inviteeIds = $table->getInvitees()->map(fn (Invitee $invitee) => $invitee->getId())->toArray();
+        $this->actions = $actions ?? [];
     }
 }
