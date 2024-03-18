@@ -38,8 +38,12 @@ export default function Homepage() {
           }
         ]}
       />
-      <HowToWedding id="how-to" />
-      <MenuAndSelection id="menu" />
+      <div className="md:pb-16">
+        <HowToWedding id="how-to" />
+      </div>
+      <div className="md:pb-16">
+        <MenuAndSelection id="menu" />
+      </div>
     </>
   );
 }
