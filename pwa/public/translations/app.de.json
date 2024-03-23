@@ -18,5 +18,21 @@
   "homepage.menu.vegetarian.text": "Vorspeise: \n\nHauptgang: \n\nDessert: \n\n",
   "homepage.qrScanner.activateCamera": "Kamera aktivieren",
   "homepage.qrScanner.invalid": "Der QR Code ist ungültig",
-  "homepage.qrScanner.loggingIn": "QR Code gescannt, Login im gange ..."
+  "homepage.qrScanner.loggingIn": "QR Code gescannt, Login im gange ...",
+  "homepage.map.title1": "Adresse",
+  "homepage.map.address": "Wasserschloss Inzlingen\nRiehenstraße 5\n79594 Inzlingen\nDeutschland",
+  "homepage.map.addressInfo": "Parkmöglichkeiten gibt es direkt beim Schloss. Es sollte genug für alle haben, aber für alle Fälle wäre es super, wenn ihr euch überlegt, ob eine Fahrgemeinschaft Sinn macht.",
+  "homepage.map.title2": "Ablauf",
+  "homepage.map.plan": "Wir werden den Tag um 14:00 Uhr vor dem Schloss mit der Trauung im Freien beginnen. Sollte das Wetter nicht mitspielen, werden wir die Trauung in einen kleinen Raum im Schloss verlegen. Bitte stattet euch dem Wetter entsprechend mit Sonnencreme oder einer Jacke aus.\nSollte sich doch noch etwas am Plan ändern, werdet ihr das frühzeitig von uns erfahren. Untenstehend findet ihr noch eine grobe Timeline von unserem Tag:",
+  "homepage.info.title": "Wichtigste Infos",
+  "homepage.info.date": "Datum: Samstag, 21.09.2024\nTrauung: 14:00 Uhr\nOrt: Wasserschloss Inzlingen",
+  "homepage.info.dresscode.title": "Dresscode",
+  "homepage.info.dresscode.text": "Wir würden uns freuen, Euch in festlicher Abendgarderobe begrüßen zu dürfen.",
+  "homepage.info.gifts.title": "Geschenke",
+  "homepage.info.gifts.text": "Vielen Dank, dass ihr etwas zu unserer Hochzeit beisteuern wollt! Da wir nach unserer Hochzeit erst mal eine Auszeit nehmen, würdet ihr uns mit einem kleinen Beitrag an unsere Ferienkasse am meisten helfen.",
+  "homepage.info.games.title": "Ideen Spiele",
+  "homepage.info.games.text": "Wir haben ein super Team, das sich um den Ablauf und die Spiele an diesem Tag kümmert. Bitte meldet euch für Ideen und Anregungen direkt bei ihnen. Die Email dafür könnt ihr in eurer Einladung finden oder einfach unter XYZ@Email.com.",
+  "homepage.gallery.title": "Fotogalerie",
+  "homepage.gallery.text": "Wir freuen uns schon auf die vielen tollen Bilder, die es geben wird. Bitte lasst doch alle daran teilhaben und ladet diese hier hoch, wo sie jeder ansehen und herunterladen kann. Zu einem späteren Zeitpunkt werden wir hier auch die Bilder von unserem Fotografen hochladen.",
+  "footer.copyright": "Images by Sacha Kocher and Pexels\n© 2024"
 }

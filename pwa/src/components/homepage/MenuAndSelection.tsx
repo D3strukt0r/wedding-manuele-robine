@@ -1,12 +1,9 @@
 import {useTranslation} from "react-i18next";
 import menu from '/menu.png';
-import {Disclosure} from "@headlessui/react";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
-import clsx from "clsx";
 import QrScannerCheck, {CountdownHandle} from "./QrScannerCheck.tsx";
 import {useRef} from "react";
 import AlignedCard from "../../layout/AlignedCard.tsx";
+import Collapsible from "../../layout/Collapsible.tsx";
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -23,19 +20,6 @@ function isValidHttpUrl(string: string) {
 
 export default function ManuAndSelection({id}: {id?: string}) {
   const {t} = useTranslation('app')
-
-  const menuOptions = [
-    {
-      key: 'meat',
-      title: t('homepage.menu.meat.title'),
-      text: t('homepage.menu.meat.text')
-    },
-    {
-      key: 'vegetarian',
-      title: t('homepage.menu.vegetarian.title'),
-      text: t('homepage.menu.vegetarian.text')
-    }
-  ];
 
   const qrRef = useRef<CountdownHandle | undefined>(undefined);
 
@@ -83,31 +67,20 @@ export default function ManuAndSelection({id}: {id?: string}) {
         <>
           <h2 className="uppercase text-3xl mb-6 philosopher-regular">{t('homepage.menu.title')}</h2>
           <div className="md:hidden">
-            {menuOptions.map((item, index) => (
-              <Disclosure
-                as="div"
-                key={item.key}
-                className={clsx('border-b-[1px] border-gray-dark', {'border-t-[1px]': index === 0})}
-              >
-                {({open}) => (
-                  <>
-                    <Disclosure.Button className="py-2">
-                      <FontAwesomeIcon
-                        icon={faChevronDown}
-                        className={clsx(
-                          'mr-4 transform transition-transform motion-reduce:transition-none',
-                          {'rotate-180': open}
-                        )}
-                      />
-                      <span className="text-lg philosopher-regular">{item.title}</span>
-                    </Disclosure.Button>
-                    <Disclosure.Panel className="whitespace-pre-line ml-8 noto-sans-regular">
-                      {item.text}
-                    </Disclosure.Panel>
-                  </>
-                )}
-              </Disclosure>
-            ))}
+            <Collapsible
+              menuOptions={[
+                {
+                  key: 'meat',
+                  title: t('homepage.menu.meat.title'),
+                  text: t('homepage.menu.meat.text')
+                },
+                {
+                  key: 'vegetarian',
+                  title: t('homepage.menu.vegetarian.title'),
+                  text: t('homepage.menu.vegetarian.text')
+                }
+              ]}
+            />
           </div>
           <div className="hidden md:block">
             <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.menu.meat.title')}</h3>
