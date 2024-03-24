@@ -133,7 +133,13 @@ Vagrant.configure('2') do |config|
             # Automatically sync when machines with rsync folders come up.
             config.gatling.rsync_on_startup = false
         end
+    elsif settings.dig('folder', 'type') == 'smb'
+        # https://github.com/hashicorp/vagrant/issues/6677#issuecomment-165873490
+        config.vm.synced_folder '.', '/vagrant',
+            type: 'smb',
+            mount_options: ['vers=3.02', 'mfsymlinks']
     else
+        # VirtualBox shared folders
         config.vm.synced_folder '.', '/vagrant'
     end
 
