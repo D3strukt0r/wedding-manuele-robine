@@ -135,9 +135,17 @@ Vagrant.configure('2') do |config|
         end
     elsif settings.dig('folder', 'type') == 'smb'
         # https://github.com/hashicorp/vagrant/issues/6677#issuecomment-165873490
-        config.vm.synced_folder '.', '/vagrant',
-            type: 'smb',
-            mount_options: ['vers=3.02', 'mfsymlinks']
+        if settings.dig('folder', 'smb', 'username') && settings.dig('folder', 'smb', 'password')
+          config.vm.synced_folder '.', '/vagrant',
+              type: 'smb',
+              mount_options: ['vers=3.02', 'mfsymlinks'],
+              smb_username: settings.dig('folder', 'smb', 'username'),
+              smb_password: settings.dig('folder', 'smb', 'password')
+        else
+          config.vm.synced_folder '.', '/vagrant',
+              type: 'smb',
+              mount_options: ['vers=3.02', 'mfsymlinks']
+        end
     else
         # VirtualBox shared folders
         config.vm.synced_folder '.', '/vagrant'
@@ -273,6 +281,7 @@ Vagrant.configure('2') do |config|
 
     # Run mkcert on host if cert files don't exist yet or incomplete
     if not File.exist?('./.docker/certs/cert.pem') || File.exist?('./.docker/certs/key.pem')
+        # TODO: Check that mkcert is installed, otherwise i think this failing will be ignored
         system('mkcert -cert-file ./.docker/certs/cert.pem -key-file ./.docker/certs/key.pem localhost wedding-manuele-robine.test "*.wedding-manuele-robine.test"')
     end
 
