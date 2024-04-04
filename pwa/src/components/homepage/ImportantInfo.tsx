@@ -1,7 +1,8 @@
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 import infos from '/infos.png';
 import AlignedCard from "../../layout/AlignedCard.tsx";
 import Collapsible from "../../layout/Collapsible.tsx";
+import {Markup} from 'interweave';
 
 export default function ImportantInfo({id}: {id?: string}) {
   const {t} = useTranslation('app')
@@ -50,7 +51,9 @@ export default function ImportantInfo({id}: {id?: string}) {
             </div>
             <div>
               <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.info.games.title')}</h3>
-              <p className="whitespace-pre-line noto-sans-regular">{t('homepage.info.games.text')}</p>
+              <p className="whitespace-pre-line noto-sans-regular">
+                <Markup content={t('homepage.info.games.text')} />
+              </p>
             </div>
           </div>
         </>
