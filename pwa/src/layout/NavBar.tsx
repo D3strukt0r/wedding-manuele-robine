@@ -1,10 +1,11 @@
-import { Fragment } from 'react'
+import {Fragment, useContext} from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import clsx from "clsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars, faX} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {faUser} from "@fortawesome/free-regular-svg-icons";
+import AuthenticationContext from "../context/AuthenticationContext.tsx";
 
 export type MenuItem = {
   label: string;
@@ -14,11 +15,13 @@ export type MenuItem = {
 export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuItems: MenuItem[] }) {
   const {t} = useTranslation("app")
   const current = null; // TODO: get current route
+  const [authentication, updateAuthentication] = useContext(AuthenticationContext);
 
   return (
     <Disclosure as="nav" className="sticky top-0 bg-black/75 shadow z-10">
       {({ open }) => (
         <>
+          {/* Desktop Menu */}
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
@@ -51,47 +54,55 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                   ))}
                 </div>
                 {/* Profile dropdown */}
-                <div className="sm:flex sm:items-center">
-                  <Menu
-                    as="div"
-                    className="relative ml-3"
-                  >
-                    <div>
-                      <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">{t('menu.user.open')}</span>
-                        <div className="h-8 w-8 rounded-full flex justify-center items-center">
-                          <FontAwesomeIcon icon={faUser} />
-                        </div>
-                      </Menu.Button>
-                    </div>
-                    <Transition
-                      as={Fragment}
-                      enter="transition ease-out duration-200"
-                      enterFrom="transform opacity-0 scale-95"
-                      enterTo="transform opacity-100 scale-100"
-                      leave="transition ease-in duration-75"
-                      leaveFrom="transform opacity-100 scale-100"
-                      leaveTo="transform opacity-0 scale-95"
+                {authentication && (
+                  <div className="sm:flex sm:items-center">
+                    <Menu
+                      as="div"
+                      className="relative ml-3"
                     >
-                      <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                        <Menu.Item>
-                          {({active}) => (
-                            <a
-                              href="#"
-                              className={clsx(
-                                'block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
-                                {'bg-gray-100': active}
-                              )}
-                            >
-                              {t('menu.logout')}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </Transition>
-                  </Menu>
-                </div>
+                      <div>
+                        <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                          <span className="absolute -inset-1.5" />
+                          <span className="sr-only">{t('menu.user.open')}</span>
+                          <div className="h-8 w-8 rounded-full flex justify-center items-center">
+                            <FontAwesomeIcon icon={faUser} />
+                          </div>
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-200"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Item disabled>
+                            <span className="block px-4 py-2 text-sm text-gray-700 noto-sans-regular opacity-75">{authentication.username}</span>
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({active}) => (
+                              <a
+                                href="#"
+                                className={clsx(
+                                  'block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
+                                  {'bg-gray-100': active}
+                                )}
+                                onClick={() => {
+                                  updateAuthentication(null);
+                                }}
+                              >
+                                {t('menu.logout')}
+                              </a>
+                            )}
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  </div>
+                )}
               </div>
               <div className="-mr-2 flex items-center sm:hidden">
                 {/* Mobile menu button */}
@@ -116,6 +127,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
             </div>
           </div>
 
+          {/* Mobile Menu */}
           <Disclosure.Panel className="sm:hidden">
             <div className="pb-3 pt-2">
               {menuItems.map((item, index) => (
@@ -137,19 +149,27 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                     {item.label}
                   </span>
                 </Disclosure.Button>
-                ))}
+              ))}
             </div>
-            <div className="border-t border-gray-200 pb-3 pt-4">
-              <div className="mt-3 space-y-1">
-                <Disclosure.Button
-                  as="a"
-                  href="#"
-                  className="block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
-                >
-                  {t('menu.logout')}
-                </Disclosure.Button>
+            {authentication && (
+              <div className="border-t border-gray-600 pb-3 pt-4">
+                <div className="flex items-center px-4">
+                  <div className="text-base font-medium text-gray-50 philosopher-regular">{authentication.username}</div>
+                </div>
+                <div className="mt-3 space-y-1">
+                  <Disclosure.Button
+                    as="a"
+                    href="#"
+                    className="block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
+                    onClick={() => {
+                      updateAuthentication(null);
+                    }}
+                  >
+                    {t('menu.logout')}
+                  </Disclosure.Button>
+                </div>
               </div>
-            </div>
+            )}
           </Disclosure.Panel>
         </>
       )}

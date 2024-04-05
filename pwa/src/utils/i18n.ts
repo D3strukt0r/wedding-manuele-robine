@@ -9,7 +9,7 @@ export const currentLanguage = () => document.documentElement.lang || 'de';
 export const init = async (lng: string) => {
   await i18n
     // .use(HttpApi)
-    .use(resourcesToBackend((language, namespace) => import(`../translations/${namespace}.${language}.json`)))
+    .use(resourcesToBackend((language: string, namespace: string) => import(`../translations/${namespace}.${language}.json`)))
     .use(LanguageDetector)
     .use(initReactI18next)
     // .init<HttpBackendOptions>({

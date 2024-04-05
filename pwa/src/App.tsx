@@ -4,6 +4,7 @@ import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
 import BigSpinner from "./layout/BigSpinner.tsx";
 import ErrorBoundary from "./layout/ErrorBoundary.tsx";
 import NotFound from "./layout/NotFound.tsx";
+import {AuthenticationContextLoader} from "./context/AuthenticationContext.tsx";
 
 const Homepage = lazy(() => import('./pages/Homepage.tsx'));
 
@@ -32,9 +33,11 @@ function App() {
 
   return (
     <RootErrorBoundary>
-      <Suspense>
-        <RouterProvider router={router} fallbackElement={<BigSpinner />} />
-      </Suspense>
+      <AuthenticationContextLoader>
+        <Suspense>
+          <RouterProvider router={router} fallbackElement={<BigSpinner />} />
+        </Suspense>
+      </AuthenticationContextLoader>
     </RootErrorBoundary>
   )
 }

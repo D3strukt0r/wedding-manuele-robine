@@ -1,9 +1,13 @@
 import {useTranslation} from "react-i18next";
 import menu from '/menu.png';
 import QrScannerCheck, {CountdownHandle} from "./QrScannerCheck.tsx";
-import {useRef} from "react";
+import {useCallback, useContext, useRef} from "react";
 import AlignedCard from "../../layout/AlignedCard.tsx";
 import Collapsible from "../../layout/Collapsible.tsx";
+import AuthenticationContext from "../../context/AuthenticationContext.tsx";
+import {api} from "../api.ts";
+import QrScanner from "qr-scanner";
+import {AxiosError} from "axios";
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -21,9 +25,11 @@ function isValidHttpUrl(string: string) {
 export default function ManuAndSelection({id}: {id?: string}) {
   const {t} = useTranslation('app')
 
-  const qrRef = useRef<CountdownHandle | undefined>(undefined);
+  const qrRef = useRef<CountdownHandle>(null);
 
-  async function handleScan(result) {
+  const [authentication, updateAuthentication] = useContext(AuthenticationContext);
+
+  const handleScan = useCallback(async (result: QrScanner.ScanResult) => {
     if (!isValidHttpUrl(result.data)) {
       qrRef.current?.showMessage('error', t('homepage.qrScanner.invalid'));
       return;
@@ -33,31 +39,24 @@ export default function ManuAndSelection({id}: {id?: string}) {
     const username = url.searchParams.get('username');
     const password = url.searchParams.get('password');
 
+    if (!username || !password) {
+      qrRef.current?.showMessage('error', t('homepage.qrScanner.noCredentials'));
+      return;
+    }
+
     qrRef.current?.showMessage('success', t('homepage.qrScanner.loggingIn'));
-
-    // try {
-    //   const response = await api.common.login({ username, password });
-    //   auth.set({jwt: response.token});
-    // } catch (e) {
-    //   qrRef.current?.showMessage('error', $t('Login fehlgeschlagen: ') + e?.response?.data?.message);
-    //   // throw e
-    // }
-  }
-
-  // onMount(async () => {
-  //   const urlParam = new URLSearchParams(window.location.search);
-  //   const username = urlParam.get('username');
-  //   const password = urlParam.get('password');
-  //   if (username && password) {
-  //     try {
-  //       const response = await api.common.login({ username, password });
-  //       auth.set({jwt: response.token});
-  //       await goto('/');
-  //     } catch (e) {
-  //       // Ignore
-  //     }
-  //   }
-  // });
+    try {
+      const response = await api.common.login({ username, password });
+      updateAuthentication(response.token);
+    } catch (e) {
+      // check if type is AxiosError
+      if (e instanceof AxiosError) {
+        qrRef.current?.showMessage('error', t('homepage.qrScanner.loginFailed', {errorMessage: e.response?.data?.message}));
+      } else {
+        qrRef.current?.showMessage('error', t('homepage.qrScanner.loginFailed', {errorMessage: e}));
+      }
+    }
+  }, [qrRef, updateAuthentication, t]);
 
   return (
     <AlignedCard
@@ -90,7 +89,9 @@ export default function ManuAndSelection({id}: {id?: string}) {
           </div>
         </>
       )}
-      bottomContent={(
+      bottomContent={authentication ? (
+        <p>{t('homepage.menu.loggedIn')}</p>
+      ) : (
         <QrScannerCheck
           ref={qrRef}
           onScan={handleScan}

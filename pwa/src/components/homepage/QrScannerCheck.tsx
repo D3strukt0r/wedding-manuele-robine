@@ -1,9 +1,8 @@
-import React, {useRef, useEffect, useState, forwardRef, useImperativeHandle} from 'react';
+import {useRef, useEffect, useState, forwardRef, useImperativeHandle} from 'react';
 import QrScanner from 'qr-scanner';
 import QrCode from "../../assets/QrCode.tsx";
 import clsx from "clsx";
 import {useTranslation} from "react-i18next";
-
 
 type MessageType = 'success' | 'error';
 
@@ -18,7 +17,7 @@ export interface CountdownHandle {
   showMessage: (type: MessageType, msg: string) => void;
 }
 interface Props {
-  onScan?: (result: string) => Promise<void>;
+  onScan?: (result: QrScanner.ScanResult) => Promise<void>;
 }
 
 const QrScannerCheck = forwardRef<CountdownHandle, Props>(({ onScan }, ref) => {

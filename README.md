@@ -25,7 +25,7 @@ Clone the project
 
 ```shell
 git clone git@github.com:D3strukt0r/wedding-manuele-robine.git
-cd emoji-helper
+cd wedding-manuele-robine
 ```
 
 TODO
