@@ -1,4 +1,4 @@
-import {Trans, useTranslation} from "react-i18next";
+import {useTranslation} from "react-i18next";
 import infos from '/infos.png';
 import AlignedCard from "../../layout/AlignedCard.tsx";
 import Collapsible from "../../layout/Collapsible.tsx";
