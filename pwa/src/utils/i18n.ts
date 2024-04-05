@@ -30,5 +30,3 @@ export const init = async (lng: string) => {
       },
     });
 };
-
-export default i18n;

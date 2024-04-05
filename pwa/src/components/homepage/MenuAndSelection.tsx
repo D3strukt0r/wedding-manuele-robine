@@ -1,13 +1,19 @@
 import {useTranslation} from "react-i18next";
 import menu from '/menu.png';
 import QrScannerCheck, {CountdownHandle} from "./QrScannerCheck.tsx";
-import {useCallback, useContext, useRef} from "react";
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import AlignedCard from "../../layout/AlignedCard.tsx";
 import Collapsible from "../../layout/Collapsible.tsx";
 import AuthenticationContext from "../../context/AuthenticationContext.tsx";
 import {api} from "../api.ts";
 import QrScanner from "qr-scanner";
 import {AxiosError} from "axios";
+import {Invitee} from "../types.ts";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import * as z from 'zod';
+import Input from "../../form/Input.tsx";
+import Checkbox from "../../form/Checkbox.tsx";
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -23,7 +29,7 @@ function isValidHttpUrl(string: string) {
 }
 
 export default function ManuAndSelection({id}: {id?: string}) {
-  const {t} = useTranslation('app')
+  const {t} = useTranslation('app');
 
   const qrRef = useRef<CountdownHandle>(null);
 
@@ -90,7 +96,7 @@ export default function ManuAndSelection({id}: {id?: string}) {
         </>
       )}
       bottomContent={authentication ? (
-        <p>{t('homepage.menu.loggedIn')}</p>
+        <InviteesListOnMyCardLoader />
       ) : (
         <QrScannerCheck
           ref={qrRef}
@@ -102,4 +108,151 @@ export default function ManuAndSelection({id}: {id?: string}) {
       imageShadowColor="gray-dark"
     />
   )
+}
+
+function InviteesListOnMyCardLoader() {
+  const [invitees, setInvitees] = useState<Omit<Invitee, 'cardId'>[]>([]);
+  const [foodOptions, setFoodOptions] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await api.invited.invitees.list();
+        setInvitees(response.records);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await api.common.lookup.type('food');
+        setFoodOptions(response);
+      } finally {
+        setLoading2(false);
+      }
+    })();
+  }, []);
+
+  if (loading || loading2) {
+    return null;
+  }
+
+  return <InviteesListOnMyCardForm invitees={invitees} foodOptions={foodOptions} />;
+}
+
+type Input = {
+  firstname: string
+  lastname: string
+  email?: string
+  willCome?: boolean
+  food?: string
+  allergies?: string
+}
+type Inputs = {
+  [key: string]: Input
+}
+
+function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invitee, 'cardId'>[]; foodOptions: string[]}) {
+  const {t} = useTranslation('app');
+
+  const schema = useMemo(() => {
+    return z.record(z.string(), z.object({
+      firstname: z.string()
+        .min(1, { message: t('form.errors.required') })
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      lastname: z.string()
+        .min(1, { message: t('form.errors.required') })
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      email: z.string()
+        .email()
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      willCome: z.boolean(),
+      food: z.string(),
+      allergies: z.string()
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+    }));
+  }, [t]);
+
+  // map the id to the key of the object
+  const mappedInvitees = useMemo(() => {
+    const mappedObject: Record<Invitee['id'], Omit<Invitee, 'id' | 'cardId'>> = {};
+    invitees.forEach(invitee => {
+      // omit the id as well
+      const {id, ...rest} = invitee;
+      mappedObject[invitee.id] = rest;
+    });
+    return mappedObject;
+  }, [invitees]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(schema),
+    defaultValues: mappedInvitees,
+  });
+  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
+    console.log(data);
+  }, []);
+
+  return (
+    <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
+      {invitees.map((invitee) => (
+        <div key={invitee.id}>
+          <h3 className="text-xl philosopher-regular">{invitee.firstname} {invitee.lastname}</h3>
+          <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="sm:col-span-3">
+              <Input
+                label={t('homepage.manageCard.properties.firstname')}
+                {...register(`${invitee.id}.firstname`)}
+                aria-invalid={errors[invitee.id]?.firstname ? "true" : "false"}
+              />
+              {errors[invitee.id]?.firstname?.message && <span>{errors[invitee.id].firstname.message}</span>}
+            </div>
+            <div className="sm:col-span-3">
+              <Input
+                label={t('homepage.manageCard.properties.lastname')}
+                {...register(`${invitee.id}.lastname`)}
+                aria-invalid={errors[invitee.id]?.lastname ? "true" : "false"}
+              />
+              {errors[invitee.id]?.lastname?.message && <span>{errors[invitee.id].lastname.message}</span>}
+            </div>
+          </div>
+          <div>
+            <Input
+              label={t('homepage.manageCard.properties.email')}
+              {...register(`${invitee.id}.email`)}
+              aria-invalid={errors[invitee.id]?.email ? "true" : "false"}
+            />
+            {errors[invitee.id]?.email?.message && <span>{errors[invitee.id].email.message}</span>}
+          </div>
+          <div className="my-2">
+            <Checkbox
+              label={t('homepage.manageCard.properties.willCome')}
+              {...register(`${invitee.id}.willCome`)}
+              aria-invalid={errors[invitee.id]?.willCome ? "true" : "false"}
+            />
+            {errors[invitee.id]?.willCome?.message && <span>{errors[invitee.id].willCome.message}</span>}
+          </div>
+          {/* TODO: Offer select group options for food */}
+          <p>{invitee.food}</p>
+          <div>
+            <Input
+              label={t('homepage.manageCard.properties.allergies')}
+              {...register(`${invitee.id}.allergies`)}
+              aria-invalid={errors[invitee.id]?.allergies ? "true" : "false"}
+            />
+            {errors[invitee.id]?.allergies?.message && <span>{errors[invitee.id].allergies.message}</span>}
+          </div>
+        </div>
+      ))}
+      <input type="submit" />
+    </form>
+  );
 }

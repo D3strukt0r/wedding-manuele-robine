@@ -9,6 +9,7 @@ readonly class UserUpdateDto
 {
     public function __construct(
         #[Assert\NotNull]
+        #[Assert\Length(max: 180)]
         public string $username,
 
         public ?string $newPassword,

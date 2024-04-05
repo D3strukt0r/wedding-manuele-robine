@@ -71,6 +71,7 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
         try {
           const response = await api.common.login({ username, password });
           updateAuthentication(response.token);
+          // TODO: Uncomment before release
           // window.history.pushState({}, document.title, window.location.pathname);
         } catch (e) {
           // Ignore

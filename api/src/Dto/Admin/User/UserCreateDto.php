@@ -8,6 +8,7 @@ readonly class UserCreateDto
 {
     public function __construct(
         #[Assert\NotNull]
+        #[Assert\Length(max: 180)]
         public string $username,
 
         public ?string $password,

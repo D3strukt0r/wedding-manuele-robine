@@ -36,8 +36,8 @@ class ListInviteesOnCard extends AbstractController
     )]
     #[IsGranted(Role::USER->value)]
     #[Security(name: 'Bearer')]
-    #[OA\Parameter(name: 'limit', in: 'query', description: 'The field used to limit the number of records returned', schema: new OA\Schema(type: 'integer'))]
-    #[OA\Parameter(name: 'offset', in: 'query', description: 'The field used to offset the records returned', schema: new OA\Schema(type: 'integer'))]
+    #[OA\Parameter(name: 'limit', description: 'The field used to limit the number of records returned', in: 'query', schema: new OA\Schema(type: 'integer'))]
+    #[OA\Parameter(name: 'offset', description: 'The field used to offset the records returned', in: 'query', schema: new OA\Schema(type: 'integer'))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns a list of invitees', content: new OA\JsonContent(properties: [
         new OA\Property(property: 'total', type: 'integer'),
         new OA\Property(property: 'offset', type: 'integer'),

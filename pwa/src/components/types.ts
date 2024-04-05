@@ -27,3 +27,10 @@ export type User = {
   username: string
   roles: string[]
 }
+
+export type ListResponse<T> = {
+  total: number
+  offset: number
+  limit: number
+  records: T[]
+}

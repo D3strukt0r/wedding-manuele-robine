@@ -1,4 +1,4 @@
-import type {Card, Invitee, Table, User} from './types'
+import {Card, Invitee, ListResponse, Table, User} from './types'
 import axios from 'axios';
 
 export const api = {
@@ -17,7 +17,7 @@ export const api = {
   admin: {
     invitees: {
       list: async () => {
-        const { data } = await axios.get<Invitee[]>('/admin/api/invitees');
+        const { data } = await axios.get<ListResponse<Invitee>[]>('/admin/api/invitees');
         return data;
       },
       create: async (invitee: Omit<Invitee, 'id'>) => {
@@ -38,7 +38,7 @@ export const api = {
     },
     cards: {
       list: async () => {
-        const { data } = await axios.get<Card[]>('/admin/api/cards');
+        const { data } = await axios.get<ListResponse<Card>[]>('/admin/api/cards');
         return data;
       },
       create: async (card: Omit<Card, 'id'>) => {
@@ -59,7 +59,7 @@ export const api = {
     },
     tables: {
       list: async () => {
-        const { data } = await axios.get<Table[]>('/admin/api/tables');
+        const { data } = await axios.get<ListResponse<Table>[]>('/admin/api/tables');
         return data;
       },
       create: async (table: Omit<Table, 'id'>) => {
@@ -80,7 +80,7 @@ export const api = {
     },
     users: {
       list: async () => {
-        const { data } = await axios.get<User[]>('/admin/api/users');
+        const { data } = await axios.get<ListResponse<User>[]>('/admin/api/users');
         return data;
       },
       create: async (table: Omit<User, 'id'>) => {
@@ -103,11 +103,11 @@ export const api = {
   invited: {
     invitees: {
       list: async () => {
-        const { data } = await axios.get<Invitee[]>('/invited/api/invitees');
+        const { data } = await axios.get<ListResponse<Omit<Invitee, 'cardId'>>>('/invited/api/invitees');
         return data;
       },
-      update: async (id: number, invitee: Omit<Invitee, 'id'>) => {
-        const { data } = await axios.put<Invitee>(`/invited/api/invitees/${id}`, invitee);
+      update: async (id: number, invitee: Omit<Invitee, 'id' | 'cardId'>) => {
+        const { data } = await axios.put<Omit<Invitee, 'cardId'>>(`/invited/api/invitees/${id}`, invitee);
         return data;
       },
     },

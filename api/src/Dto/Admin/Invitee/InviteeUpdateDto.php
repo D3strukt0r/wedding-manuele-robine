@@ -9,17 +9,21 @@ readonly class InviteeUpdateDto
 {
     public function __construct(
         #[Assert\NotNull]
+        #[Assert\Length(max: 255)]
         public string $firstname,
 
         #[Assert\NotNull]
+        #[Assert\Length(max: 255)]
         public string $lastname,
 
+        #[Assert\Length(max: 255)]
         public ?string $email,
 
         public ?bool $willCome,
 
         public ?Food $food,
 
+        #[Assert\Length(max: 255)]
         public ?string $allergies,
 
         public ?int $tableId,
