@@ -19,6 +19,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 import RadioGroup from "../../form/RadioGroup.tsx";
 import Button from "../../form/Button.tsx";
+import {DevTool} from "@hookform/devtools";
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -193,6 +194,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>({
@@ -204,67 +206,74 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
   }, []);
 
   return (
-    <form className="grid grid-cols-2 gap-4" onSubmit={handleSubmit(onSubmit)}>
-      {invitees.map((invitee) => (
-        <div key={invitee.id}>
-          <h3 className="text-xl philosopher-regular">{invitee.firstname} {invitee.lastname}</h3>
-          <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <Input
-                label={t('homepage.manageCard.properties.firstname')}
-                {...register(`${invitee.id}.firstname`)}
-                aria-invalid={errors[invitee.id]?.firstname ? "true" : "false"}
-              />
-              {errors[invitee.id]?.firstname?.message && <span>{errors[invitee.id]?.firstname?.message}</span>}
+    <>
+
+      <form
+        className="grid grid-cols-2 gap-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        {invitees.map((invitee) => (
+          <div key={invitee.id}>
+            <h3 className="text-xl philosopher-regular">{invitee.firstname} {invitee.lastname}</h3>
+            <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="sm:col-span-3">
+                <Input
+                  label={t('homepage.manageCard.properties.firstname')}
+                  {...register(`${invitee.id}.firstname`)}
+                  aria-invalid={errors[invitee.id]?.firstname ? "true" : "false"}
+                />
+                {errors[invitee.id]?.firstname?.message && <span>{errors[invitee.id]?.firstname?.message}</span>}
+              </div>
+              <div className="sm:col-span-3">
+                <Input
+                  label={t('homepage.manageCard.properties.lastname')}
+                  {...register(`${invitee.id}.lastname`)}
+                  aria-invalid={errors[invitee.id]?.lastname ? "true" : "false"}
+                />
+                {errors[invitee.id]?.lastname?.message && <span>{errors[invitee.id]?.lastname?.message}</span>}
+              </div>
             </div>
-            <div className="sm:col-span-3">
+            <div>
               <Input
-                label={t('homepage.manageCard.properties.lastname')}
-                {...register(`${invitee.id}.lastname`)}
-                aria-invalid={errors[invitee.id]?.lastname ? "true" : "false"}
+                label={t('homepage.manageCard.properties.email')}
+                {...register(`${invitee.id}.email`)}
+                aria-invalid={errors[invitee.id]?.email ? "true" : "false"}
               />
-              {errors[invitee.id]?.lastname?.message && <span>{errors[invitee.id]?.lastname?.message}</span>}
+              {errors[invitee.id]?.email?.message && <span>{errors[invitee.id]?.email?.message}</span>}
+            </div>
+            <div className="my-2">
+              <Checkbox
+                label={t('homepage.manageCard.properties.willCome')}
+                {...register(`${invitee.id}.willCome`)}
+                aria-invalid={errors[invitee.id]?.willCome ? "true" : "false"}
+              />
+              {errors[invitee.id]?.willCome?.message && <span>{errors[invitee.id]?.willCome?.message}</span>}
+            </div>
+            <div>
+              <RadioGroup
+                label={t('homepage.manageCard.properties.food')}
+                inline
+                options={foodOptions.map((food) => ({
+                  value: food,
+                  title: t(`enum.food.${food}`),
+                  ...register(`${invitee.id}.food`),
+                }))}
+              />
+              {errors[invitee.id]?.food?.message && <span>{errors[invitee.id]?.food?.message}</span>}
+            </div>
+            <div>
+              <Input
+                label={t('homepage.manageCard.properties.allergies')}
+                {...register(`${invitee.id}.allergies`)}
+                aria-invalid={errors[invitee.id]?.allergies ? "true" : "false"}
+              />
+              {errors[invitee.id]?.allergies?.message && <span>{errors[invitee.id]?.allergies?.message}</span>}
             </div>
           </div>
-          <div>
-            <Input
-              label={t('homepage.manageCard.properties.email')}
-              {...register(`${invitee.id}.email`)}
-              aria-invalid={errors[invitee.id]?.email ? "true" : "false"}
-            />
-            {errors[invitee.id]?.email?.message && <span>{errors[invitee.id]?.email?.message}</span>}
-          </div>
-          <div className="my-2">
-            <Checkbox
-              label={t('homepage.manageCard.properties.willCome')}
-              {...register(`${invitee.id}.willCome`)}
-              aria-invalid={errors[invitee.id]?.willCome ? "true" : "false"}
-            />
-            {errors[invitee.id]?.willCome?.message && <span>{errors[invitee.id]?.willCome?.message}</span>}
-          </div>
-          <div>
-            <RadioGroup
-              label={t('homepage.manageCard.properties.food')}
-              inline
-              options={foodOptions.map((food) => ({
-                value: food,
-                title: t(`enum.food.${food}`),
-                ...register(`${invitee.id}.food`),
-              }))}
-            />
-            {errors[invitee.id]?.food?.message && <span>{errors[invitee.id]?.food?.message}</span>}
-          </div>
-          <div>
-            <Input
-              label={t('homepage.manageCard.properties.allergies')}
-              {...register(`${invitee.id}.allergies`)}
-              aria-invalid={errors[invitee.id]?.allergies ? "true" : "false"}
-            />
-            {errors[invitee.id]?.allergies?.message && <span>{errors[invitee.id]?.allergies?.message}</span>}
-          </div>
-        </div>
-      ))}
-      <Button type="submit" className="col-span-2">{t('form.save')}</Button>
-    </form>
+        ))}
+        <Button type="submit" className="col-span-2">{t('form.save')}</Button>
+      </form>
+      <DevTool control={control} />
+    </>
   );
 }

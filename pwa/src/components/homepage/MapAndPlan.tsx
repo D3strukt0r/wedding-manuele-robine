@@ -1,5 +1,4 @@
 import {useTranslation} from "react-i18next";
-import map from '/map.png';
 import AlignedCard from "../../layout/AlignedCard.tsx";
 import Timeline from "../../layout/Timeline.tsx";
 import ForkAndKnife from '../../assets/ForkAndKnife';
@@ -7,14 +6,21 @@ import Drink from "../../assets/Drink.tsx";
 import Heart from "../../assets/Heart.tsx";
 import Note from "../../assets/Note.tsx";
 import Moon from "../../assets/Moon.tsx";
+import {Map, Marker} from "@vis.gl/react-google-maps";
 
 export default function MapAndPlan({id}: {id?: string}) {
   const {t} = useTranslation('app')
 
+  const position = {lat: 47.5867275, lng: 7.696703};
+
   return (
     <AlignedCard
       id={id}
-      image={map}
+      image={(
+        <Map center={position} zoom={17}>
+          <Marker position={position} />
+        </Map>
+      )}
       topContent={(
         <>
           <h2 className="uppercase text-3xl mb-6 philosopher-regular">{t('homepage.map.title1')}</h2>

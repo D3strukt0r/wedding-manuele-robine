@@ -7,6 +7,7 @@ import NotFound from "./layout/NotFound.tsx";
 import {AuthenticationContextLoader} from "./context/AuthenticationContext.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import {APIProvider} from '@vis.gl/react-google-maps';
 
 const Homepage = lazy(() => import('./pages/Homepage.tsx'));
 
@@ -44,11 +45,13 @@ function App() {
   return (
     <RootErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthenticationContextLoader>
-          <Suspense>
-            <RouterProvider router={router} fallbackElement={<BigSpinner />} />
-          </Suspense>
-        </AuthenticationContextLoader>
+        <APIProvider apiKey="AIzaSyAOah4ZHl4nysZftsXrqefJ54LUDLPdIr0">
+          <AuthenticationContextLoader>
+            <Suspense>
+              <RouterProvider router={router} fallbackElement={<BigSpinner />} />
+            </Suspense>
+          </AuthenticationContextLoader>
+        </APIProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </RootErrorBoundary>

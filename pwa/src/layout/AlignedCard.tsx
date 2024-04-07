@@ -7,7 +7,7 @@ const fullConfig = resolveConfig(tailwindConfig)
 
 export default function AlignedCard({id, image, topContent, bottomContent, align, backgroundColor, imageShadowColor}: {
   id?: string;
-  image: string;
+  image: ReactNode;
   topContent: ReactNode;
   bottomContent: ReactNode;
   align: 'left' | 'right';
@@ -62,21 +62,40 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
           >
             {/* Image always comes first on mobile */}
             <div className="flex-1">
-              <img
-                src={image}
-                alt=""
-                className={clsx(
-                  'w-full md:mt-12',
-                  {
-                    'md:translate-x-12': align === 'left',
-                    'md:-translate-x-12': align === 'right',
-                    [`md:shadow-[-1rem_1rem_0_0_#dab4a7]`]: imageShadowColor === 'red-light',
-                    [`md:shadow-[-1rem_1rem_0_0_#8c594d]`]: imageShadowColor === 'red-dark',
-                    [`md:shadow-[-1rem_1rem_0_0_#403a37]`]: imageShadowColor === 'gray-dark',
-                    [`md:shadow-[-1rem_1rem_0_0_#ffffff]`]: imageShadowColor === 'white',
-                  },
-                )}
-              />
+              {/* if image is a string */}
+              {typeof image === 'string' ? (
+                <img
+                  src={image}
+                  alt=""
+                  className={clsx(
+                    'w-full md:mt-12',
+                    {
+                      'md:translate-x-12': align === 'left',
+                      'md:-translate-x-12': align === 'right',
+                      [`md:shadow-[-1rem_1rem_0_0_#dab4a7]`]: imageShadowColor === 'red-light',
+                      [`md:shadow-[-1rem_1rem_0_0_#8c594d]`]: imageShadowColor === 'red-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#403a37]`]: imageShadowColor === 'gray-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#ffffff]`]: imageShadowColor === 'white',
+                    },
+                  )}
+                />
+              ) : (
+                <div
+                  className={clsx(
+                    'h-80 md:mt-12',
+                    {
+                      'md:translate-x-12': align === 'left',
+                      'md:-translate-x-12': align === 'right',
+                      [`md:shadow-[-1rem_1rem_0_0_#dab4a7]`]: imageShadowColor === 'red-light',
+                      [`md:shadow-[-1rem_1rem_0_0_#8c594d]`]: imageShadowColor === 'red-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#403a37]`]: imageShadowColor === 'gray-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#ffffff]`]: imageShadowColor === 'white',
+                    },
+                  )}
+                >
+                  {image}
+                </div>
+              )}
             </div>
             <div
               className={clsx(
