@@ -4,6 +4,7 @@
   "enum.food.vegetarian": "Vegetarisch",
   "enum.food.vegan": "Vegan",
   "enum.food.child": "Kindermenü",
+  "form.save": "Speichern",
   "form.errors.required": "Dieses Feld ist erforderlich",
   "form.errors.email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
   "form.errors.min": "Bitte geben Sie mindestens {{min}} Zeichen ein",

@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import menu from '/menu.png';
 import QrScannerCheck, {CountdownHandle} from "./QrScannerCheck.tsx";
-import {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {useCallback, useContext, useMemo, useRef} from "react";
 import AlignedCard from "../../layout/AlignedCard.tsx";
 import Collapsible from "../../layout/Collapsible.tsx";
 import AuthenticationContext from "../../context/AuthenticationContext.tsx";
@@ -18,6 +18,7 @@ import {useQuery} from "@tanstack/react-query";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 import RadioGroup from "../../form/RadioGroup.tsx";
+import Button from "../../form/Button.tsx";
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -158,19 +159,23 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
 
   const schema = useMemo(() => {
     return z.record(z.string(), z.object({
-      firstname: z.string()
+      firstname: z.string({ required_error: t('form.errors.required') })
         .min(1, { message: t('form.errors.required') })
         .max(255, { message: t('form.errors.max', { max: 255 }) }),
-      lastname: z.string()
+      lastname: z.string({ required_error: t('form.errors.required') })
         .min(1, { message: t('form.errors.required') })
         .max(255, { message: t('form.errors.max', { max: 255 }) }),
-      email: z.string()
-        .email()
-        .max(255, { message: t('form.errors.max', { max: 255 }) }),
-      willCome: z.boolean(),
-      food: z.string(),
-      allergies: z.string()
-        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      email: z.nullable(z.union([
+        z.string()
+          .max(255, { message: t('form.errors.max', { max: 255 }) })
+          .email(t('form.errors.email')),
+        z.string().length(0)
+      ])),
+      willCome: z.nullable(z.boolean()),
+      food: z.nullable(z.string()),
+      allergies: z.nullable(z.string()
+        .max(255, { message: t('form.errors.max', { max: 255 }) })
+      ),
     }));
   }, [t]);
 
@@ -179,6 +184,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
     const mappedObject: Record<Invitee['id'], Omit<Invitee, 'id' | 'cardId'>> = {};
     invitees.forEach(invitee => {
       // omit the id as well
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const {id, ...rest} = invitee;
       mappedObject[invitee.id] = rest;
     });
@@ -209,7 +215,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
                 {...register(`${invitee.id}.firstname`)}
                 aria-invalid={errors[invitee.id]?.firstname ? "true" : "false"}
               />
-              {errors[invitee.id]?.firstname?.message && <span>{errors[invitee.id].firstname.message}</span>}
+              {errors[invitee.id]?.firstname?.message && <span>{errors[invitee.id]?.firstname?.message}</span>}
             </div>
             <div className="sm:col-span-3">
               <Input
@@ -217,7 +223,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
                 {...register(`${invitee.id}.lastname`)}
                 aria-invalid={errors[invitee.id]?.lastname ? "true" : "false"}
               />
-              {errors[invitee.id]?.lastname?.message && <span>{errors[invitee.id].lastname.message}</span>}
+              {errors[invitee.id]?.lastname?.message && <span>{errors[invitee.id]?.lastname?.message}</span>}
             </div>
           </div>
           <div>
@@ -226,7 +232,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
               {...register(`${invitee.id}.email`)}
               aria-invalid={errors[invitee.id]?.email ? "true" : "false"}
             />
-            {errors[invitee.id]?.email?.message && <span>{errors[invitee.id].email.message}</span>}
+            {errors[invitee.id]?.email?.message && <span>{errors[invitee.id]?.email?.message}</span>}
           </div>
           <div className="my-2">
             <Checkbox
@@ -234,7 +240,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
               {...register(`${invitee.id}.willCome`)}
               aria-invalid={errors[invitee.id]?.willCome ? "true" : "false"}
             />
-            {errors[invitee.id]?.willCome?.message && <span>{errors[invitee.id].willCome.message}</span>}
+            {errors[invitee.id]?.willCome?.message && <span>{errors[invitee.id]?.willCome?.message}</span>}
           </div>
           <div>
             <RadioGroup
@@ -246,7 +252,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
                 ...register(`${invitee.id}.food`),
               }))}
             />
-            {errors[invitee.id]?.food?.message && <span>{errors[invitee.id].food.message}</span>}
+            {errors[invitee.id]?.food?.message && <span>{errors[invitee.id]?.food?.message}</span>}
           </div>
           <div>
             <Input
@@ -254,11 +260,11 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
               {...register(`${invitee.id}.allergies`)}
               aria-invalid={errors[invitee.id]?.allergies ? "true" : "false"}
             />
-            {errors[invitee.id]?.allergies?.message && <span>{errors[invitee.id].allergies.message}</span>}
+            {errors[invitee.id]?.allergies?.message && <span>{errors[invitee.id]?.allergies?.message}</span>}
           </div>
         </div>
       ))}
-      <input type="submit" />
+      <Button type="submit" className="col-span-2">{t('form.save')}</Button>
     </form>
   );
 }
