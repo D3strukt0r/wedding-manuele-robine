@@ -5,8 +5,8 @@ namespace App\Entity;
 enum Food: string
 {
     case MEAT = 'meat';
-    case FISH = 'fish';
+    // case FISH = 'fish';
     case VEGETARIAN = 'vegetarian';
-    case VEGAN = 'vegan';
-    case CHILD = 'child';
+    // case VEGAN = 'vegan';
+    // case CHILD = 'child';
 }

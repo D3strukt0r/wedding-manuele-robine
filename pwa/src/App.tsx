@@ -5,8 +5,18 @@ import BigSpinner from "./layout/BigSpinner.tsx";
 import ErrorBoundary from "./layout/ErrorBoundary.tsx";
 import NotFound from "./layout/NotFound.tsx";
 import {AuthenticationContextLoader} from "./context/AuthenticationContext.tsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const Homepage = lazy(() => import('./pages/Homepage.tsx'));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -33,11 +43,14 @@ function App() {
 
   return (
     <RootErrorBoundary>
-      <AuthenticationContextLoader>
-        <Suspense>
-          <RouterProvider router={router} fallbackElement={<BigSpinner />} />
-        </Suspense>
-      </AuthenticationContextLoader>
+      <QueryClientProvider client={queryClient}>
+        <AuthenticationContextLoader>
+          <Suspense>
+            <RouterProvider router={router} fallbackElement={<BigSpinner />} />
+          </Suspense>
+        </AuthenticationContextLoader>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </RootErrorBoundary>
   )
 }

@@ -14,6 +14,10 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import * as z from 'zod';
 import Input from "../../form/Input.tsx";
 import Checkbox from "../../form/Checkbox.tsx";
+import {useQuery} from "@tanstack/react-query";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
+import RadioGroup from "../../form/RadioGroup.tsx";
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -111,38 +115,30 @@ export default function ManuAndSelection({id}: {id?: string}) {
 }
 
 function InviteesListOnMyCardLoader() {
-  const [invitees, setInvitees] = useState<Omit<Invitee, 'cardId'>[]>([]);
-  const [foodOptions, setFoodOptions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loading2, setLoading2] = useState(true);
+  const invitees = useQuery({
+    queryKey: ['myInvitees'],
+    queryFn: api.invited.invitees.list,
+  });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await api.invited.invitees.list();
-        setInvitees(response.records);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const foodOptions = useQuery({
+    queryKey: ['enum', 'food'],
+    queryFn: () => api.common.lookup.type('food'),
+  });
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await api.common.lookup.type('food');
-        setFoodOptions(response);
-      } finally {
-        setLoading2(false);
-      }
-    })();
-  }, []);
-
-  if (loading || loading2) {
-    return null;
+  if (invitees.isPending || foodOptions.isPending) {
+    return <FontAwesomeIcon icon={faSpinner} spin />;
   }
 
-  return <InviteesListOnMyCardForm invitees={invitees} foodOptions={foodOptions} />;
+  if (invitees.isError || foodOptions.isError) {
+    return (
+      <div>
+        {invitees.isError && <p>{invitees.error.message}</p>}
+        {foodOptions.isError && <p>{foodOptions.error.message}</p>}
+      </div>
+    )
+  }
+
+  return <InviteesListOnMyCardForm invitees={invitees.data.records} foodOptions={foodOptions.data} />;
 }
 
 type Input = {
@@ -240,8 +236,18 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
             />
             {errors[invitee.id]?.willCome?.message && <span>{errors[invitee.id].willCome.message}</span>}
           </div>
-          {/* TODO: Offer select group options for food */}
-          <p>{invitee.food}</p>
+          <div>
+            <RadioGroup
+              label={t('homepage.manageCard.properties.food')}
+              inline
+              options={foodOptions.map((food) => ({
+                value: food,
+                title: t(`enum.food.${food}`),
+                ...register(`${invitee.id}.food`),
+              }))}
+            />
+            {errors[invitee.id]?.food?.message && <span>{errors[invitee.id].food.message}</span>}
+          </div>
           <div>
             <Input
               label={t('homepage.manageCard.properties.allergies')}

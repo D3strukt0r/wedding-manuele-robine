@@ -47,41 +47,41 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
   }, [setAuthentication]);
 
   useEffect(() => {
-    // load from localStorage first
-    const storedAuthentication = localStorage.getItem('authentication');
-    if (storedAuthentication) {
-      const jwt = jwtDecode<DecodedJwtPayload>(storedAuthentication);
-      const expiresAt = jwt.exp ? new Date(jwt.exp * 1000) : null;
-      if (expiresAt && expiresAt > new Date()) {
-        // only use stored authentication if it is still valid
-        updateAuthentication(storedAuthentication);
-        setLoading(false);
-        return;
-      } else if (expiresAt && expiresAt < new Date()) {
-        // remove expired stored authentication
-        localStorage.removeItem('authentication');
-      }
-    }
-
-    const urlParam = new URLSearchParams(window.location.search);
-    const username = urlParam.get('username');
-    const password = urlParam.get('password');
-    if (username && password) {
-      (async () => {
+    (async () => {
+      const urlParam = new URLSearchParams(window.location.search);
+      const username = urlParam.get('username');
+      const password = urlParam.get('password');
+      if (username && password) {
         try {
           const response = await api.common.login({ username, password });
           updateAuthentication(response.token);
           // TODO: Uncomment before release
           // window.history.pushState({}, document.title, window.location.pathname);
+          return;
         } catch (e) {
           // Ignore
         } finally {
           setLoading(false);
         }
-      })();
-    } else {
+      }
+
+      const storedAuthentication = localStorage.getItem('authentication');
+      if (storedAuthentication) {
+        const jwt = jwtDecode<DecodedJwtPayload>(storedAuthentication);
+        const expiresAt = jwt.exp ? new Date(jwt.exp * 1000) : null;
+        if (expiresAt && expiresAt > new Date()) {
+          // only use stored authentication if it is still valid
+          updateAuthentication(storedAuthentication);
+          setLoading(false);
+          return;
+        } else if (expiresAt && expiresAt < new Date()) {
+          // remove expired stored authentication
+          localStorage.removeItem('authentication');
+        }
+      }
+
       setLoading(false);
-    }
+    })();
   }, []);
 
   useEffect(() => {
@@ -89,7 +89,6 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
       (response) => response,
       (error) => {
         if (error.response.status === 401) {
-          delete axios.defaults.headers.common['Authorization'];
           setAuthentication(null);
         }
 
