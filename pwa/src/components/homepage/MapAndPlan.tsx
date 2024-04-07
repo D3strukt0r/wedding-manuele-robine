@@ -1,11 +1,11 @@
 import {useTranslation} from "react-i18next";
 import AlignedCard from "../../layout/AlignedCard.tsx";
 import Timeline from "../../layout/Timeline.tsx";
-import ForkAndKnife from '../../assets/ForkAndKnife';
-import Drink from "../../assets/Drink.tsx";
-import Heart from "../../assets/Heart.tsx";
-import Note from "../../assets/Note.tsx";
-import Moon from "../../assets/Moon.tsx";
+import ForkAndKnife from '@material-design-icons/svg/outlined/restaurant.svg?react';
+import Drink from "@material-design-icons/svg/outlined/local_bar.svg?react";
+import Heart from "@material-design-icons/svg/outlined/favorite_border.svg?react";
+import Note from "@material-design-icons/svg/outlined/music_note.svg?react";
+import Moon from "@material-design-icons/svg/outlined/bedtime.svg?react";
 import {Map, Marker} from "@vis.gl/react-google-maps";
 
 export default function MapAndPlan({id}: {id?: string}) {
@@ -40,7 +40,7 @@ export default function MapAndPlan({id}: {id?: string}) {
                   <>
                     <time className="philosopher-regular inline mr-2 md:block">{t('homepage.map.plan.1.time')}</time>
                     <p className="philosopher-regular inline md:block">
-                      <Heart className="h-4 inline mr-2" />
+                      <Heart className="inline mr-2 text-white fill-current" aria-hidden="true" />
                       {t('homepage.map.plan.1.text')}
                     </p>
                   </>
@@ -52,7 +52,7 @@ export default function MapAndPlan({id}: {id?: string}) {
                   <>
                     <time className="philosopher-regular inline mr-2 md:block">{t('homepage.map.plan.2.time')}</time>
                     <p className="philosopher-regular inline md:block">
-                    <Drink className="h-4 inline mr-2" />
+                      <Drink className="inline mr-2 text-white fill-current" aria-hidden="true" />
                       {t('homepage.map.plan.2.text')}
                     </p>
                   </>
@@ -64,7 +64,7 @@ export default function MapAndPlan({id}: {id?: string}) {
                   <>
                     <time className="philosopher-regular inline mr-2 md:block">{t('homepage.map.plan.3.time')}</time>
                     <p className="philosopher-regular inline md:block">
-                    <ForkAndKnife className="h-4 inline mr-2" />
+                      <ForkAndKnife className="inline mr-2 text-white fill-current" aria-hidden="true" />
                       {t('homepage.map.plan.3.text')}
                     </p>
                   </>
@@ -76,7 +76,7 @@ export default function MapAndPlan({id}: {id?: string}) {
                   <>
                     <time className="philosopher-regular inline mr-2 md:block">{t('homepage.map.plan.4.time')}</time>
                     <p className="philosopher-regular inline md:block">
-                      <Note className="h-4 inline mr-2" />
+                      <Note className="inline mr-2 text-white fill-current" aria-hidden="true" />
                       {t('homepage.map.plan.4.text')}
                     </p>
                   </>
@@ -88,7 +88,7 @@ export default function MapAndPlan({id}: {id?: string}) {
                   <>
                     <time className="philosopher-regular inline mr-2 md:block">{t('homepage.map.plan.5.time')}</time>
                     <p className="philosopher-regular inline md:block">
-                      <Moon className="h-4 inline mr-2" />
+                      <Moon className="inline mr-2 text-white fill-current" aria-hidden="true" />
                       {t('homepage.map.plan.5.text')}
                     </p>
                   </>

@@ -1,6 +1,7 @@
 import {useRef, useEffect, useState, forwardRef, useImperativeHandle} from 'react';
 import QrScanner from 'qr-scanner';
 import QrCode from "../../assets/QrCode.tsx";
+// import QrCode from "@material-design-icons/svg/outlined/qr_code_scanner.svg?react";
 import clsx from "clsx";
 import {useTranslation} from "react-i18next";
 
@@ -93,7 +94,11 @@ const QrScannerCheck = forwardRef<CountdownHandle, Props>(({ onScan }, ref) => {
 
   return (
     <div className="border-2 border-gray-300 bg-gray-200">
-      <div ref={qrEnableElemRef} className={clsx('flex flex-col items-center p-8', {'hidden': !cameraUnavailable})}>
+      <div
+        ref={qrEnableElemRef}
+        className={clsx('flex flex-col items-center p-8', {'hidden': !cameraUnavailable})}
+      >
+        {/*<QrCode className="mb-8 my-4 h-20 w-20" />*/}
         <div className="mb-8 my-4 w-20">
           <QrCode />
         </div>
