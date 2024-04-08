@@ -35,7 +35,7 @@ export default function ImportantInfo({id}: {id?: string}) {
                 {
                   key: 'games',
                   title: t('homepage.info.games.title'),
-                  text: t('homepage.info.games.text')
+                  text: <Markup content={t('homepage.info.games.text')} />
                 }
               ]}
             />
