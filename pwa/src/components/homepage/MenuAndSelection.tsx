@@ -273,7 +273,9 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
         ))}
         <Button type="submit" className="col-span-2">{t('form.save')}</Button>
       </form>
-      <DevTool control={control} />
+      {import.meta.env.MODE === 'development' && (
+        <DevTool control={control} />
+      )}
     </>
   );
 }
