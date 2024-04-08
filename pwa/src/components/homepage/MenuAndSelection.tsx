@@ -14,7 +14,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import * as z from 'zod';
 import Input from "../../form/Input.tsx";
 import Checkbox from "../../form/Checkbox.tsx";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 import RadioGroup from "../../form/RadioGroup.tsx";
@@ -146,10 +146,10 @@ function InviteesListOnMyCardLoader() {
 type Input = {
   firstname: string
   lastname: string
-  email?: string
-  willCome?: boolean
-  food?: string
-  allergies?: string
+  email: string | null
+  willCome: boolean | null
+  food: string | null
+  allergies: string | null
 }
 type Inputs = {
   [key: string]: Input
@@ -157,6 +157,7 @@ type Inputs = {
 
 function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invitee, 'cardId'>[]; foodOptions: string[]}) {
   const {t} = useTranslation('app');
+  const queryClient = useQueryClient();
 
   const schema = useMemo(() => {
     return z.record(z.string(), z.object({
@@ -192,6 +193,14 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
     return mappedObject;
   }, [invitees]);
 
+  const mutation = useMutation({
+    mutationFn: api.invited.invitees.update,
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['myInvitees'] })
+    },
+  })
+
   const {
     register,
     control,
@@ -202,12 +211,11 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
     defaultValues: mappedInvitees,
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    console.log(data);
-  }, []);
+    mutation.mutate(data);
+  }, [mutation]);
 
   return (
     <>
-
       <form
         className="grid grid-cols-2 gap-4"
         onSubmit={handleSubmit(onSubmit)}
@@ -271,7 +279,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
             </div>
           </div>
         ))}
-        <Button type="submit" className="col-span-2">{t('form.save')}</Button>
+        <Button type="submit" className="col-span-2" loading={mutation.isPending}>{t('form.save')}</Button>
       </form>
       {import.meta.env.MODE === 'development' && (
         <DevTool control={control} />

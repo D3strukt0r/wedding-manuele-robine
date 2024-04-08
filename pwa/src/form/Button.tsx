@@ -1,10 +1,13 @@
 import clsx from "clsx";
 import {ButtonHTMLAttributes} from "react";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   layout?: 'primary' | 'secondary';
+  loading?: boolean;
 }
-export default function Button({layout = 'primary', ...props}: Props) {
+export default function Button({layout = 'primary', loading = false, children, ...props}: Props) {
   return (
     <button
       {...props}
@@ -16,6 +19,12 @@ export default function Button({layout = 'primary', ...props}: Props) {
           'text-gray-900': layout === 'secondary',
         }
       )}
-    />
+      disabled={loading || props.disabled}
+    >
+      {loading && (
+        <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
+      )}
+      {children}
+    </button>
   );
 }

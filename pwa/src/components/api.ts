@@ -106,8 +106,8 @@ export const api = {
         const { data } = await axios.get<ListResponse<Omit<Invitee, 'cardId'>>>('/invited/api/invitees');
         return data;
       },
-      update: async (id: number, invitee: Omit<Invitee, 'id' | 'cardId'>) => {
-        const { data } = await axios.put<Omit<Invitee, 'cardId'>>(`/invited/api/invitees/${id}`, invitee);
+      update: async (invitees: Record<Invitee['id'] | string, Omit<Invitee, 'id' | 'tableId' | 'cardId'>>) => {
+        const { data } = await axios.put<ListResponse<Omit<Invitee, 'cardId'>>>(`/invited/api/invitees`, {invitees});
         return data;
       },
     },

@@ -2,17 +2,17 @@ export type Invitee = {
   id: number
   firstname: string
   lastname: string
-  email: string
-  willCome: boolean
-  food: string
-  allergies: string
-  tableId: number
-  cardId: number
+  email: string | null
+  willCome: boolean | null
+  food: string | null
+  allergies: string | null
+  tableId: number | null
+  cardId: number | null
 }
 
 export type Card = {
   id: number
-  userLoginId: string
+  userLoginId: string | null
   inviteeIds: number[]
 }
 
