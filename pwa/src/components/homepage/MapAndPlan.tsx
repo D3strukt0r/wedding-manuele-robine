@@ -6,19 +6,20 @@ import Drink from "@material-design-icons/svg/outlined/local_bar.svg?react";
 import Heart from "@material-design-icons/svg/outlined/favorite_border.svg?react";
 import Note from "@material-design-icons/svg/outlined/music_note.svg?react";
 import Moon from "@material-design-icons/svg/outlined/bedtime.svg?react";
-import {Map, Marker} from "@vis.gl/react-google-maps";
+import {Map, AdvancedMarker} from "@vis.gl/react-google-maps";
 
 export default function MapAndPlan({id}: {id?: string}) {
   const {t} = useTranslation('app')
 
   const position = {lat: 47.5867275, lng: 7.696703};
 
+  // Map ID: https://console.cloud.google.com/google/maps-apis/studio/maps
   return (
     <AlignedCard
       id={id}
       image={(
-        <Map center={position} zoom={17}>
-          <Marker position={position} />
+        <Map defaultCenter={position} defaultZoom={17} mapId="7035e553f3676d1e">
+          <AdvancedMarker position={position} />
         </Map>
       )}
       topContent={(
