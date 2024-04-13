@@ -7,7 +7,11 @@ type Routes = Parameters<typeof createBrowserRouter>[0][number];
 export default function adminRoutes() {
   return ({
     path: '/admin',
-    element: <Outlet />,
+    element: (
+      <div className="h-full bg-white">
+        <Outlet />
+      </div>
+    ),
     children: [
       {
         index: true,

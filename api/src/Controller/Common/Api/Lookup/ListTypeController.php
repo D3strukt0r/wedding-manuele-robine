@@ -2,6 +2,7 @@
 
 namespace App\Controller\Common\Api\Lookup;
 
+use App\Dto\Common\ListableType;
 use App\Entity\Food;
 use App\Entity\Role;
 use OpenApi\Attributes as OA;
@@ -25,17 +26,9 @@ class ListTypeController extends AbstractController
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Type not found')]
     #[OA\Tag('Common/Lookup')]
-    public function __invoke(string $type): JsonResponse
+    public function __invoke(ListableType $type): JsonResponse
     {
-        $matchedType = match($type) {
-            'food' => Food::class,
-            'role' => Role::class,
-            default => null,
-        };
-
-        if ($matchedType === null) {
-            throw $this->createNotFoundException();
-        }
+        $matchedType = $type->getListClass();
 
         if (!is_a($matchedType, \BackedEnum::class, true)) {
             throw new \UnexpectedValueException('enum class must be a backed enum');

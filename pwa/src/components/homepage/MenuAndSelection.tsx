@@ -193,7 +193,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
     return mappedObject;
   }, [invitees]);
 
-  const mutation = useMutation({
+  const updateInvitees = useMutation({
     mutationFn: api.invited.invitees.update,
     onSuccess: async () => {
       // Invalidate and re-fetch
@@ -211,8 +211,8 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
     defaultValues: mappedInvitees,
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    mutation.mutate(data);
-  }, [mutation]);
+    updateInvitees.mutate(data);
+  }, [updateInvitees]);
 
   return (
     <>
@@ -279,7 +279,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
             </div>
           </div>
         ))}
-        <Button type="submit" className="col-span-2" loading={mutation.isPending}>{t('form.save')}</Button>
+        <Button type="submit" className="col-span-2" loading={updateInvitees.isPending}>{t('form.save')}</Button>
       </form>
       {import.meta.env.MODE === 'development' && (
         <DevTool control={control} />
