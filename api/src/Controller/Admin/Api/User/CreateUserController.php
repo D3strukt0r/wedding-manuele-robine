@@ -50,6 +50,7 @@ class CreateUserController extends AbstractController
 
         $plainPassword = $dto->password ?? $this->passwordGenerator->generate();
         $user = new User($dto->username, $this->passwordHasher, $plainPassword);
+        // TODO: Roles are ignored, do something with them
 
         $this->userRepository->save($user, true);
 

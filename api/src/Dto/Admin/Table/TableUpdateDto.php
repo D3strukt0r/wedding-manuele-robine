@@ -2,16 +2,18 @@
 
 namespace App\Dto\Admin\Table;
 
+use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
 readonly class TableUpdateDto
 {
     public function __construct(
         #[Assert\NotNull]
+        #[OA\Property(example: 5)]
         public int $seats,
 
         /** @var array<int> */
-        #[Assert\NotNull]
+        #[OA\Property(example: [1, 2])]
         public array $inviteeIds = [],
     ) {}
 }

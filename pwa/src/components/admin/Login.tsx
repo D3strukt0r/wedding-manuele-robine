@@ -6,6 +6,9 @@ import {api} from "../api.ts";
 import AuthenticationContext from "../../context/AuthenticationContext.tsx";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
+import Input from '../../form/admin/Input.tsx';
+import Button from '../../form/admin/Button.tsx';
+import {DevTool} from '@hookform/devtools';
 
 type Inputs = {
   username: string
@@ -55,10 +58,7 @@ export default function Login() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form
-          className="space-y-6"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
             <label
               htmlFor="email"
@@ -67,14 +67,12 @@ export default function Login() {
               {t('admin.login.username')}
             </label>
             <div className="mt-2">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+              <Input
+                {...register('username')}
+                autoComplete="username"
                 required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
+              {errors.username?.message && <span>{errors.username.message}</span>}
             </div>
           </div>
 
@@ -106,16 +104,11 @@ export default function Login() {
               />
             </div>
           </div>
-
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              {t('admin.login.login')}
-            </button>
-          </div>
+          <Button type="submit" loading={login.isPending} className="w-full">{t('admin.login.login')}</Button>
         </form>
+        {import.meta.env.MODE === 'development' && (
+          <DevTool control={control} />
+        )}
       </div>
     </div>
   );

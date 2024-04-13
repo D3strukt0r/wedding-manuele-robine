@@ -1,4 +1,5 @@
 import {forwardRef, InputHTMLAttributes, ReactNode} from "react";
+import clsx from 'clsx';
 
 interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: ReactNode;
@@ -9,10 +10,13 @@ const Input = forwardRef<HTMLInputElement, Props>(({label, description, ...props
     <div className="relative flex items-start">
       <div className="flex h-6 items-center">
         <input
+          {...props}
           id={props.id ?? props.name}
           aria-describedby={description ? `${props.id ?? props.name}-description` : undefined}
-          className="h-4 w-4 rounded border-gray-300 text-red-dark focus:ring-red-dark"
-          {...props}
+          className={clsx(
+            props.className,
+            'h-4 w-4 rounded border-gray-300 text-red-dark focus:ring-red-dark',
+          )}
           type="checkbox"
           ref={ref}
         />

@@ -79,9 +79,29 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
   }, []);
 
   useEffect(() => {
+    axios.interceptors.request.use(
+      function (config) {
+        (function fixDataObject(obj: any) {
+          for (const key in obj) {
+            if (obj[key] === '') {
+              obj[key] = null; // convert empty string to null
+            } else if (typeof obj[key] === 'object') {
+              fixDataObject(obj[key]);
+            }
+          }
+        })(config.data);
+        return config;
+      },
+      function (error) {
+        return Promise.reject(error);
+      }
+    );
+
     axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
+      function (response) {
+        return response;
+      },
+      function (error) {
         if (error.response.status === 401) {
           updateAuthentication(null);
         }

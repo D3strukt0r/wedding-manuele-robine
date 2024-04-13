@@ -8,24 +8,23 @@ const Input = forwardRef<HTMLInputElement, Props>(({label, ...props}, ref) => {
   return (
     <>
       {label && (
-        <label htmlFor={props.id ?? props.name} className="block text-sm noto-sans-regular leading-6 text-gray-900">
+        <label
+          htmlFor={props.id ?? props.name}
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
           {label}
         </label>
       )}
-      <div className={clsx('relative', {'mt-2': label})}>
+      <div className={clsx({'mt-2': label})}>
         <input
           type="text"
           {...props}
           id={props.id ?? props.name}
           className={clsx(
             props.className,
-            'peer block w-full border-0 bg-gray-50 py-1.5 text-gray-900 focus:ring-0 sm:text-sm sm:leading-6',
+            'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6',
           )}
           ref={ref}
-        />
-        <div
-          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-red-dark"
-          aria-hidden="true"
         />
       </div>
     </>

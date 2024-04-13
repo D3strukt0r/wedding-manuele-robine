@@ -228,6 +228,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
                 <Input
                   label={t('homepage.manageCard.properties.firstname')}
                   {...register(`${invitee.id}.firstname`)}
+                  required
                   aria-invalid={errors[invitee.id]?.firstname ? "true" : "false"}
                 />
                 {errors[invitee.id]?.firstname?.message && <span>{errors[invitee.id]?.firstname?.message}</span>}
@@ -236,6 +237,7 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
                 <Input
                   label={t('homepage.manageCard.properties.lastname')}
                   {...register(`${invitee.id}.lastname`)}
+                  required
                   aria-invalid={errors[invitee.id]?.lastname ? "true" : "false"}
                 />
                 {errors[invitee.id]?.lastname?.message && <span>{errors[invitee.id]?.lastname?.message}</span>}

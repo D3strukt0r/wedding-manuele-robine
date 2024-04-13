@@ -12,7 +12,7 @@ readonly class CardCreateDto
         public ?int $userLoginId,
 
         /** @var array<int> */
-        #[Assert\NotNull]
+        #[OA\Property(example: [1, 2])]
         public array $inviteeIds = [],
     ) {}
 }

@@ -144,11 +144,10 @@
       <excludeFolder url="file://$MODULE_DIR$/pwa/.pnpm-store" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/hidehalo/nanoid-php" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/paragonie/random_compat" />
+      <excludeFolder url="file://$MODULE_DIR$/api/public/bundles" />
+      <excludeFolder url="file://$MODULE_DIR$/pwa/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-  <component name="SonarLintModuleSettings">
-    <option name="uniqueId" value="f5bd3009-f83a-4bf0-8cc0-f0947640aee5" />
   </component>
 </module>

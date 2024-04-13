@@ -25,10 +25,13 @@ export default function RadioGroup({label, legend, inline = false, options}: Pro
           {options.map(({title, ...props}) => (
             <div key={props.value} className="flex items-center">
               <input
-                id={`${props.name}.${props.value}`}
                 // defaultChecked={option.id === 'email'}
-                className="h-4 w-4 border-gray-300 text-red-dark focus:ring-red-dark"
                 {...props}
+                id={`${props.name}.${props.value}`}
+                className={clsx(
+                  props.className,
+                  'h-4 w-4 border-gray-300 text-red-dark focus:ring-red-dark',
+                )}
                 type="radio"
               />
               <label htmlFor={`${props.name}.${props.value}`} className="ml-3 block text-sm noto-sans-regular leading-6 text-gray-900">
