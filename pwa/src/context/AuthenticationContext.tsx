@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useCallback, useEffect, useState} from 'react';
+import {createContext, ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 import {jwtDecode, JwtPayload} from "jwt-decode";
 import {api} from "../components/api.ts";
 import axios from "axios";
@@ -22,26 +22,20 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
   const [loading, setLoading] = useState(true);
   const [authentication, setAuthentication] = useState<MyJwtPayload | null>(null);
 
-  useEffect(() => {
-    if (authentication) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${authentication.jwt}`;
-      localStorage.setItem('authentication', authentication.jwt);
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-      localStorage.removeItem('authentication');
-    }
-  }, [authentication]);
-
   const updateAuthentication = useCallback((token: string | null) => {
     if (token) {
       const jwt = jwtDecode<DecodedJwtPayload>(token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      localStorage.setItem('authentication', token);
       setAuthentication({
         ...jwt,
         jwt: token,
         exp: jwt.exp ? new Date(jwt.exp * 1000) : null,
         iat: jwt.iat ? new Date(jwt.iat * 1000) : null,
-      })
+      });
     } else {
+      delete axios.defaults.headers.common['Authorization'];
+      localStorage.removeItem('authentication');
       setAuthentication(null);
     }
   }, [setAuthentication]);
@@ -89,7 +83,7 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
       (response) => response,
       (error) => {
         if (error.response.status === 401) {
-          setAuthentication(null);
+          updateAuthentication(null);
         }
 
         return Promise.reject(error);
@@ -97,12 +91,16 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
     );
   }, []);
 
+  const providedData = useMemo(() => {
+    return [authentication, updateAuthentication];
+  }, [authentication, updateAuthentication]);
+
   if (loading) {
     return null;
   }
 
   return (
-    <AuthenticationContext.Provider value={[authentication, updateAuthentication]}>
+    <AuthenticationContext.Provider value={providedData}>
       {children}
     </AuthenticationContext.Provider>
   )

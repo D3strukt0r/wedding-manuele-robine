@@ -8,6 +8,7 @@ import {AuthenticationContextLoader} from "./context/AuthenticationContext.tsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import {APIProvider} from '@vis.gl/react-google-maps';
+import adminRoutes from "./pages/admin/routes.tsx";
 
 const Homepage = lazy(() => import('./pages/Homepage.tsx'));
 
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
         index: true,
         element: <Homepage />,
       },
+      adminRoutes(),
       {
         path: '*',
         element: <NotFound />,

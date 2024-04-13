@@ -195,9 +195,9 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
 
   const mutation = useMutation({
     mutationFn: api.invited.invitees.update,
-    onSuccess: () => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['myInvitees'] })
+    onSuccess: async () => {
+      // Invalidate and re-fetch
+      await queryClient.invalidateQueries({ queryKey: ['myInvitees'] })
     },
   })
 

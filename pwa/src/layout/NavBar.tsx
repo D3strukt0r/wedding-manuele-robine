@@ -1,4 +1,4 @@
-import {Fragment, useContext} from 'react'
+import {forwardRef, Fragment, useContext} from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import clsx from "clsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -6,6 +6,11 @@ import {faBars, faX} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {faUser} from "@fortawesome/free-regular-svg-icons";
 import AuthenticationContext from "../context/AuthenticationContext.tsx";
+import {Link, LinkProps} from "react-router-dom";
+
+const DisclosureLink = forwardRef<HTMLAnchorElement, LinkProps>(function (props, ref) {
+  return <Link ref={ref} {...props} />
+})
 
 export type MenuItem = {
   label: string;
@@ -82,12 +87,28 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                           <Menu.Item disabled>
                             <span className="block px-4 py-2 text-sm text-gray-700 noto-sans-regular opacity-75">{authentication.username}</span>
                           </Menu.Item>
+                          {/* TODO: Don't check for roles directly in frontend */}
+                          {authentication.roles.includes('ROLE_ADMIN') && (
+                            <Menu.Item>
+                              {({active}) => (
+                                <Link
+                                  to="/admin"
+                                  className={clsx(
+                                    'block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
+                                    {'bg-gray-100': active}
+                                  )}
+                                >
+                                  {t('menu.admin')}
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          )}
                           <Menu.Item>
                             {({active}) => (
-                              <a
-                                href="#"
+                              <button
+                                type="button"
                                 className={clsx(
-                                  'block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
+                                  'w-full text-left block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
                                   {'bg-gray-100': active}
                                 )}
                                 onClick={() => {
@@ -95,7 +116,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                                 }}
                               >
                                 {t('menu.logout')}
-                              </a>
+                              </button>
                             )}
                           </Menu.Item>
                         </Menu.Items>
@@ -157,10 +178,19 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                   <div className="text-base font-medium text-gray-50 philosopher-regular">{authentication.username}</div>
                 </div>
                 <div className="mt-3 space-y-1">
+                  {/* TODO: Don't check for roles directly in frontend */}
+                  {authentication.roles.includes('ROLE_ADMIN') && (
+                    <Disclosure.Button
+                      as={DisclosureLink}
+                      to="/admin"
+                      className="block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
+                    >
+                      {t('menu.admin')}
+                    </Disclosure.Button>
+                  )}
                   <Disclosure.Button
-                    as="a"
-                    href="#"
-                    className="block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
+                    as="button"
+                    className="w-full text-left block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
                     onClick={() => {
                       updateAuthentication(null);
                     }}
