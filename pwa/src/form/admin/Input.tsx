@@ -1,20 +1,39 @@
-import {forwardRef, InputHTMLAttributes, ReactNode} from "react";
+import {forwardRef, InputHTMLAttributes, ReactNode, useMemo} from 'react';
 import clsx from 'clsx';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: ReactNode;
+  extra?: ReactNode;
 }
-const Input = forwardRef<HTMLInputElement, Props>(({label, ...props}, ref) => {
+const Input = forwardRef<HTMLInputElement, Props>(({label, extra, ...props}, ref) => {
+  const labelLinked = useMemo(() => {
+    return label && (
+      <label
+        htmlFor={props.id ?? props.name}
+        className="block text-sm font-medium leading-6 text-gray-900"
+      >
+        {label}
+      </label>
+    );
+  }, [label]);
+  const labelBar = useMemo(() => {
+    if (label && extra) {
+      return (
+        <div className="flex items-center justify-between">
+          {labelLinked}
+          {extra}
+        </div>
+      );
+    } else if (label) {
+      return labelLinked;
+    } else {
+      return null;
+    }
+  }, [label, extra]);
+
   return (
     <>
-      {label && (
-        <label
-          htmlFor={props.id ?? props.name}
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
-          {label}
-        </label>
-      )}
+      {labelBar}
       <div className={clsx({'mt-2': label})}>
         <input
           type="text"
