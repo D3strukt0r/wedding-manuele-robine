@@ -56,7 +56,7 @@ export default function Homepage() {
       <div className="md:pb-16">
         <Gallery id="gallery" />
       </div>
-      <footer className="bg-gray-dark text-white">
+      <footer className="bg-app-gray-dark text-white">
         <p className="text-center whitespace-pre-line py-4 text-sm">{t('footer.copyright')}</p>
       </footer>
     </>

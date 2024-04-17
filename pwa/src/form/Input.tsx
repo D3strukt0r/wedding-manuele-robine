@@ -24,7 +24,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({label, ...props}, ref) => {
           ref={ref}
         />
         <div
-          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-red-dark"
+          className="absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2 peer-focus:border-app-red-dark"
           aria-hidden="true"
         />
       </div>

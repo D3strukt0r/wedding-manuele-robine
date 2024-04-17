@@ -30,7 +30,7 @@ export default function RadioGroup({label, legend, inline = false, options}: Pro
                 id={`${props.name}.${props.value}`}
                 className={clsx(
                   props.className,
-                  'h-4 w-4 border-gray-300 text-red-dark focus:ring-red-dark',
+                  'h-4 w-4 border-gray-300 text-app-red-dark focus:ring-app-red-dark',
                 )}
                 type="radio"
               />

@@ -20,7 +20,7 @@ export default function Gallery({id}: {id?: string}) {
         </>
       )}
       align="right"
-      backgroundColor="red-light"
+      backgroundColor="app-red-light"
       imageShadowColor="white"
     />
   )

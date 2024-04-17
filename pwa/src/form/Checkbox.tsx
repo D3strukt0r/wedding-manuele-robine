@@ -15,7 +15,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({label, description, ...props
           aria-describedby={description ? `${props.id ?? props.name}-description` : undefined}
           className={clsx(
             props.className,
-            'h-4 w-4 rounded border-gray-300 text-red-dark focus:ring-red-dark',
+            'h-4 w-4 rounded border-gray-300 text-app-red-dark focus:ring-app-red-dark',
           )}
           type="checkbox"
           ref={ref}

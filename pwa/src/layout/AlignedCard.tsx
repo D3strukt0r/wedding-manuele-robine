@@ -11,8 +11,8 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
   topContent: ReactNode;
   bottomContent: ReactNode;
   align: 'left' | 'right';
-  backgroundColor: 'red-light' | 'gray-dark' | 'white';
-  imageShadowColor: 'red-light' | 'red-dark' | 'gray-dark' | 'white';
+  backgroundColor: 'app-red-light' | 'app-gray-dark' | 'white';
+  imageShadowColor: 'app-red-light' | 'app-red-dark' | 'app-gray-dark' | 'white';
 }) {
   return (
     // Gradient background to have two different colors on both sides
@@ -21,13 +21,13 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
       className={clsx(
         'bg-gradient-to-r from-45% to-55%',
         {
-          'from-red-light': align === 'left' && backgroundColor === 'red-light',
-          'from-gray-dark': align === 'left' && backgroundColor === 'gray-dark',
+          'from-app-red-light': align === 'left' && backgroundColor === 'app-red-light',
+          'from-app-gray-dark': align === 'left' && backgroundColor === 'app-gray-dark',
           'from-white': align === 'left' && backgroundColor === 'white',
           'to-transparent': align === 'left',
           'from-transparent': align === 'right',
-          'to-red-light': align === 'right' && backgroundColor === 'red-light',
-          'to-gray-dark': align === 'right' && backgroundColor === 'gray-dark',
+          'to-app-red-light': align === 'right' && backgroundColor === 'app-red-light',
+          'to-app-gray-dark': align === 'right' && backgroundColor === 'app-gray-dark',
           'to-white': align === 'right' && backgroundColor === 'white',
         },
       )}
@@ -45,8 +45,8 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
         {/* Container background color */}
         <div
           className={clsx({
-            'bg-red-light': backgroundColor === 'red-light',
-            'bg-gray-dark': backgroundColor === 'gray-dark',
+            'bg-app-red-light': backgroundColor === 'app-red-light',
+            'bg-app-gray-dark': backgroundColor === 'app-gray-dark',
             'bg-white': backgroundColor === 'white',
           })}
         >
@@ -72,9 +72,9 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
                     {
                       'md:translate-x-12': align === 'left',
                       'md:-translate-x-12': align === 'right',
-                      [`md:shadow-[-1rem_1rem_0_0_#dab4a7]`]: imageShadowColor === 'red-light',
-                      [`md:shadow-[-1rem_1rem_0_0_#8c594d]`]: imageShadowColor === 'red-dark',
-                      [`md:shadow-[-1rem_1rem_0_0_#403a37]`]: imageShadowColor === 'gray-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#dab4a7]`]: imageShadowColor === 'app-red-light',
+                      [`md:shadow-[-1rem_1rem_0_0_#8c594d]`]: imageShadowColor === 'app-red-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#403a37]`]: imageShadowColor === 'app-gray-dark',
                       [`md:shadow-[-1rem_1rem_0_0_#ffffff]`]: imageShadowColor === 'white',
                     },
                   )}
@@ -86,9 +86,9 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
                     {
                       'md:translate-x-12': align === 'left',
                       'md:-translate-x-12': align === 'right',
-                      [`md:shadow-[-1rem_1rem_0_0_#dab4a7]`]: imageShadowColor === 'red-light',
-                      [`md:shadow-[-1rem_1rem_0_0_#8c594d]`]: imageShadowColor === 'red-dark',
-                      [`md:shadow-[-1rem_1rem_0_0_#403a37]`]: imageShadowColor === 'gray-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#dab4a7]`]: imageShadowColor === 'app-red-light',
+                      [`md:shadow-[-1rem_1rem_0_0_#8c594d]`]: imageShadowColor === 'app-red-dark',
+                      [`md:shadow-[-1rem_1rem_0_0_#403a37]`]: imageShadowColor === 'app-gray-dark',
                       [`md:shadow-[-1rem_1rem_0_0_#ffffff]`]: imageShadowColor === 'white',
                     },
                   )}
@@ -100,7 +100,7 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
             <div
               className={clsx(
                 'flex-1 m-8 md:mx-0',
-                {'text-white': backgroundColor === 'gray-dark'}
+                {'text-white': backgroundColor === 'app-gray-dark'}
               )}
             >
               {topContent}
@@ -110,8 +110,8 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
             className={clsx(
               'md:pt-8',
               {
-                'bg-red-light': backgroundColor === 'red-light',
-                'bg-gray-dark': backgroundColor === 'gray-dark',
+                'bg-app-red-light': backgroundColor === 'app-red-light',
+                'bg-app-gray-dark': backgroundColor === 'app-gray-dark',
                 'bg-white': backgroundColor === 'white'
               },
             )}
@@ -122,7 +122,7 @@ export default function AlignedCard({id, image, topContent, bottomContent, align
                 {
                   'md:pl-0': align === 'left',
                   'md:pr-0': align === 'right',
-                  'text-white': backgroundColor === 'gray-dark',
+                  'text-white': backgroundColor === 'app-gray-dark',
                 },
               )}
             >

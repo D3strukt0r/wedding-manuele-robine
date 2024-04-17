@@ -7,6 +7,7 @@
   "notFound.title": "Seite nicht gefunden",
   "notFound.goBack": "Zurück zur Startseite",
   "form.save": "Speichern",
+  "form.errors.general": "Ein Fehler ist aufgetreten",
   "form.errors.required": "Dieses Feld ist erforderlich",
   "form.errors.email": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
   "form.errors.min": "Bitte geben Sie mindestens {{min}} Zeichen ein",

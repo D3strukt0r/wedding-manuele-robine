@@ -60,7 +60,7 @@ export default function ImportantInfo({id}: {id?: string}) {
       )}
       align="left"
       backgroundColor="white"
-      imageShadowColor="gray-dark"
+      imageShadowColor="app-gray-dark"
     />
   )
 }

@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {useMutation} from "@tanstack/react-query";
 import {useCallback, useContext, useMemo} from "react";
 import * as z from "zod";
 import {api} from "../api.ts";
@@ -9,6 +9,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import Input from '../../form/admin/Input.tsx';
 import Button from '../../form/admin/Button.tsx';
 import {DevTool} from '@hookform/devtools';
+import Alert from '../common/admin/Alert.tsx';
 
 type Inputs = {
   username: string
@@ -58,6 +59,15 @@ export default function Login() {
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {login.isError ? (
+            <Alert
+              type="error"
+              title={t('form.errors.general')}
+              text={(
+                <p>{login.error.response.data.message}</p>
+              )}
+            />
+          ) : null}
           <div>
             <Input
               {...register('username')}
@@ -73,13 +83,13 @@ export default function Login() {
               {...register('password')}
               type="password"
               label={t('admin.login.password')}
-              extra={(
-                <div className="text-sm">
-                  <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
-                    {t('admin.login.forgotPassword')}
-                  </a>
-                </div>
-              )}
+              // extra={(
+              //   <div className="text-sm">
+              //     <a href="#" className="font-semibold text-blue-600 hover:text-blue-500">
+              //       {t('admin.login.forgotPassword')}
+              //     </a>
+              //   </div>
+              // )}
               autoComplete="current-password"
               required
             />

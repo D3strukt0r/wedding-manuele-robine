@@ -100,8 +100,8 @@ export default function MapAndPlan({id}: {id?: string}) {
         </>
       )}
       align="right"
-      backgroundColor="gray-dark"
-      imageShadowColor="red-light"
+      backgroundColor="app-gray-dark"
+      imageShadowColor="app-red-light"
     />
   )
 }

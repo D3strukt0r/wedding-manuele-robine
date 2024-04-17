@@ -34,7 +34,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({label, extra, ...props}, ref
   return (
     <>
       {labelBar}
-      <div className={clsx({'mt-2': label})}>
+      <div className={clsx({'mt-2': labelBar})}>
         <input
           type="text"
           {...props}

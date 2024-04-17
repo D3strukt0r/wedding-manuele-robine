@@ -9,7 +9,7 @@ export default function Collapsible({menuOptions}: {menuOptions: {key: string, t
     <Disclosure
       as="div"
       key={item.key}
-      className={clsx('border-b-[1px] border-gray-dark', {'border-t-[1px]': index === 0})}
+      className={clsx('border-b-[1px] border-app-gray-dark', {'border-t-[1px]': index === 0})}
     >
       {({open}) => (
         <>

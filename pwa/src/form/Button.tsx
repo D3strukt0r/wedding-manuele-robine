@@ -15,7 +15,7 @@ export default function Button({layout = 'primary', loading = false, children, .
         'text-sm noto-sans-regular',
         props.className,
         {
-          'rounded-md bg-red-dark px-3 py-2 text-white shadow-sm hover:bg-gray-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-dark': layout === 'primary',
+          'rounded-md bg-app-red-dark px-3 py-2 text-white shadow-sm hover:bg-app-gray-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-app-red-dark': layout === 'primary',
           'text-gray-900': layout === 'secondary',
         }
       )}

@@ -110,8 +110,8 @@ export default function ManuAndSelection({id}: {id?: string}) {
         />
       )}
       align="left"
-      backgroundColor="red-light"
-      imageShadowColor="gray-dark"
+      backgroundColor="app-red-light"
+      imageShadowColor="app-gray-dark"
     />
   )
 }

@@ -10,10 +10,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        'red': '#a53333',
-        'red-light': '#dab4a7',
-        'red-dark': '#8c594d',
-        'gray-dark': '#403a37',
+        'app-red': '#a53333',
+        'app-red-light': '#dab4a7',
+        'app-red-dark': '#8c594d',
+        'app-gray-dark': '#403a37',
       }
     },
   },
