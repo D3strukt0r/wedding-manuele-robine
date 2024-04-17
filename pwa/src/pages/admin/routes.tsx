@@ -2,6 +2,7 @@ import {lazy} from 'react';
 import {createBrowserRouter, Outlet} from 'react-router-dom';
 
 const LoginOrDashboard = lazy(() => import('./LoginOrDashboard.tsx'));
+const HomepageAdmin = lazy(() => import('./HomepageAdmin.tsx'));
 
 type Routes = Parameters<typeof createBrowserRouter>[0][number];
 export default function adminRoutes() {
@@ -14,8 +15,14 @@ export default function adminRoutes() {
     ),
     children: [
       {
-        index: true,
+        path: '',
         element: <LoginOrDashboard />,
+        children: [
+          {
+            index: true,
+            element: <HomepageAdmin />,
+          }
+        ],
       },
     ],
   }) satisfies Routes;

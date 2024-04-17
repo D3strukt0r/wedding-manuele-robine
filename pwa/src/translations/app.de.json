@@ -71,6 +71,9 @@
   "admin.login.password": "Passwort",
   "admin.login.forgotPassword": "Passwort vergessen?",
   "admin.login.login": "Einloggen",
+  "admin.sidebar.close": "Menü schließen",
+  "admin.sidebar.open": "Menü öffnen",
+  "admin.userMenu.open": "Benutzermenü öffnen",
   "admin.menu.dashboard": "Dashboard",
   "footer.copyright": "Images by Sacha Kocher and Pexels\n© 2024"
 }

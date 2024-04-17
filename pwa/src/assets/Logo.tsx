@@ -1,7 +1,16 @@
-export default function Logo({mode}: {mode: 'light' | 'dark'}) {
+import clsx from 'clsx';
+
+interface Props {
+  mode: 'light' | 'dark';
+  className?: string;
+}
+export default function Logo({mode, className}: Props) {
   return (
     <svg
-      className="h-full w-full"
+      className={clsx(
+        'h-full w-full',
+        className,
+      )}
       viewBox="0 0 38 56"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
