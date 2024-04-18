@@ -1,11 +1,12 @@
 import {Fragment, MouseEventHandler, ReactNode, useState} from 'react';
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faBars, faChevronDown, faGear, faMagnifyingGlass, faX, IconDefinition} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faChevronDown, faX, IconDefinition} from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import {faBell, faUser} from '@fortawesome/free-regular-svg-icons';
+import {faUser} from '@fortawesome/free-regular-svg-icons';
 import Logo from "../../../assets/Logo.tsx";
 import {useTranslation} from 'react-i18next';
+import {Link} from 'react-router-dom';
 
 interface Navigation {
   name: string;
@@ -34,7 +35,7 @@ export default function AdminLayout({navigation, userNavigation, user, children}
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div>
+    <>
       <Transition.Root show={sidebarOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
           <Transition.Child
@@ -89,8 +90,8 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                         <ul role="list" className="-mx-2 space-y-1">
                           {navigation.map((item) => (
                             <li key={item.name}>
-                              <a
-                                href={item.href}
+                              <Link
+                                to={item.href}
                                 className={clsx(
                                   item.current
                                     ? 'bg-gray-50 text-blue-600'
@@ -107,7 +108,7 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                                   aria-hidden="true"
                                 />
                                 {item.name}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
@@ -149,8 +150,8 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                 <ul role="list" className="-mx-2 space-y-1">
                   {navigation.map((item) => (
                     <li key={item.name}>
-                      <a
-                        href={item.href}
+                      <Link
+                        to={item.href}
                         className={clsx(
                           item.current
                             ? 'bg-gray-50 text-blue-600'
@@ -167,7 +168,7 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                           aria-hidden="true"
                         />
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -256,15 +257,15 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                       <Menu.Item key={item.name}>
                         {({ active }) =>
                           'href' in item ? (
-                            <a
-                              href={item.href}
+                            <Link
+                              to={item.href}
                               className={clsx(
                                 active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                 'block px-4 py-2 text-sm font-semibold'
                               )}
                             >
                               {item.name}
-                            </a>
+                            </Link>
                           ) : (
                             <button
                               type="button"
@@ -293,6 +294,6 @@ export default function AdminLayout({navigation, userNavigation, user, children}
           </div>
         </main>
       </div>
-    </div>
+    </>
   );
 }

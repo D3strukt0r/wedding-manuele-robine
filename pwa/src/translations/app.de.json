@@ -75,5 +75,9 @@
   "admin.sidebar.open": "Menü öffnen",
   "admin.userMenu.open": "Benutzermenü öffnen",
   "admin.menu.dashboard": "Dashboard",
+  "admin.menu.invitees": "Eingeladene",
+  "admin.menu.cards": "Karten",
+  "admin.menu.tables": "Tische",
+  "admin.menu.users": "Benutzer",
   "footer.copyright": "Images by Sacha Kocher and Pexels\n© 2024"
 }
