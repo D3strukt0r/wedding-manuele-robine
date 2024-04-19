@@ -88,5 +88,5 @@ export default function Table({columns, dataSource, rowKey}: TableProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -87,5 +87,15 @@
   "actions.delete": "Löschen",
   "user.username": "Benutzername",
   "user.roles": "Rollen",
+  "table.seats": "Sitzplätze",
+  "invitee.firstname": "Vorname",
+  "invitee.lastname": "Nachname",
+  "invitee.email": "Email",
+  "invitee.willCome": "Wird kommen?",
+  "invitee.food": "Essenspräferenz",
+  "invitee.allergies": "Allergien",
+  "invitee.table": "Tisch",
+  "invitee.card": "Karte",
+  "card.userLogin": "Benutzer Login",
   "footer.copyright": "Images by Sacha Kocher and Pexels\n© 2024"
 }

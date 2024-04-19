@@ -16,10 +16,6 @@ export const api = {
   },
   admin: {
     invitees: {
-      list: async () => {
-        const { data } = await axios.get<ListResponse<Invitee>>('/admin/api/invitees');
-        return data;
-      },
       create: async (invitee: Omit<Invitee, 'id'>) => {
         const { data } = await axios.post<Invitee>(`/admin/api/invitees`, invitee);
         return data;
@@ -37,10 +33,6 @@ export const api = {
       },
     },
     cards: {
-      list: async () => {
-        const { data } = await axios.get<ListResponse<Card>>('/admin/api/cards');
-        return data;
-      },
       create: async (card: Omit<Card, 'id'>) => {
         const { data } = await axios.post<Card>(`/admin/api/cards`, card);
         return data;
@@ -58,10 +50,6 @@ export const api = {
       },
     },
     tables: {
-      list: async () => {
-        const { data } = await axios.get<ListResponse<Table>>('/admin/api/tables');
-        return data;
-      },
       create: async (table: Omit<Table, 'id'>) => {
         const { data } = await axios.post<Table>(`/admin/api/tables`, table);
         return data;
