@@ -17,7 +17,7 @@ export const api = {
   admin: {
     invitees: {
       list: async () => {
-        const { data } = await axios.get<ListResponse<Invitee>[]>('/admin/api/invitees');
+        const { data } = await axios.get<ListResponse<Invitee>>('/admin/api/invitees');
         return data;
       },
       create: async (invitee: Omit<Invitee, 'id'>) => {
@@ -38,7 +38,7 @@ export const api = {
     },
     cards: {
       list: async () => {
-        const { data } = await axios.get<ListResponse<Card>[]>('/admin/api/cards');
+        const { data } = await axios.get<ListResponse<Card>>('/admin/api/cards');
         return data;
       },
       create: async (card: Omit<Card, 'id'>) => {
@@ -59,7 +59,7 @@ export const api = {
     },
     tables: {
       list: async () => {
-        const { data } = await axios.get<ListResponse<Table>[]>('/admin/api/tables');
+        const { data } = await axios.get<ListResponse<Table>>('/admin/api/tables');
         return data;
       },
       create: async (table: Omit<Table, 'id'>) => {
@@ -79,10 +79,6 @@ export const api = {
       },
     },
     users: {
-      list: async () => {
-        const { data } = await axios.get<ListResponse<User>[]>('/admin/api/users');
-        return data;
-      },
       create: async (table: Omit<User, 'id'>) => {
         const { data } = await axios.post<User>(`/admin/api/users`, table);
         return data;

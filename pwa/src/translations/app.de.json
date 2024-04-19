@@ -4,6 +4,8 @@
   "enum.food.vegetarian": "Vegetarisch",
   "enum.food.vegan": "Vegan",
   "enum.food.child": "Kindermenü",
+  "enum.role.ROLE_USER": "Benutzer",
+  "enum.role.ROLE_ADMIN": "Admin",
   "notFound.title": "Seite nicht gefunden",
   "notFound.goBack": "Zurück zur Startseite",
   "form.save": "Speichern",
@@ -79,5 +81,11 @@
   "admin.menu.cards": "Karten",
   "admin.menu.tables": "Tische",
   "admin.menu.users": "Benutzer",
+  "table.actions": "Aktionen",
+  "actions.create": "Erstellen",
+  "actions.edit": "Bearbeiten",
+  "actions.delete": "Löschen",
+  "user.username": "Benutzername",
+  "user.roles": "Rollen",
   "footer.copyright": "Images by Sacha Kocher and Pexels\n© 2024"
 }
