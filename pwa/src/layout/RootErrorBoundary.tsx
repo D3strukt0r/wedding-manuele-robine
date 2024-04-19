@@ -4,7 +4,10 @@ interface State {
   hasError: boolean;
 }
 
-export class RootErrorBoundary extends Component<PropsWithChildren<object>, State> {
+export class RootErrorBoundary extends Component<
+  PropsWithChildren<object>,
+  State
+> {
   constructor(props: object) {
     super(props);
     this.state = { hasError: false };

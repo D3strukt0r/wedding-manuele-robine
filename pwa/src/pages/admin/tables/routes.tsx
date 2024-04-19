@@ -1,5 +1,5 @@
-import {lazy} from 'react';
-import {createBrowserRouter, Outlet} from 'react-router-dom';
+import { lazy } from 'react';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 
 const ListTables = lazy(() => import('./ListTables.tsx'));
 const ShowTable = lazy(() => import('./ShowTable.tsx'));
@@ -18,6 +18,6 @@ export default function tableRoutes() {
         path: '/admin/tables/:id',
         element: <ShowTable />,
       },
-    ]
+    ],
   } satisfies Routes;
 }

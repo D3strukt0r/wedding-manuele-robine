@@ -1,14 +1,14 @@
-import {lazy, Suspense} from 'react'
-import {RootErrorBoundary} from "./layout/RootErrorBoundary.tsx";
-import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
-import BigSpinner from "./layout/BigSpinner.tsx";
-import ErrorBoundary from "./layout/ErrorBoundary.tsx";
-import NotFound from "./layout/NotFound.tsx";
-import {AuthenticationContextLoader} from "./context/AuthenticationContext.tsx";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import { lazy, Suspense } from 'react';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import {APIProvider} from '@vis.gl/react-google-maps';
-import adminRoutes from "./pages/admin/routes.tsx";
+import { APIProvider } from '@vis.gl/react-google-maps';
+import { RootErrorBoundary } from './layout/RootErrorBoundary';
+import BigSpinner from './layout/BigSpinner';
+import ErrorBoundary from './layout/ErrorBoundary';
+import NotFound from './layout/NotFound';
+import { AuthenticationContextLoader } from './context/AuthenticationContext';
+import adminRoutes from './pages/admin/routes';
 
 const Homepage = lazy(() => import('./pages/Homepage.tsx'));
 
@@ -22,7 +22,7 @@ const queryClient = new QueryClient({
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Outlet />,
     errorElement: <ErrorBoundary />,
     children: [
@@ -50,14 +50,17 @@ function App() {
         <APIProvider apiKey="AIzaSyAOah4ZHl4nysZftsXrqefJ54LUDLPdIr0">
           <AuthenticationContextLoader>
             <Suspense>
-              <RouterProvider router={router} fallbackElement={<BigSpinner />} />
+              <RouterProvider
+                router={router}
+                fallbackElement={<BigSpinner />}
+              />
             </Suspense>
           </AuthenticationContextLoader>
         </APIProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </RootErrorBoundary>
-  )
+  );
 }
 
-export default App
+export default App;

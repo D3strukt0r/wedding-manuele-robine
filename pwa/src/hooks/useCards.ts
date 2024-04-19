@@ -1,6 +1,6 @@
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import {Card, ListResponse} from '../components/types.ts';
+import { Card, ListResponse } from '../components/types';
 
 export default function useCards(
   queryOptions?: Omit<

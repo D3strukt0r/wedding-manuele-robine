@@ -1,14 +1,14 @@
-import Table, {TableProps} from '../../../components/common/admin/Table.tsx';
-import {useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
-import BigSpinner from '../../../layout/BigSpinner.tsx';
-import useTables from '../../../hooks/useTables.ts';
-import useCards from '../../../hooks/useCards.ts';
-import useInvitees from '../../../hooks/useInvitees.ts';
-import useEnumFood from '../../../hooks/useEnumFood.ts';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import Table, { TableProps } from '../../../components/common/admin/Table';
+import BigSpinner from '../../../layout/BigSpinner';
+import useTables from '../../../hooks/useTables';
+import useCards from '../../../hooks/useCards';
+import useInvitees from '../../../hooks/useInvitees';
+import useEnumFood from '../../../hooks/useEnumFood';
 
 export default function ListInvitees() {
-  const {t} = useTranslation('app');
+  const { t } = useTranslation('app');
 
   const invitees = useInvitees();
   const tables = useTables();
@@ -39,12 +39,14 @@ export default function ListInvitees() {
         <div className="flex space-x-4">
           {actions?.update && (
             <a href="#" className="text-blue-600 hover:text-blue-900">
-              {t('actions.edit')}<span className="sr-only">, {record.id}</span>
+              {t('actions.edit')}
+              <span className="sr-only">, {record.id}</span>
             </a>
           )}
           {actions?.delete && (
             <a href="#" className="text-blue-600 hover:text-blue-900">
-              {t('actions.delete')}<span className="sr-only">, {record.id}</span>
+              {t('actions.delete')}
+              <span className="sr-only">, {record.id}</span>
             </a>
           )}
         </div>
@@ -54,16 +56,15 @@ export default function ListInvitees() {
 
   if (invitees.data && tables.data && cards.data && food.data) {
     return (
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={invitees.data.records}
-      />
+      <Table rowKey="id" columns={columns} dataSource={invitees.data.records} />
     );
   }
 
   if (invitees.isError || tables.isError || cards.isError || food.isError) {
-    if (invitees.error && tables.error && cards.isError && food.isError) throw new Error(`${invitees.error}\n${tables.error}\n${cards.error}\n${food.error}`);
+    if (invitees.error && tables.error && cards.isError && food.isError)
+      throw new Error(
+        `${invitees.error}\n${tables.error}\n${cards.error}\n${food.error}`,
+      );
     if (invitees.error) throw invitees.error;
     if (tables.error) throw tables.error;
     if (cards.error) throw cards.error;

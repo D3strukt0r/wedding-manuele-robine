@@ -1,11 +1,15 @@
-import {forwardRef, InputHTMLAttributes, ReactNode, useMemo} from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useMemo } from 'react';
 import clsx from 'clsx';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: ReactNode;
   extra?: ReactNode;
 }
-const Input = forwardRef<HTMLInputElement, Props>(({label, extra, ...props}, ref) => {
+const Input = forwardRef<HTMLInputElement, Props>(({
+  label,
+  extra,
+  ...props
+}, ref) => {
   const labelLinked = useMemo(() => {
     return label && (
       <label
@@ -24,17 +28,17 @@ const Input = forwardRef<HTMLInputElement, Props>(({label, extra, ...props}, ref
           {extra}
         </div>
       );
-    } else if (label) {
-      return labelLinked;
-    } else {
-      return null;
     }
+    if (label) {
+      return labelLinked;
+    }
+    return null;
   }, [label, extra]);
 
   return (
     <>
       {labelBar}
-      <div className={clsx({'mt-2': labelBar})}>
+      <div className={clsx({ 'mt-2': labelBar })}>
         <input
           type="text"
           {...props}

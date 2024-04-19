@@ -3,8 +3,8 @@ import TailwindForms from '@tailwindcss/forms';
 
 export default {
   content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    './index.html',
+    './src/**/*.{js,ts,jsx,tsx}',
   ],
   darkMode: ['class', '[data-theme="dark"]'],
   theme: {
@@ -14,10 +14,10 @@ export default {
         'app-red-light': '#dab4a7',
         'app-red-dark': '#8c594d',
         'app-gray-dark': '#403a37',
-      }
+      },
     },
   },
   plugins: [
     TailwindForms,
   ],
-} satisfies Config
+} satisfies Config;

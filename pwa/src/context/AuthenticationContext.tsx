@@ -1,7 +1,14 @@
-import {createContext, ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
-import {jwtDecode, JwtPayload} from "jwt-decode";
-import {api} from "../components/api.ts";
-import axios from "axios";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+import axios from 'axios';
+import { api } from '../components/api';
 
 interface DecodedJwtPayload extends JwtPayload {
   roles: string[];
@@ -18,14 +25,19 @@ const AuthenticationContext = createContext<[MyJwtPayload | null, (token: string
 
 export default AuthenticationContext;
 
-export function AuthenticationContextLoader({children}: {children: ReactNode}) {
+interface Props {
+  children: ReactNode;
+}
+export function AuthenticationContextLoader({
+  children,
+}: Props) {
   const [loading, setLoading] = useState(true);
   const [authentication, setAuthentication] = useState<MyJwtPayload | null>(null);
 
   const updateAuthentication = useCallback((token: string | null) => {
     if (token) {
       const jwt = jwtDecode<DecodedJwtPayload>(token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
       localStorage.setItem('authentication', token);
       setAuthentication({
         ...jwt,
@@ -34,7 +46,7 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
         iat: jwt.iat ? new Date(jwt.iat * 1000) : null,
       });
     } else {
-      delete axios.defaults.headers.common['Authorization'];
+      delete axios.defaults.headers.common.Authorization;
       localStorage.removeItem('authentication');
       setAuthentication(null);
     }
@@ -68,7 +80,8 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
           updateAuthentication(storedAuthentication);
           setLoading(false);
           return;
-        } else if (expiresAt && expiresAt < new Date()) {
+        }
+        if (expiresAt && expiresAt < new Date()) {
           // remove expired stored authentication
           localStorage.removeItem('authentication');
         }
@@ -80,7 +93,7 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
 
   useEffect(() => {
     axios.interceptors.request.use(
-      function (config) {
+      (config) => {
         (function fixDataObject(obj: any) {
           for (const key in obj) {
             if (obj[key] === '') {
@@ -92,16 +105,12 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
         })(config.data);
         return config;
       },
-      function (error) {
-        return Promise.reject(error);
-      }
+      (error) => Promise.reject(error),
     );
 
     axios.interceptors.response.use(
-      function (response) {
-        return response;
-      },
-      function (error) {
+      (response) => response,
+      (error) => {
         if (error.response.status === 401) {
           updateAuthentication(null);
         }
@@ -123,5 +132,5 @@ export function AuthenticationContextLoader({children}: {children: ReactNode}) {
     <AuthenticationContext.Provider value={providedData}>
       {children}
     </AuthenticationContext.Provider>
-  )
+  );
 }

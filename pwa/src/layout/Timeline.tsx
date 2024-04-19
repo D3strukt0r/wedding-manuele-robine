@@ -1,4 +1,9 @@
-export default function Timeline({points}: {points: {key: string, text: JSX.Element}[]}) {
+interface Props {
+  points: { key: string; text: JSX.Element }[];
+}
+export default function Timeline({
+  points,
+}: Props) {
   return (
     <>
       <div className="md:hidden">
@@ -17,11 +22,9 @@ export default function Timeline({points}: {points: {key: string, text: JSX.Elem
             <li key={point.key} className="relative mb-6 sm:mb-0">
               <div className="flex items-center">
                 <div className="z-10 flex items-center justify-center w-6 h-6 bg-white rounded-full ring-white ring-2 ring-offset-4 ring-offset-app-gray-dark shrink-0" />
-                <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700"></div>
+                <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
               </div>
-              <div className="mt-3 sm:pe-8">
-                {point.text}
-              </div>
+              <div className="mt-3 sm:pe-8">{point.text}</div>
             </li>
           ))}
         </ol>

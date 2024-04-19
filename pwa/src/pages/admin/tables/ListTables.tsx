@@ -1,12 +1,12 @@
-import Table, {TableProps} from '../../../components/common/admin/Table.tsx';
-import {useMemo} from 'react';
-import {useTranslation} from 'react-i18next';
-import BigSpinner from '../../../layout/BigSpinner.tsx';
-import useUsers from '../../../hooks/useUsers.ts';
-import useTables from '../../../hooks/useTables.ts';
+import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import Table, { TableProps } from '../../../components/common/admin/Table';
+import BigSpinner from '../../../layout/BigSpinner';
+import useUsers from '../../../hooks/useUsers';
+import useTables from '../../../hooks/useTables';
 
 export default function ListTables() {
-  const {t} = useTranslation('app');
+  const { t } = useTranslation('app');
 
   const tables = useTables();
   const users = useUsers();
@@ -23,12 +23,14 @@ export default function ListTables() {
         <div className="flex space-x-4">
           {actions?.update && (
             <a href="#" className="text-blue-600 hover:text-blue-900">
-              {t('actions.edit')}<span className="sr-only">, {record.id}</span>
+              {t('actions.edit')}
+              <span className="sr-only">, {record.id}</span>
             </a>
           )}
           {actions?.delete && (
             <a href="#" className="text-blue-600 hover:text-blue-900">
-              {t('actions.delete')}<span className="sr-only">, {record.id}</span>
+              {t('actions.delete')}
+              <span className="sr-only">, {record.id}</span>
             </a>
           )}
         </div>
@@ -38,16 +40,13 @@ export default function ListTables() {
 
   if (tables.data && users.data) {
     return (
-      <Table
-        rowKey="id"
-        columns={columns}
-        dataSource={tables.data.records}
-      />
+      <Table rowKey="id" columns={columns} dataSource={tables.data.records} />
     );
   }
 
   if (tables.isError || users.isError) {
-    if (users.error && tables.error) throw new Error(`${users.error}\n${tables.error}`);
+    if (users.error && tables.error)
+      throw new Error(`${users.error}\n${tables.error}`);
     if (users.error) throw users.error;
     if (tables.error) throw tables.error;
   }

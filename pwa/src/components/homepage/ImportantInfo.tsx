@@ -1,23 +1,30 @@
-import {useTranslation} from "react-i18next";
+import { useTranslation } from 'react-i18next';
+import { Markup } from 'interweave';
 import infos from '/infos.png';
-import AlignedCard from "../../layout/AlignedCard.tsx";
-import Collapsible from "../../layout/Collapsible.tsx";
-import {Markup} from 'interweave';
+import AlignedCard from '../../layout/AlignedCard';
+import Collapsible from '../../layout/Collapsible';
 
-export default function ImportantInfo({id}: {id?: string}) {
-  const {t} = useTranslation('app')
+interface Props {
+  id?: string;
+}
+export default function ImportantInfo({ id }: Props) {
+  const { t } = useTranslation('app');
 
   return (
     <AlignedCard
       id={id}
       image={infos}
-      topContent={(
+      topContent={
         <>
-          <h2 className="uppercase text-3xl mb-6 philosopher-regular">{t('homepage.info.title')}</h2>
-          <p className="whitespace-pre-line noto-sans-regular">{t('homepage.info.date')}</p>
+          <h2 className="uppercase text-3xl mb-6 philosopher-regular">
+            {t('homepage.info.title')}
+          </h2>
+          <p className="whitespace-pre-line noto-sans-regular">
+            {t('homepage.info.date')}
+          </p>
         </>
-      )}
-      bottomContent={(
+      }
+      bottomContent={
         <>
           <div className="md:hidden">
             <Collapsible
@@ -25,42 +32,52 @@ export default function ImportantInfo({id}: {id?: string}) {
                 {
                   key: 'dresscode',
                   title: t('homepage.info.dresscode.title'),
-                  text: t('homepage.info.dresscode.text')
+                  text: t('homepage.info.dresscode.text'),
                 },
                 {
                   key: 'gifts',
                   title: t('homepage.info.gifts.title'),
-                  text: t('homepage.info.gifts.text')
+                  text: t('homepage.info.gifts.text'),
                 },
                 {
                   key: 'games',
                   title: t('homepage.info.games.title'),
-                  text: <Markup content={t('homepage.info.games.text')} />
-                }
+                  text: <Markup content={t('homepage.info.games.text')} />,
+                },
               ]}
             />
           </div>
           <div className="hidden md:grid grid-rows-2 grid-flow-col gap-8">
             <div>
-              <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.info.dresscode.title')}</h3>
-              <p className="whitespace-pre-line noto-sans-regular">{t('homepage.info.dresscode.text')}</p>
+              <h3 className="text-2xl mb-4 philosopher-regular">
+                {t('homepage.info.dresscode.title')}
+              </h3>
+              <p className="whitespace-pre-line noto-sans-regular">
+                {t('homepage.info.dresscode.text')}
+              </p>
             </div>
             <div>
-              <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.info.gifts.title')}</h3>
-              <p className="whitespace-pre-line noto-sans-regular">{t('homepage.info.gifts.text')}</p>
+              <h3 className="text-2xl mb-4 philosopher-regular">
+                {t('homepage.info.gifts.title')}
+              </h3>
+              <p className="whitespace-pre-line noto-sans-regular">
+                {t('homepage.info.gifts.text')}
+              </p>
             </div>
             <div>
-              <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.info.games.title')}</h3>
+              <h3 className="text-2xl mb-4 philosopher-regular">
+                {t('homepage.info.games.title')}
+              </h3>
               <p className="whitespace-pre-line noto-sans-regular">
                 <Markup content={t('homepage.info.games.text')} />
               </p>
             </div>
           </div>
         </>
-      )}
+      }
       align="left"
       backgroundColor="white"
       imageShadowColor="app-gray-dark"
     />
-  )
+  );
 }

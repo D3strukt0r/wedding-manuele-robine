@@ -1,25 +1,25 @@
-import {useTranslation} from "react-i18next";
-import menu from '/menu.png';
-import QrScannerCheck, {CountdownHandle} from "./QrScannerCheck.tsx";
-import {useCallback, useContext, useMemo, useRef} from "react";
-import AlignedCard from "../../layout/AlignedCard.tsx";
-import Collapsible from "../../layout/Collapsible.tsx";
-import AuthenticationContext from "../../context/AuthenticationContext.tsx";
-import {api} from "../api.ts";
-import QrScanner from "qr-scanner";
-import {AxiosError} from "axios";
-import {Invitee} from "../types.ts";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
+import { useTranslation } from 'react-i18next';
+import { useCallback, useContext, useMemo, useRef } from 'react';
+import QrScanner from 'qr-scanner';
+import { AxiosError } from 'axios';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import Input from "../../form/Input.tsx";
-import Checkbox from "../../form/Checkbox.tsx";
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSpinner} from "@fortawesome/free-solid-svg-icons";
-import RadioGroup from "../../form/RadioGroup.tsx";
-import Button from "../../form/Button.tsx";
-import {DevTool} from "@hookform/devtools";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
+import menu from '/menu.png';
+import AlignedCard from '../../layout/AlignedCard';
+import Collapsible from '../../layout/Collapsible';
+import AuthenticationContext from '../../context/AuthenticationContext';
+import { api } from '../api';
+import { Invitee } from '../types';
+import Input from '../../form/Input';
+import Checkbox from '../../form/Checkbox';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import RadioGroup from '../../form/RadioGroup';
+import Button from '../../form/Button';
+import { DevTool } from '@hookform/devtools';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -31,11 +31,14 @@ function isValidHttpUrl(string: string) {
     return false;
   }
 
-  return url.protocol === "http:" || url.protocol === "https:";
+  return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
-export default function ManuAndSelection({id}: {id?: string}) {
-  const {t} = useTranslation('app');
+interface Props {
+  id?: string;
+}
+export default function ManuAndSelection({ id }: Props) {
+  const { t } = useTranslation('app');
 
   const qrRef = useRef<CountdownHandle>(null);
 
@@ -63,9 +66,17 @@ export default function ManuAndSelection({id}: {id?: string}) {
     } catch (e) {
       // check if type is AxiosError
       if (e instanceof AxiosError) {
-        qrRef.current?.showMessage('error', t('homepage.qrScanner.loginFailed', {errorMessage: e.response?.data?.message}));
+        qrRef.current?.showMessage(
+          'error',
+          t('homepage.qrScanner.loginFailed', {
+            errorMessage: e.response?.data?.message,
+          }),
+        );
       } else {
-        qrRef.current?.showMessage('error', t('homepage.qrScanner.loginFailed', {errorMessage: e}));
+        qrRef.current?.showMessage(
+          'error',
+          t('homepage.qrScanner.loginFailed', { errorMessage: e }),
+        );
       }
     }
   }, [qrRef, updateAuthentication, t]);
@@ -74,46 +85,55 @@ export default function ManuAndSelection({id}: {id?: string}) {
     <AlignedCard
       id={id}
       image={menu}
-      topContent={(
+      topContent={
         <>
-          <h2 className="uppercase text-3xl mb-6 philosopher-regular">{t('homepage.menu.title')}</h2>
+          <h2 className="uppercase text-3xl mb-6 philosopher-regular">
+            {t('homepage.menu.title')}
+          </h2>
           <div className="md:hidden">
             <Collapsible
               menuOptions={[
                 {
                   key: 'meat',
                   title: t('homepage.menu.meat.title'),
-                  text: t('homepage.menu.meat.text')
+                  text: t('homepage.menu.meat.text'),
                 },
                 {
                   key: 'vegetarian',
                   title: t('homepage.menu.vegetarian.title'),
-                  text: t('homepage.menu.vegetarian.text')
-                }
+                  text: t('homepage.menu.vegetarian.text'),
+                },
               ]}
             />
           </div>
           <div className="hidden md:block">
-            <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.menu.meat.title')}</h3>
-            <p className="whitespace-pre-line noto-sans-regular">{t('homepage.menu.meat.text')}</p>
-            <h3 className="text-2xl mb-4 philosopher-regular">{t('homepage.menu.vegetarian.title')}</h3>
-            <p className="whitespace-pre-line noto-sans-regular">{t('homepage.menu.vegetarian.text')}</p>
+            <h3 className="text-2xl mb-4 philosopher-regular">
+              {t('homepage.menu.meat.title')}
+            </h3>
+            <p className="whitespace-pre-line noto-sans-regular">
+              {t('homepage.menu.meat.text')}
+            </p>
+            <h3 className="text-2xl mb-4 philosopher-regular">
+              {t('homepage.menu.vegetarian.title')}
+            </h3>
+            <p className="whitespace-pre-line noto-sans-regular">
+              {t('homepage.menu.vegetarian.text')}
+            </p>
           </div>
         </>
-      )}
-      bottomContent={authentication ? (
-        <InviteesListOnMyCardLoader />
-      ) : (
-        <QrScannerCheck
-          ref={qrRef}
-          onScan={handleScan}
-        />
-      )}
+      }
+      bottomContent={
+        authentication ? (
+          <InviteesListOnMyCardLoader />
+        ) : (
+          <QrScannerCheck ref={qrRef} onScan={handleScan} />
+        )
+      }
       align="left"
       backgroundColor="app-red-light"
       imageShadowColor="app-gray-dark"
     />
-  )
+  );
 }
 
 function InviteesListOnMyCardLoader() {
@@ -137,57 +157,78 @@ function InviteesListOnMyCardLoader() {
         {invitees.isError && <p>{invitees.error.message}</p>}
         {foodOptions.isError && <p>{foodOptions.error.message}</p>}
       </div>
-    )
+    );
   }
 
-  return <InviteesListOnMyCardForm invitees={invitees.data.records} foodOptions={foodOptions.data} />;
+  return (
+    <InviteesListOnMyCardForm
+      invitees={invitees.data.records}
+      foodOptions={foodOptions.data}
+    />
+  );
 }
 
 type Input = {
-  firstname: string
-  lastname: string
-  email: string | null
-  willCome: boolean | null
-  food: string | null
-  allergies: string | null
-}
+  firstname: string;
+  lastname: string;
+  email: string | null;
+  willCome: boolean | null;
+  food: string | null;
+  allergies: string | null;
+};
 type Inputs = {
-  [key: string]: Input
-}
+  [key: string]: Input;
+};
 
-function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invitee, 'cardId'>[]; foodOptions: string[]}) {
-  const {t} = useTranslation('app');
+function InviteesListOnMyCardForm({
+  invitees,
+  foodOptions,
+}: {
+  invitees: Omit<Invitee, 'cardId'>[];
+  foodOptions: string[];
+}) {
+  const { t } = useTranslation('app');
   const queryClient = useQueryClient();
 
   const schema = useMemo(() => {
-    return z.record(z.string(), z.object({
-      firstname: z.string({ required_error: t('form.errors.required') })
-        .min(1, { message: t('form.errors.required') })
-        .max(255, { message: t('form.errors.max', { max: 255 }) }),
-      lastname: z.string({ required_error: t('form.errors.required') })
-        .min(1, { message: t('form.errors.required') })
-        .max(255, { message: t('form.errors.max', { max: 255 }) }),
-      email: z.nullable(z.union([
-        z.string()
-          .max(255, { message: t('form.errors.max', { max: 255 }) })
-          .email(t('form.errors.email')),
-        z.string().length(0)
-      ])),
-      willCome: z.nullable(z.boolean()),
-      food: z.nullable(z.string()),
-      allergies: z.nullable(z.string()
-        .max(255, { message: t('form.errors.max', { max: 255 }) })
-      ),
-    }));
-  }, [t]);
+    return z.record(
+      z.string(),
+      z.object({
+        firstname: z
+          .string({ required_error: t('form.errors.required') })
+          .min(1, { message: t('form.errors.required') })
+          .max(255, { message: t('form.errors.max', { max: 255 }) }),
+        lastname: z
+          .string({ required_error: t('form.errors.required') })
+          .min(1, { message: t('form.errors.required') })
+          .max(255, { message: t('form.errors.max', { max: 255 }) }),
+        email: z.nullable(
+          z.union([
+            z
+              .string()
+              .max(255, { message: t('form.errors.max', { max: 255 }) })
+              .email(t('form.errors.email')),
+            z.string().length(0),
+          ]),
+        ),
+        willCome: z.nullable(z.boolean()),
+        food: z.nullable(z.string()),
+        allergies: z.nullable(
+          z
+            .string()
+            .max(255, { message: t('form.errors.max', { max: 255 }) }),
+        ),
+      }),
+    );
+  });
 
   // map the id to the key of the object
   const mappedInvitees = useMemo(() => {
     const mappedObject: Record<Invitee['id'], Omit<Invitee, 'id' | 'cardId'>> = {};
-    invitees.forEach(invitee => {
+    invitees.forEach((invitee) => {
       // omit the id as well
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {id, ...rest} = invitee;
+      const { id, ...rest } = invitee;
       mappedObject[invitee.id] = rest;
     });
     return mappedObject;
@@ -197,9 +238,9 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
     mutationFn: api.invited.invitees.update,
     onSuccess: async () => {
       // Invalidate and re-fetch
-      await queryClient.invalidateQueries({ queryKey: ['myInvitees'] })
+      await queryClient.invalidateQueries({ queryKey: ['myInvitees'] });
     },
-  })
+  });
 
   const {
     register,
@@ -222,42 +263,54 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
       >
         {invitees.map((invitee) => (
           <div key={invitee.id}>
-            <h3 className="text-xl philosopher-regular">{invitee.firstname} {invitee.lastname}</h3>
+            <h3 className="text-xl philosopher-regular">
+              {invitee.firstname} {invitee.lastname}
+            </h3>
             <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
                 <Input
                   label={t('homepage.manageCard.properties.firstname')}
                   {...register(`${invitee.id}.firstname`)}
                   required
-                  aria-invalid={errors[invitee.id]?.firstname ? "true" : "false"}
+                  aria-invalid={
+                    errors[invitee.id]?.firstname ? 'true' : 'false'
+                  }
                 />
-                {errors[invitee.id]?.firstname?.message && <span>{errors[invitee.id]?.firstname?.message}</span>}
+                {errors[invitee.id]?.firstname?.message && (
+                  <span>{errors[invitee.id]?.firstname?.message}</span>
+                )}
               </div>
               <div className="sm:col-span-3">
                 <Input
                   label={t('homepage.manageCard.properties.lastname')}
                   {...register(`${invitee.id}.lastname`)}
                   required
-                  aria-invalid={errors[invitee.id]?.lastname ? "true" : "false"}
+                  aria-invalid={errors[invitee.id]?.lastname ? 'true' : 'false'}
                 />
-                {errors[invitee.id]?.lastname?.message && <span>{errors[invitee.id]?.lastname?.message}</span>}
+                {errors[invitee.id]?.lastname?.message && (
+                  <span>{errors[invitee.id]?.lastname?.message}</span>
+                )}
               </div>
             </div>
             <div>
               <Input
                 label={t('homepage.manageCard.properties.email')}
                 {...register(`${invitee.id}.email`)}
-                aria-invalid={errors[invitee.id]?.email ? "true" : "false"}
+                aria-invalid={errors[invitee.id]?.email ? 'true' : 'false'}
               />
-              {errors[invitee.id]?.email?.message && <span>{errors[invitee.id]?.email?.message}</span>}
+              {errors[invitee.id]?.email?.message && (
+                <span>{errors[invitee.id]?.email?.message}</span>
+              )}
             </div>
             <div className="my-2">
               <Checkbox
                 label={t('homepage.manageCard.properties.willCome')}
                 {...register(`${invitee.id}.willCome`)}
-                aria-invalid={errors[invitee.id]?.willCome ? "true" : "false"}
+                aria-invalid={errors[invitee.id]?.willCome ? 'true' : 'false'}
               />
-              {errors[invitee.id]?.willCome?.message && <span>{errors[invitee.id]?.willCome?.message}</span>}
+              {errors[invitee.id]?.willCome?.message && (
+                <span>{errors[invitee.id]?.willCome?.message}</span>
+              )}
             </div>
             <div>
               <RadioGroup
@@ -269,23 +322,31 @@ function InviteesListOnMyCardForm({invitees, foodOptions}: {invitees: Omit<Invit
                   ...register(`${invitee.id}.food`),
                 }))}
               />
-              {errors[invitee.id]?.food?.message && <span>{errors[invitee.id]?.food?.message}</span>}
+              {errors[invitee.id]?.food?.message && (
+                <span>{errors[invitee.id]?.food?.message}</span>
+              )}
             </div>
             <div>
               <Input
                 label={t('homepage.manageCard.properties.allergies')}
                 {...register(`${invitee.id}.allergies`)}
-                aria-invalid={errors[invitee.id]?.allergies ? "true" : "false"}
+                aria-invalid={errors[invitee.id]?.allergies ? 'true' : 'false'}
               />
-              {errors[invitee.id]?.allergies?.message && <span>{errors[invitee.id]?.allergies?.message}</span>}
+              {errors[invitee.id]?.allergies?.message && (
+                <span>{errors[invitee.id]?.allergies?.message}</span>
+              )}
             </div>
           </div>
         ))}
-        <Button type="submit" className="col-span-2" loading={updateInvitees.isPending}>{t('form.save')}</Button>
+        <Button
+          type="submit"
+          className="col-span-2"
+          loading={updateInvitees.isPending}
+        >
+          {t('form.save')}
+        </Button>
       </form>
-      {import.meta.env.MODE === 'development' && (
-        <DevTool control={control} />
-      )}
+      {import.meta.env.MODE === 'development' && <DevTool control={control} />}
     </>
   );
 }

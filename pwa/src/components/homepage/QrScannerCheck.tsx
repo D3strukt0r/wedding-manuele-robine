@@ -1,9 +1,15 @@
-import {useRef, useEffect, useState, forwardRef, useImperativeHandle} from 'react';
+import {
+  useRef,
+  useEffect,
+  useState,
+  forwardRef,
+  useImperativeHandle,
+} from 'react';
 import QrScanner from 'qr-scanner';
-import QrCode from "../../assets/QrCode.tsx";
 // import QrCode from "@material-design-icons/svg/outlined/qr_code_scanner.svg?react";
-import clsx from "clsx";
-import {useTranslation} from "react-i18next";
+import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+import QrCode from '../../assets/QrCode';
 
 type MessageType = 'success' | 'error';
 
@@ -12,7 +18,7 @@ const mapMessageTypeToColor: { [key in MessageType]: string } = {
   error: 'bg-red-600/50',
 };
 
-let messageDeBouncer: number | undefined = undefined;
+let messageDeBouncer: number | undefined;
 
 export interface CountdownHandle {
   showMessage: (type: MessageType, msg: string) => void;
@@ -22,7 +28,7 @@ interface Props {
 }
 
 const QrScannerCheck = forwardRef<CountdownHandle, Props>(({ onScan }, ref) => {
-  const {t} = useTranslation('app');
+  const { t } = useTranslation('app');
 
   const qrEnableElemRef = useRef<HTMLDivElement>(null);
   const qrReaderSourceElemRef = useRef<HTMLVideoElement>(null);
@@ -83,22 +89,22 @@ const QrScannerCheck = forwardRef<CountdownHandle, Props>(({ onScan }, ref) => {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      if (qrScanner) {
-        qrScanner.destroy();
-        qrScanner = null;
-      }
-    };
+  useEffect(() => () => {
+    if (qrScanner) {
+      qrScanner.destroy();
+      qrScanner = null;
+    }
   }, []);
 
   return (
     <div className="border-2 border-gray-300 bg-gray-200">
       <div
         ref={qrEnableElemRef}
-        className={clsx('flex flex-col items-center p-8', {'hidden': !cameraUnavailable})}
+        className={clsx('flex flex-col items-center p-8', {
+          hidden: !cameraUnavailable,
+        })}
       >
-        {/*<QrCode className="mb-8 my-4 h-20 w-20" />*/}
+        {/* <QrCode className="mb-8 my-4 h-20 w-20" /> */}
         <div className="mb-8 my-4 w-20">
           <QrCode />
         </div>
@@ -124,7 +130,7 @@ const QrScannerCheck = forwardRef<CountdownHandle, Props>(({ onScan }, ref) => {
         <video
           ref={qrReaderSourceElemRef}
           className={`!w-full ${cameraUnavailable ? 'hidden' : 'block'}`}
-        ></video>
+        />
       </div>
     </div>
   );

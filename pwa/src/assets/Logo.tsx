@@ -4,13 +4,10 @@ interface Props {
   mode: 'light' | 'dark';
   className?: string;
 }
-export default function Logo({mode, className}: Props) {
+export default function Logo({ mode, className }: Props) {
   return (
     <svg
-      className={clsx(
-        'h-full w-full',
-        className,
-      )}
+      className={clsx('h-full w-full', className)}
       viewBox="0 0 38 56"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -35,5 +32,5 @@ export default function Logo({mode, className}: Props) {
         </clipPath>
       </defs>
     </svg>
-  )
+  );
 }

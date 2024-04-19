@@ -1,12 +1,17 @@
-import {Fragment, MouseEventHandler, ReactNode, useState} from 'react';
-import { Dialog, Menu, Transition } from '@headlessui/react'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faBars, faChevronDown, faX, IconDefinition} from '@fortawesome/free-solid-svg-icons';
+import { Fragment, MouseEventHandler, ReactNode, useState } from 'react';
+import { Dialog, Menu, Transition } from '@headlessui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBars,
+  faChevronDown,
+  faX,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import {faUser} from '@fortawesome/free-regular-svg-icons';
-import Logo from "../../../assets/Logo.tsx";
-import {useTranslation} from 'react-i18next';
-import {Link} from 'react-router-dom';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import Logo from '../../../assets/Logo';
 
 interface Navigation {
   name: string;
@@ -25,19 +30,28 @@ interface UserNavigationClickHandler {
 
 export interface AdminLayoutProps {
   navigation: Navigation[];
-  userNavigation: (UserNavigation|UserNavigationClickHandler)[];
+  userNavigation: (UserNavigation | UserNavigationClickHandler)[];
   user: ReactNode;
   children: ReactNode;
 }
 
-export default function AdminLayout({navigation, userNavigation, user, children}: AdminLayoutProps) {
-  const {t} = useTranslation('app');
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+export default function AdminLayout({
+  navigation,
+  userNavigation,
+  user,
+  children,
+}: AdminLayoutProps) {
+  const { t } = useTranslation('app');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <>
       <Transition.Root show={sidebarOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
+        <Dialog
+          as="div"
+          className="relative z-50 lg:hidden"
+          onClose={setSidebarOpen}
+        >
           <Transition.Child
             as={Fragment}
             enter="transition-opacity ease-linear duration-300"
@@ -71,9 +85,19 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                   leaveTo="opacity-0"
                 >
                   <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
-                    <button type="button" className="-m-2.5 p-2.5" onClick={() => setSidebarOpen(false)}>
-                      <span className="sr-only">{t('admin.sidebar.close')}</span>
-                      <FontAwesomeIcon icon={faX} className="h-6 w-6 text-white" aria-hidden="true" />
+                    <button
+                      type="button"
+                      className="-m-2.5 p-2.5"
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <span className="sr-only">
+                        {t('admin.sidebar.close')}
+                      </span>
+                      <FontAwesomeIcon
+                        icon={faX}
+                        className="h-6 w-6 text-white"
+                        aria-hidden="true"
+                      />
                     </button>
                   </div>
                 </Transition.Child>
@@ -96,14 +120,16 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                                   item.current
                                     ? 'bg-gray-50 text-blue-600'
                                     : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50',
-                                  'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                                  'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
                                 )}
                               >
                                 <FontAwesomeIcon
                                   icon={item.icon}
                                   className={clsx(
-                                    item.current ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600',
-                                    'h-6 w-6 shrink-0'
+                                    item.current
+                                      ? 'text-blue-600'
+                                      : 'text-gray-400 group-hover:text-blue-600',
+                                    'h-6 w-6 shrink-0',
                                   )}
                                   aria-hidden="true"
                                 />
@@ -113,19 +139,19 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                           ))}
                         </ul>
                       </li>
-                      {/*<li className="mt-auto">*/}
-                      {/*  <a*/}
-                      {/*    href="#"*/}
-                      {/*    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-blue-600"*/}
-                      {/*  >*/}
-                      {/*    <FontAwesomeIcon*/}
-                      {/*      icon={faGear}*/}
-                      {/*      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600"*/}
-                      {/*      aria-hidden="true"*/}
-                      {/*    />*/}
-                      {/*    Settings*/}
-                      {/*  </a>*/}
-                      {/*</li>*/}
+                      {/* <li className="mt-auto"> */}
+                      {/*  <a */}
+                      {/*    href="#" */}
+                      {/*    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-blue-600" */}
+                      {/*  > */}
+                      {/*    <FontAwesomeIcon */}
+                      {/*      icon={faGear} */}
+                      {/*      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600" */}
+                      {/*      aria-hidden="true" */}
+                      {/*    /> */}
+                      {/*    Settings */}
+                      {/*  </a> */}
+                      {/* </li> */}
                     </ul>
                   </nav>
                 </div>
@@ -156,14 +182,16 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                           item.current
                             ? 'bg-gray-50 text-blue-600'
                             : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50',
-                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold',
                         )}
                       >
                         <FontAwesomeIcon
                           icon={item.icon}
                           className={clsx(
-                            item.current ? 'text-blue-600' : 'text-gray-400 group-hover:text-blue-600',
-                            'h-6 w-6 shrink-0'
+                            item.current
+                              ? 'text-blue-600'
+                              : 'text-gray-400 group-hover:text-blue-600',
+                            'h-6 w-6 shrink-0',
                           )}
                           aria-hidden="true"
                         />
@@ -173,19 +201,19 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                   ))}
                 </ul>
               </li>
-              {/*<li className="mt-auto">*/}
-              {/*  <a*/}
-              {/*    href="#"*/}
-              {/*    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-blue-600"*/}
-              {/*  >*/}
-              {/*    <FontAwesomeIcon*/}
-              {/*      icon={faGear}*/}
-              {/*      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600"*/}
-              {/*      aria-hidden="true"*/}
-              {/*    />*/}
-              {/*    Settings*/}
-              {/*  </a>*/}
-              {/*</li>*/}
+              {/* <li className="mt-auto"> */}
+              {/*  <a */}
+              {/*    href="#" */}
+              {/*    className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 hover:bg-gray-50 hover:text-blue-600" */}
+              {/*  > */}
+              {/*    <FontAwesomeIcon */}
+              {/*      icon={faGear} */}
+              {/*      className="h-6 w-6 shrink-0 text-gray-400 group-hover:text-blue-600" */}
+              {/*      aria-hidden="true" */}
+              {/*    /> */}
+              {/*    Settings */}
+              {/*  </a> */}
+              {/* </li> */}
             </ul>
           </nav>
         </div>
@@ -193,41 +221,52 @@ export default function AdminLayout({navigation, userNavigation, user, children}
 
       <div className="lg:pl-72">
         <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-          <button type="button" className="-m-2.5 p-2.5 text-gray-700 lg:hidden" onClick={() => setSidebarOpen(true)}>
+          <button
+            type="button"
+            className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
+            onClick={() => setSidebarOpen(true)}
+          >
             <span className="sr-only">{t('admin.sidebar.open')}</span>
-            <FontAwesomeIcon icon={faBars} className="h-6 w-6" aria-hidden="true" />
+            <FontAwesomeIcon
+              icon={faBars}
+              className="h-6 w-6"
+              aria-hidden="true"
+            />
           </button>
 
           {/* Separator */}
           <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <span className="flex flex-1"></span>
-            {/*<form className="relative flex flex-1" action="#" method="GET">*/}
-            {/*  <label htmlFor="search-field" className="sr-only">*/}
-            {/*    Search*/}
-            {/*  </label>*/}
-            {/*  <FontAwesomeIcon*/}
-            {/*    icon={faMagnifyingGlass}*/}
-            {/*    className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"*/}
-            {/*    aria-hidden="true"*/}
-            {/*  />*/}
-            {/*  <input*/}
-            {/*    id="search-field"*/}
-            {/*    className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm"*/}
-            {/*    placeholder="Search..."*/}
-            {/*    type="search"*/}
-            {/*    name="search"*/}
-            {/*  />*/}
-            {/*</form>*/}
+            <span className="flex flex-1" />
+            {/* <form className="relative flex flex-1" action="#" method="GET"> */}
+            {/*  <label htmlFor="search-field" className="sr-only"> */}
+            {/*    Search */}
+            {/*  </label> */}
+            {/*  <FontAwesomeIcon */}
+            {/*    icon={faMagnifyingGlass} */}
+            {/*    className="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400" */}
+            {/*    aria-hidden="true" */}
+            {/*  /> */}
+            {/*  <input */}
+            {/*    id="search-field" */}
+            {/*    className="block h-full w-full border-0 py-0 pl-8 pr-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm" */}
+            {/*    placeholder="Search..." */}
+            {/*    type="search" */}
+            {/*    name="search" */}
+            {/*  /> */}
+            {/* </form> */}
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              {/*<button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500">*/}
-              {/*  <span className="sr-only">View notifications</span>*/}
-              {/*  <FontAwesomeIcon icon={faBell} className="h-6 w-6" aria-hidden="true" />*/}
-              {/*</button>*/}
+              {/* <button type="button" className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"> */}
+              {/*  <span className="sr-only">View notifications</span> */}
+              {/*  <FontAwesomeIcon icon={faBell} className="h-6 w-6" aria-hidden="true" /> */}
+              {/* </button> */}
 
               {/* Separator */}
-              <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" aria-hidden="true" />
+              <div
+                className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200"
+                aria-hidden="true"
+              />
 
               {/* Profile dropdown */}
               <Menu as="div" className="relative">
@@ -237,10 +276,17 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                     <FontAwesomeIcon icon={faUser} />
                   </div>
                   <span className="hidden lg:flex lg:items-center">
-                    <span className="ml-4 text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
+                    <span
+                      className="ml-4 text-sm font-semibold leading-6 text-gray-900"
+                      aria-hidden="true"
+                    >
                       {user}
                     </span>
-                    <FontAwesomeIcon icon={faChevronDown} className="ml-2 h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className="ml-2 h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
                   </span>
                 </Menu.Button>
                 <Transition
@@ -260,8 +306,10 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                             <Link
                               to={item.href}
                               className={clsx(
-                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                'block px-4 py-2 text-sm font-semibold'
+                                active
+                                  ? 'bg-gray-100 text-gray-900'
+                                  : 'text-gray-700',
+                                'block px-4 py-2 text-sm font-semibold',
                               )}
                             >
                               {item.name}
@@ -271,8 +319,10 @@ export default function AdminLayout({navigation, userNavigation, user, children}
                               type="button"
                               onClick={item.onClick}
                               className={clsx(
-                                active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                                'block w-full px-4 py-2 text-sm font-semibold text-left'
+                                active
+                                  ? 'bg-gray-100 text-gray-900'
+                                  : 'text-gray-700',
+                                'block w-full px-4 py-2 text-sm font-semibold text-left',
                               )}
                             >
                               {item.name}
@@ -289,9 +339,7 @@ export default function AdminLayout({navigation, userNavigation, user, children}
         </div>
 
         <main className="py-10">
-          <div className="px-4 sm:px-6 lg:px-8">
-            {children}
-          </div>
+          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
         </main>
       </div>
     </>

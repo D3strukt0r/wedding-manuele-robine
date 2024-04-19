@@ -1,24 +1,31 @@
-import {forwardRef, Fragment, useContext} from 'react'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
-import clsx from "clsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBars, faX} from "@fortawesome/free-solid-svg-icons";
-import {useTranslation} from "react-i18next";
-import {faUser} from "@fortawesome/free-regular-svg-icons";
-import AuthenticationContext from "../context/AuthenticationContext.tsx";
-import {Link, LinkProps} from "react-router-dom";
+import { forwardRef, Fragment, useContext } from 'react';
+import { Disclosure, Menu, Transition } from '@headlessui/react';
+import clsx from 'clsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faX } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import { Link, LinkProps } from 'react-router-dom';
+import AuthenticationContext from '../context/AuthenticationContext';
 
-const DisclosureLink = forwardRef<HTMLAnchorElement, LinkProps>(function (props, ref) {
-  return <Link ref={ref} {...props} />
-})
+const DisclosureLink = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => (
+  <Link ref={ref} {...props} />
+));
 
 export type MenuItem = {
   label: string;
   route: string;
-}
+};
 
-export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuItems: MenuItem[] }) {
-  const {t} = useTranslation("app")
+interface Props {
+  logo: React.ReactNode;
+  menuItems: MenuItem[];
+}
+export default function NavBar({
+  logo,
+  menuItems,
+}: Props) {
+  const { t } = useTranslation('app');
   const current = null; // TODO: get current route
   const [authentication, updateAuthentication] = useContext(AuthenticationContext);
 
@@ -31,9 +38,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
-                  <div className="h-8 w-auto">
-                    {logo}
-                  </div>
+                  <div className="h-8 w-auto">{logo}</div>
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex">
@@ -43,14 +48,16 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                       key={item.label}
                       href={item.route}
                       className={clsx(
-                        item.route === current ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-50 hover:border-gray-100 hover:text-gray-200',
+                        item.route === current
+                          ? 'border-indigo-500 text-gray-900'
+                          : 'border-transparent text-gray-50 hover:border-gray-100 hover:text-gray-200',
                         'inline-flex items-center border-b-2 pt-1 text-sm font-medium uppercase philosopher-regular',
                       )}
                     >
                       <span
                         className={clsx(
                           'flex items-center h-8 px-3',
-                          index !== 0 ? 'border-l-[1px] border-gray-50' : null
+                          index !== 0 ? 'border-l-[1px] border-gray-50' : null,
                         )}
                       >
                         {item.label}
@@ -61,10 +68,7 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                 {/* Profile dropdown */}
                 {authentication && (
                   <div className="sm:flex sm:items-center">
-                    <Menu
-                      as="div"
-                      className="relative ml-3"
-                    >
+                    <Menu as="div" className="relative ml-3">
                       <div>
                         <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                           <span className="absolute -inset-1.5" />
@@ -85,17 +89,19 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                       >
                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <Menu.Item disabled>
-                            <span className="block px-4 py-2 text-sm text-gray-700 noto-sans-regular opacity-75">{authentication.username}</span>
+                            <span className="block px-4 py-2 text-sm text-gray-700 noto-sans-regular opacity-75">
+                              {authentication.username}
+                            </span>
                           </Menu.Item>
                           {/* TODO: Don't check for roles directly in frontend */}
                           {authentication.roles.includes('ROLE_ADMIN') && (
                             <Menu.Item>
-                              {({active}) => (
+                              {({ active }) => (
                                 <Link
                                   to="/admin"
                                   className={clsx(
                                     'block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
-                                    {'bg-gray-100': active}
+                                    { 'bg-gray-100': active },
                                   )}
                                 >
                                   {t('menu.admin')}
@@ -104,12 +110,12 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                             </Menu.Item>
                           )}
                           <Menu.Item>
-                            {({active}) => (
+                            {({ active }) => (
                               <button
                                 type="button"
                                 className={clsx(
                                   'w-full text-left block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
-                                  {'bg-gray-100': active}
+                                  { 'bg-gray-100': active },
                                 )}
                                 onClick={() => {
                                   updateAuthentication(null);
@@ -129,7 +135,9 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                 {/* Mobile menu button */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-50 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                   <span className="absolute -inset-0.5" />
-                  <span className="sr-only">{t('accessibility.menu.open')}</span>
+                  <span className="sr-only">
+                    {t('accessibility.menu.open')}
+                  </span>
                   {open ? (
                     <FontAwesomeIcon
                       icon={faX}
@@ -157,14 +165,16 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
                   as="a"
                   href={item.route}
                   className={clsx(
-                    item.route === current ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
-                    'block border-l-4 pl-3 pr-4 text-base font-medium uppercase philosopher-regular'
+                    item.route === current
+                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                      : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
+                    'block border-l-4 pl-3 pr-4 text-base font-medium uppercase philosopher-regular',
                   )}
                 >
                   <span
                     className={clsx(
                       'flex items-center border-b-[1px] border-gray-50 py-3',
-                      index === 0 ? 'border-t-[1px]' : null
+                      index === 0 ? 'border-t-[1px]' : null,
                     )}
                   >
                     {item.label}
@@ -175,7 +185,9 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
             {authentication && (
               <div className="border-t border-gray-600 pb-3 pt-4">
                 <div className="flex items-center px-4">
-                  <div className="text-base font-medium text-gray-50 philosopher-regular">{authentication.username}</div>
+                  <div className="text-base font-medium text-gray-50 philosopher-regular">
+                    {authentication.username}
+                  </div>
                 </div>
                 <div className="mt-3 space-y-1">
                   {/* TODO: Don't check for roles directly in frontend */}
@@ -204,5 +216,5 @@ export default function NavBar({logo, menuItems}: { logo: React.ReactNode, menuI
         </>
       )}
     </Disclosure>
-  )
+  );
 }

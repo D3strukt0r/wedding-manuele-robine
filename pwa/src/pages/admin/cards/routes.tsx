@@ -1,5 +1,5 @@
-import {lazy} from 'react';
-import {createBrowserRouter, Outlet} from 'react-router-dom';
+import { lazy } from 'react';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 
 const ListCards = lazy(() => import('./ListCards.tsx'));
 const ShowCard = lazy(() => import('./ShowCard.tsx'));
@@ -18,6 +18,6 @@ export default function cardRoutes() {
         path: '/admin/cards/:id',
         element: <ShowCard />,
       },
-    ]
+    ],
   } satisfies Routes;
 }

@@ -1,5 +1,5 @@
-import {lazy} from 'react';
-import {createBrowserRouter, Outlet} from 'react-router-dom';
+import { lazy } from 'react';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 
 const ListUsers = lazy(() => import('./ListUsers.tsx'));
 const ShowUser = lazy(() => import('./ShowUser.tsx'));
@@ -18,6 +18,6 @@ export default function userRoutes() {
         path: '/admin/users/:id',
         element: <ShowUser />,
       },
-    ]
+    ],
   } satisfies Routes;
 }

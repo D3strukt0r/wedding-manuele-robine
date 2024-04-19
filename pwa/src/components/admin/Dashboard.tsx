@@ -1,17 +1,22 @@
-import AdminLayout, {AdminLayoutProps} from '../common/admin/AdminLayout.tsx';
-import {faChair, faEnvelope, faHouse, faPerson} from '@fortawesome/free-solid-svg-icons';
-import {Suspense, useContext} from 'react';
-import AuthenticationContext from '../../context/AuthenticationContext.tsx';
-import {useTranslation} from 'react-i18next';
-import {Outlet} from 'react-router-dom';
-import BigSpinner from '../../layout/BigSpinner.tsx';
-import {faUser} from '@fortawesome/free-regular-svg-icons';
+import {
+  faChair,
+  faEnvelope,
+  faHouse,
+  faPerson,
+} from '@fortawesome/free-solid-svg-icons';
+import { Suspense, useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Outlet } from 'react-router-dom';
+import { faUser } from '@fortawesome/free-regular-svg-icons';
+import BigSpinner from '../../layout/BigSpinner';
+import AuthenticationContext from '../../context/AuthenticationContext';
+import AdminLayout, { AdminLayoutProps } from '../common/admin/AdminLayout';
 
 export default function Dashboard() {
-  const {t} = useTranslation("app");
+  const { t } = useTranslation('app');
   const [authentication, updateAuthentication] = useContext(AuthenticationContext);
 
-  const navigation = [
+  const navigation = useMemo(() => ([
     {
       name: t('admin.menu.dashboard'),
       href: '/admin',
@@ -42,15 +47,15 @@ export default function Dashboard() {
       icon: faUser,
       current: false,
     },
-  ] satisfies AdminLayoutProps['navigation'];
-  const userNavigation = [
+  ] satisfies AdminLayoutProps['navigation']), [t]);
+  const userNavigation = useMemo(() => ([
     {
       name: t('menu.logout'),
       onClick: () => {
         updateAuthentication(null);
       },
     },
-  ] satisfies AdminLayoutProps['userNavigation'];
+  ] satisfies AdminLayoutProps['userNavigation']), [t, updateAuthentication]);
 
   return (
     <AdminLayout

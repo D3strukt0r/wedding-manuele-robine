@@ -1,6 +1,6 @@
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import {Invitee, ListResponse} from '../components/types.ts';
+import { Invitee, ListResponse } from '../components/types';
 
 export default function useInvitees(
   queryOptions?: Omit<

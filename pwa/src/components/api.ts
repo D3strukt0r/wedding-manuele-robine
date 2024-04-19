@@ -1,10 +1,10 @@
-import {Card, Invitee, ListResponse, Table, User} from './types'
 import axios from 'axios';
+import { Card, Invitee, ListResponse, Table, User } from './types';
 
 export const api = {
   common: {
-    login: async (loginValues: { username: string, password: string }) => {
-      const { data } = await axios.post<{token: string}>('/common/api/login_check', loginValues);
+    login: async (loginValues: { username: string; password: string }) => {
+      const { data } = await axios.post<{ token: string }>('/common/api/login_check', loginValues);
       return data;
     },
     lookup: {
@@ -17,7 +17,7 @@ export const api = {
   admin: {
     invitees: {
       create: async (invitee: Omit<Invitee, 'id'>) => {
-        const { data } = await axios.post<Invitee>(`/admin/api/invitees`, invitee);
+        const { data } = await axios.post<Invitee>('/admin/api/invitees', invitee);
         return data;
       },
       show: async (id: number) => {
@@ -91,9 +91,9 @@ export const api = {
         return data;
       },
       update: async (invitees: Record<Invitee['id'] | string, Omit<Invitee, 'id' | 'tableId' | 'cardId'>>) => {
-        const { data } = await axios.put<ListResponse<Omit<Invitee, 'cardId'>>>(`/invited/api/invitees`, {invitees});
+        const { data } = await axios.put<ListResponse<Omit<Invitee, 'cardId'>>>('/invited/api/invitees', { invitees });
         return data;
       },
     },
-  }
+  },
 };

@@ -1,4 +1,4 @@
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 export default function useEnumRole(
@@ -11,7 +11,7 @@ export default function useEnumRole(
     ...(queryOptions ?? {}),
     queryKey: ['enum', 'role'],
     queryFn: async () => {
-      const { data } = await axios.get<string[]>(`/common/api/lookup/type/role`);
+      const { data } = await axios.get<string[]>('/common/api/lookup/type/role');
       return data;
     },
   });

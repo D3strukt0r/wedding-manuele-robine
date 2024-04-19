@@ -1,5 +1,5 @@
-import {lazy} from 'react';
-import {createBrowserRouter, Outlet} from 'react-router-dom';
+import { lazy } from 'react';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 
 const ListInvitees = lazy(() => import('./ListInvitees.tsx'));
 const ShowInvitee = lazy(() => import('./ShowInvitee.tsx'));
@@ -18,6 +18,6 @@ export default function inviteeRoutes() {
         path: '/admin/invitees/:id',
         element: <ShowInvitee />,
       },
-    ]
+    ],
   } satisfies Routes;
 }

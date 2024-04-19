@@ -1,14 +1,14 @@
-import NavBar from "../layout/NavBar.tsx";
-import Logo from "../assets/Logo.tsx";
-import {useTranslation} from "react-i18next";
-import HowToWedding from "../components/homepage/HowToWedding.tsx";
-import MenuAndSelection from "../components/homepage/MenuAndSelection.tsx";
-import MapAndPlan from "../components/homepage/MapAndPlan.tsx";
-import ImportantInfo from "../components/homepage/ImportantInfo.tsx";
-import Gallery from "../components/homepage/Gallery.tsx";
+import { useTranslation } from 'react-i18next';
+import NavBar from '../layout/NavBar';
+import Logo from '../assets/Logo';
+import HowToWedding from '../components/homepage/HowToWedding';
+import MenuAndSelection from '../components/homepage/MenuAndSelection';
+import MapAndPlan from '../components/homepage/MapAndPlan';
+import ImportantInfo from '../components/homepage/ImportantInfo';
+import Gallery from '../components/homepage/Gallery';
 
 export default function Homepage() {
-  const {t} = useTranslation("app")
+  const { t } = useTranslation('app');
 
   return (
     <>
@@ -17,28 +17,28 @@ export default function Homepage() {
         menuItems={[
           {
             label: t('menu.howTo'),
-            route: '#how-to'
+            route: '#how-to',
           },
           {
             label: t('menu.menu'),
-            route: '#menu'
+            route: '#menu',
           },
           {
             label: t('menu.address'),
-            route: '#address'
+            route: '#address',
           },
           {
             label: t('menu.process'),
-            route: '#address'
+            route: '#address',
           },
           {
             label: t('menu.importantInfo'),
-            route: '#important-info'
+            route: '#important-info',
           },
           {
             label: t('menu.gallery'),
-            route: '#gallery'
-          }
+            route: '#gallery',
+          },
         ]}
       />
       <div className="md:pb-16">
@@ -57,7 +57,9 @@ export default function Homepage() {
         <Gallery id="gallery" />
       </div>
       <footer className="bg-app-gray-dark text-white">
-        <p className="text-center whitespace-pre-line py-4 text-sm">{t('footer.copyright')}</p>
+        <p className="text-center whitespace-pre-line py-4 text-sm">
+          {t('footer.copyright')}
+        </p>
       </footer>
     </>
   );

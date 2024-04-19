@@ -1,6 +1,6 @@
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import {ListResponse, Table} from '../components/types.ts';
+import { ListResponse, Table } from '../components/types';
 
 export default function useTables(
   queryOptions?: Omit<

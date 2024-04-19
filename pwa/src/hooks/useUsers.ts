@@ -1,6 +1,6 @@
-import {useQuery} from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import {ListResponse, User} from '../components/types.ts';
+import { ListResponse, User } from '../components/types';
 
 export default function useUsers(
   queryOptions?: Omit<

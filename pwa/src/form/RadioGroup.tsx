@@ -1,9 +1,12 @@
-import clsx from "clsx";
-import { InputHTMLAttributes } from "react";
+import clsx from 'clsx';
+import { InputHTMLAttributes } from 'react';
 
 interface Option extends InputHTMLAttributes<HTMLInputElement> {
   title: string;
-  value: Exclude<InputHTMLAttributes<HTMLInputElement>['value'], readonly string[]>;
+  value: Exclude<
+    InputHTMLAttributes<HTMLInputElement>['value'],
+    readonly string[]
+  >;
 }
 interface Props {
   label?: string;
@@ -11,18 +14,29 @@ interface Props {
   inline?: boolean;
   options: Option[];
 }
-export default function RadioGroup({label, legend, inline = false, options}: Props) {
+export default function RadioGroup({
+  label,
+  legend,
+  inline = false,
+  options,
+}: Props) {
   return (
     <div>
       {label && (
-        <label className="text-base noto-sans-regular text-gray-900">{label}</label>
+        <label className="text-base noto-sans-regular text-gray-900">
+          {label}
+        </label>
       )}
       <fieldset>
         {legend && (
           <legend className="sr-only">{legend}</legend>
         )}
-        <div className={clsx('space-y-4', {'sm:flex sm:items-center sm:space-x-10 sm:space-y-0': inline})}>
-          {options.map(({title, ...props}) => (
+        <div
+          className={clsx('space-y-4', {
+            'sm:flex sm:items-center sm:space-x-10 sm:space-y-0': inline,
+          })}
+        >
+          {options.map(({ title, ...props }) => (
             <div key={props.value} className="flex items-center">
               <input
                 // defaultChecked={option.id === 'email'}
@@ -34,7 +48,10 @@ export default function RadioGroup({label, legend, inline = false, options}: Pro
                 )}
                 type="radio"
               />
-              <label htmlFor={`${props.name}.${props.value}`} className="ml-3 block text-sm noto-sans-regular leading-6 text-gray-900">
+              <label
+                htmlFor={`${props.name}.${props.value}`}
+                className="ml-3 block text-sm noto-sans-regular leading-6 text-gray-900"
+              >
                 {title}
               </label>
             </div>
@@ -42,5 +59,5 @@ export default function RadioGroup({label, legend, inline = false, options}: Pro
         </div>
       </fieldset>
     </div>
-  )
+  );
 }

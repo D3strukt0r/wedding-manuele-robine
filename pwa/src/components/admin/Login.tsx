@@ -1,31 +1,33 @@
-import {useTranslation} from "react-i18next";
-import {useMutation} from "@tanstack/react-query";
-import {useCallback, useContext, useMemo} from "react";
-import * as z from "zod";
-import {api} from "../api.ts";
-import AuthenticationContext from "../../context/AuthenticationContext.tsx";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {zodResolver} from "@hookform/resolvers/zod";
-import Input from '../../form/admin/Input.tsx';
-import Button from '../../form/admin/Button.tsx';
-import {DevTool} from '@hookform/devtools';
-import Alert from '../common/admin/Alert.tsx';
+import { useTranslation } from 'react-i18next';
+import { useMutation } from '@tanstack/react-query';
+import { useCallback, useContext, useMemo } from 'react';
+import * as z from 'zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { DevTool } from '@hookform/devtools';
+import { api } from '../api';
+import AuthenticationContext from '../../context/AuthenticationContext';
+import Input from '../../form/admin/Input';
+import Button from '../../form/admin/Button';
+import Alert from '../common/admin/Alert';
 
 type Inputs = {
-  username: string
-  password: string
-}
+  username: string;
+  password: string;
+};
 
 export default function Login() {
-  const {t} = useTranslation('app');
+  const { t } = useTranslation('app');
   const [, updateAuthentication] = useContext(AuthenticationContext);
 
   const schema = useMemo(() => {
     return z.object({
-      username: z.string({ required_error: t('form.errors.required') })
+      username: z
+        .string({ required_error: t('form.errors.required') })
         .min(1, { message: t('form.errors.required') })
         .max(180, { message: t('form.errors.max', { max: 180 }) }),
-      password: z.string({ required_error: t('form.errors.required') })
+      password: z
+        .string({ required_error: t('form.errors.required') })
         .min(1, { message: t('form.errors.required') }),
     });
   }, [t]);
@@ -35,7 +37,7 @@ export default function Login() {
     onSuccess: async (response) => {
       updateAuthentication(response.token);
     },
-  })
+  });
 
   const {
     register,
@@ -63,9 +65,7 @@ export default function Login() {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={(
-                <p>{login.error.response.data.message}</p>
-              )}
+              text={<p>{login.error.response.data.message}</p>}
             />
           ) : null}
           <div>
@@ -95,7 +95,9 @@ export default function Login() {
             />
             {errors.password?.message && <span>{errors.password.message}</span>}
           </div>
-          <Button type="submit" loading={login.isPending} className="w-full">{t('admin.login.login')}</Button>
+          <Button type="submit" loading={login.isPending} className="w-full">
+            {t('admin.login.login')}
+          </Button>
         </form>
         {import.meta.env.MODE === 'development' && (
           <DevTool control={control} />
