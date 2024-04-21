@@ -1,15 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import { useMutation } from '@tanstack/react-query';
 import { useCallback, useContext, useMemo } from 'react';
 import * as z from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import { api } from '../api';
 import AuthenticationContext from '../../context/AuthenticationContext';
 import Input from '../../form/admin/Input';
 import Button from '../../form/admin/Button';
 import Alert from '../common/admin/Alert';
+import useLogin from '../../hooks/useLogin';
 
 type Inputs = {
   username: string;
@@ -32,8 +31,7 @@ export default function Login() {
     });
   }, [t]);
 
-  const login = useMutation({
-    mutationFn: api.common.login,
+  const login = useLogin({
     onSuccess: async (response) => {
       updateAuthentication(response.token);
     },

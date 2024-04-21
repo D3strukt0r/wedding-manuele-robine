@@ -1,18 +1,19 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
-import { Invitee, ListResponse } from '../components/types';
+import { Table } from '../components/types';
 
-export default function useInvitees(
+export default function useTable(
+  id: Table['id'],
   queryOptions?: Omit<
-    UseQueryOptions<ListResponse<Invitee>>,
+    UseQueryOptions<Table>,
     'queryKey' | 'queryFn'
   >,
 ) {
   return useQuery({
     ...(queryOptions ?? {}),
-    queryKey: ['invitees'],
+    queryKey: ['table', id],
     queryFn: async () => {
-      const { data: response } = await axios.get<ListResponse<Invitee>>('/admin/api/invitees');
+      const { data: response } = await axios.get<Table>(`/admin/api/tables/${id}`);
       return response;
     },
   });

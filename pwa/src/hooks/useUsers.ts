@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { ListResponse, User } from '../components/types';
 
 export default function useUsers(
   queryOptions?: Omit<
-    Parameters<typeof useQuery<ListResponse<User>>>[0],
+    UseQueryOptions<ListResponse<User>>,
     'queryKey' | 'queryFn'
   >,
 ) {
@@ -12,8 +12,8 @@ export default function useUsers(
     ...(queryOptions ?? {}),
     queryKey: ['users'],
     queryFn: async () => {
-      const { data } = await axios.get<ListResponse<User>>('/admin/api/users');
-      return data;
+      const { data: response } = await axios.get<ListResponse<User>>('/admin/api/users');
+      return response;
     },
   });
 }

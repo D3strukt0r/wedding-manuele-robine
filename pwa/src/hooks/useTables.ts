@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { ListResponse, Table } from '../components/types';
 
 export default function useTables(
   queryOptions?: Omit<
-    Parameters<typeof useQuery<ListResponse<Table>>>[0],
+    UseQueryOptions<ListResponse<Table>>,
     'queryKey' | 'queryFn'
   >,
 ) {
@@ -12,8 +12,8 @@ export default function useTables(
     ...(queryOptions ?? {}),
     queryKey: ['tables'],
     queryFn: async () => {
-      const { data } = await axios.get<ListResponse<Table>>('/admin/api/tables');
-      return data;
+      const { data: response } = await axios.get<ListResponse<Table>>('/admin/api/tables');
+      return response;
     },
   });
 }

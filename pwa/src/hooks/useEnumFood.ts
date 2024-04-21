@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 
 export default function useEnumFood(
   queryOptions?: Omit<
-    Parameters<typeof useQuery<string[]>>[0],
+    UseQueryOptions<string[]>,
     'queryKey' | 'queryFn'
   >,
 ) {
@@ -11,8 +11,8 @@ export default function useEnumFood(
     ...(queryOptions ?? {}),
     queryKey: ['enum', 'food'],
     queryFn: async () => {
-      const { data } = await axios.get<string[]>('/common/api/lookup/type/food');
-      return data;
+      const { data: response } = await axios.get<string[]>('/common/api/lookup/type/food');
+      return response;
     },
   });
 }
