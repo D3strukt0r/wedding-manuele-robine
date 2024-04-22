@@ -45,10 +45,10 @@ export default function ListTables() {
   }
 
   if (tables.isError || users.isError) {
-    if (users.error && tables.error)
-      throw new Error(`${users.error}\n${tables.error}`);
-    if (users.error) throw users.error;
-    if (tables.error) throw tables.error;
+    const error: string[] = [];
+    if (users.error) error.push(users.error.message);
+    if (tables.error) error.push(tables.error.message);
+    throw new Error(error.join('\n'));
   }
 
   return <BigSpinner />;

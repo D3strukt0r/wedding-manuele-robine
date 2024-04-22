@@ -7,6 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { DevTool } from '@hookform/devtools';
 import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
 import menu from '/menu.png';
 import AlignedCard from '../../layout/AlignedCard';
@@ -16,10 +18,8 @@ import { api } from '../api';
 import { Invitee } from '../types';
 import Input from '../../form/Input';
 import Checkbox from '../../form/Checkbox';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import RadioGroup from '../../form/RadioGroup';
 import Button from '../../form/Button';
-import { DevTool } from '@hookform/devtools';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -220,7 +220,7 @@ function InviteesListOnMyCardForm({
         ),
       }),
     );
-  });
+  }, [t]);
 
   // map the id to the key of the object
   const mappedInvitees = useMemo(() => {
@@ -270,7 +270,7 @@ function InviteesListOnMyCardForm({
               <div className="sm:col-span-3">
                 <Input
                   label={t('homepage.manageCard.properties.firstname')}
-                  {...register(`${invitee.id}.firstname`)}
+                  {...register(`${invitee.id}.firstname`, { setValueAs: (value) => value === '' ? null : value })}
                   required
                   aria-invalid={
                     errors[invitee.id]?.firstname ? 'true' : 'false'
@@ -283,7 +283,7 @@ function InviteesListOnMyCardForm({
               <div className="sm:col-span-3">
                 <Input
                   label={t('homepage.manageCard.properties.lastname')}
-                  {...register(`${invitee.id}.lastname`)}
+                  {...register(`${invitee.id}.lastname`, { setValueAs: (value) => value === '' ? null : value })}
                   required
                   aria-invalid={errors[invitee.id]?.lastname ? 'true' : 'false'}
                 />
@@ -295,7 +295,7 @@ function InviteesListOnMyCardForm({
             <div>
               <Input
                 label={t('homepage.manageCard.properties.email')}
-                {...register(`${invitee.id}.email`)}
+                {...register(`${invitee.id}.email`, { setValueAs: (value) => value === '' ? null : value })}
                 aria-invalid={errors[invitee.id]?.email ? 'true' : 'false'}
               />
               {errors[invitee.id]?.email?.message && (
@@ -329,7 +329,7 @@ function InviteesListOnMyCardForm({
             <div>
               <Input
                 label={t('homepage.manageCard.properties.allergies')}
-                {...register(`${invitee.id}.allergies`)}
+                {...register(`${invitee.id}.allergies`, { setValueAs: (value) => value === '' ? null : value })}
                 aria-invalid={errors[invitee.id]?.allergies ? 'true' : 'false'}
               />
               {errors[invitee.id]?.allergies?.message && (

@@ -5,7 +5,7 @@ import BigSpinner from '../../../layout/BigSpinner';
 import useTables from '../../../hooks/useTables';
 import useCards from '../../../hooks/useCards';
 import useInvitees from '../../../hooks/useInvitees';
-import useEnumFood from '../../../hooks/useEnumFood';
+import useLookupType, { EnumTypes } from '../../../hooks/useLookupType';
 
 export default function ListInvitees() {
   const { t } = useTranslation('app');
@@ -13,7 +13,7 @@ export default function ListInvitees() {
   const invitees = useInvitees();
   const tables = useTables();
   const cards = useCards();
-  const food = useEnumFood();
+  const food = useLookupType(EnumTypes.FOOD);
 
   const columns = useMemo(() => [
     {
@@ -61,14 +61,12 @@ export default function ListInvitees() {
   }
 
   if (invitees.isError || tables.isError || cards.isError || food.isError) {
-    if (invitees.error && tables.error && cards.isError && food.isError)
-      throw new Error(
-        `${invitees.error}\n${tables.error}\n${cards.error}\n${food.error}`,
-      );
-    if (invitees.error) throw invitees.error;
-    if (tables.error) throw tables.error;
-    if (cards.error) throw cards.error;
-    if (food.error) throw food.error;
+    const error: string[] = [];
+    if (invitees.error) error.push(invitees.error.message);
+    if (tables.error) error.push(tables.error.message);
+    if (cards.error) error.push(cards.error.message);
+    if (food.error) error.push(food.error.message);
+    throw new Error(error.join('\n'));
   }
 
   return <BigSpinner />;

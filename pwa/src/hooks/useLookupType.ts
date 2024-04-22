@@ -1,7 +1,13 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 
-export default function useEnumRole(
+export enum EnumTypes {
+  FOOD = 'food',
+  ROLE = 'role',
+}
+
+export default function useLookupType(
+  type: EnumTypes,
   queryOptions?: Omit<
     UseQueryOptions<string[]>,
     'queryKey' | 'queryFn'
@@ -9,9 +15,9 @@ export default function useEnumRole(
 ) {
   return useQuery({
     ...(queryOptions ?? {}),
-    queryKey: ['enum', 'role'],
+    queryKey: ['enum', type],
     queryFn: async () => {
-      const { data: response } = await axios.get<string[]>('/common/api/lookup/type/role');
+      const { data: response } = await axios.get<string[]>(`/common/api/lookup/type/${type}`);
       return response;
     },
   });

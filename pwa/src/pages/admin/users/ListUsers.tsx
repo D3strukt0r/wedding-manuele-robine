@@ -4,13 +4,13 @@ import Table, { TableProps } from '../../../components/common/admin/Table';
 import BigSpinner from '../../../layout/BigSpinner';
 import { User } from '../../../components/types';
 import useUsers from '../../../hooks/useUsers';
-import useEnumRole from '../../../hooks/useEnumRole';
+import useLookupType, { EnumTypes } from '../../../hooks/useLookupType';
 
 export default function ListUsers() {
   const { t } = useTranslation('app');
 
   const users = useUsers();
-  const roles = useEnumRole();
+  const roles = useLookupType(EnumTypes.ROLE);
 
   const columns = useMemo(() => [
     {
@@ -52,10 +52,10 @@ export default function ListUsers() {
   }
 
   if (users.isError || roles.isError) {
-    if (users.error && roles.error)
-      throw new Error(`${users.error}\n${roles.error}`);
-    if (users.error) throw users.error;
-    if (roles.error) throw roles.error;
+    const error: string[] = [];
+    if (users.error) error.push(users.error.message);
+    if (roles.error) error.push(roles.error.message);
+    throw new Error(error.join('\n'));
   }
 
   return <BigSpinner />;

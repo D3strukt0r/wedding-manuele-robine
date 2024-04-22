@@ -47,11 +47,11 @@ export default function ListInvitees() {
   }
 
   if (cards.isError || invitees.isError || users.isError) {
-    if (cards.isError && invitees.error && users.isError)
-      throw new Error(`${cards.error}\n${invitees.error}\n${users.error}`);
-    if (cards.error) throw cards.error;
-    if (invitees.error) throw invitees.error;
-    if (users.error) throw users.error;
+    const error: string[] = [];
+    if (cards.error) error.push(cards.error.message);
+    if (invitees.error) error.push(invitees.error.message);
+    if (users.error) error.push(users.error.message);
+    throw new Error(error.join('\n'));
   }
 
   return <BigSpinner />;
