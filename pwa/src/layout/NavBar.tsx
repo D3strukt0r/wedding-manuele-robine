@@ -139,17 +139,9 @@ export default function NavBar({
                     {t('accessibility.menu.open')}
                   </span>
                   {open ? (
-                    <FontAwesomeIcon
-                      icon={faX}
-                      className="block h-6 w-6"
-                      aria-hidden="true"
-                    />
+                    <FontAwesomeIcon icon={faX} className="block h-6 w-6" aria-hidden="true" />
                   ) : (
-                    <FontAwesomeIcon
-                      icon={faBars}
-                      className="block h-6 w-6"
-                      aria-hidden="true"
-                    />
+                    <FontAwesomeIcon icon={faBars} className="block h-6 w-6" aria-hidden="true" />
                   )}
                 </Disclosure.Button>
               </div>

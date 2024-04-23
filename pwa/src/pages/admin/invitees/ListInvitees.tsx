@@ -1,11 +1,73 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 import Table, { TableProps } from '../../../components/common/admin/Table';
 import BigSpinner from '../../../layout/BigSpinner';
 import useTables from '../../../hooks/useTables';
 import useCards from '../../../hooks/useCards';
 import useInvitees from '../../../hooks/useInvitees';
 import useLookupType, { EnumTypes } from '../../../hooks/useLookupType';
+import { Invitee } from '../../../components/types';
+import Modal from '../../../components/common/admin/Modal';
+import useInviteeDelete from '../../../hooks/useInviteeDelete';
+
+function DeleteAction({ record }: { record: Invitee }) {
+  const { t } = useTranslation('app');
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const deleteInvitee = useInviteeDelete(record.id);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-red-600 hover:text-red-900"
+      >
+        {t('actions.delete')}
+        <span className="sr-only">, {record.firstname} {record.lastname}</span>
+      </button>
+      <Modal
+        type="warning"
+        title={t('invitee.action.delete.title')}
+        open={open}
+        setOpen={() => {
+          if (!loading) setOpen(false);
+        }}
+        actions={[
+          {
+            text: t('actions.delete'),
+            layout: 'danger',
+            loading,
+            onClick: async () => {
+              setLoading(true);
+              try {
+                await deleteInvitee.mutateAsync();
+                await queryClient.invalidateQueries({ queryKey: ['invitees'] });
+                setOpen(false);
+              } finally {
+                setLoading(false);
+              }
+            },
+          },
+          {
+            text: t('actions.cancel'),
+            layout: 'secondary',
+            onClick: () => {
+              if (!loading) setOpen(false);
+            },
+          },
+        ]}
+      >
+        <p className="text-sm text-gray-500">
+          {t('invitee.action.delete.text', { firstname: record.firstname, lastname: record.lastname })}
+        </p>
+      </Modal>
+    </>
+  );
+}
 
 export default function ListInvitees() {
   const { t } = useTranslation('app');
@@ -37,17 +99,9 @@ export default function ListInvitees() {
       title: <span className="sr-only">{t('table.actions')}</span>,
       render: (actions, record) => (
         <div className="flex space-x-4">
-          {actions?.update && (
-            <a href="#" className="text-blue-600 hover:text-blue-900">
-              {t('actions.edit')}
-              <span className="sr-only">, {record.id}</span>
-            </a>
-          )}
+          {actions?.update && null}
           {actions?.delete && (
-            <a href="#" className="text-blue-600 hover:text-blue-900">
-              {t('actions.delete')}
-              <span className="sr-only">, {record.id}</span>
-            </a>
+            <DeleteAction record={record} />
           )}
         </div>
       ),
