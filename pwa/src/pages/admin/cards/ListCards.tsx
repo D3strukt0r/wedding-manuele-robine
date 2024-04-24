@@ -1,16 +1,113 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
+import * as z from 'zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { DevTool } from '@hookform/devtools';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Table, { TableProps } from '../../../components/common/admin/Table';
 import BigSpinner from '../../../layout/BigSpinner';
 import useCards from '../../../hooks/useCards';
 import useInvitees from '../../../hooks/useInvitees';
 import useUsers from '../../../hooks/useUsers';
-import { Card } from '../../../components/types';
+import { Card, Invitee, User } from '../../../components/types';
 import Modal from '../../../components/common/admin/Modal';
 import useCardDelete from '../../../hooks/useCardDelete';
+import Alert from '../../../components/common/admin/Alert';
+import useCardUpdate from '../../../hooks/useCardUpdate';
 
-function DeleteAction({ record }: { record: Card }) {
+type Inputs = {
+  // TODO: userLoginId: User['id'];
+  // TODO: inviteeIds: (Invitee['id'])[]
+};
+
+function UpdateCard({ record }: { record: Card }) {
+  const { t } = useTranslation('app');
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const schema = useMemo(() => {
+    return z.object({
+      // TODO: userLoginId
+      // TODO: inviteeIds
+    });
+  }, [t]);
+
+  const updateCard = useCardUpdate(record.id);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(schema),
+    defaultValues: record,
+  });
+  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
+    setLoading(true);
+    try {
+      await updateCard.mutateAsync(data);
+      await queryClient.invalidateQueries({ queryKey: ['cards'] });
+      setOpen(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [updateCard, queryClient]);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-blue-600 hover:text-blue-900"
+      >
+        {t('actions.update')}
+        <span className="sr-only">, {record.id}</span>
+      </button>
+      <Modal
+        title={t('card.actions.update.title')}
+        open={open}
+        setOpen={() => {
+          if (!loading) setOpen(false);
+        }}
+        actions={[
+          {
+            text: t('actions.update'),
+            layout: 'primary',
+            loading,
+            onClick: () => {
+              handleSubmit(onSubmit)();
+            },
+          },
+          {
+            text: t('actions.cancel'),
+            layout: 'secondary',
+            onClick: () => {
+              if (!loading) setOpen(false);
+            },
+          },
+        ]}
+      >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {updateCard.isError ? (
+            <Alert
+              type="error"
+              title={t('form.errors.general')}
+              text={<p>{updateCard.error.response.data.message}</p>}
+            />
+          ) : null}
+        </form>
+        {import.meta.env.MODE === 'development' && (
+          <DevTool control={control} />
+        )}
+      </Modal>
+    </>
+  );
+}
+
+function DeleteCard({ record }: { record: Card }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -85,9 +182,11 @@ export default function ListInvitees() {
       title: <span className="sr-only">{t('table.actions')}</span>,
       render: (actions, record) => (
         <div className="flex space-x-4">
-          {actions?.update && null}
+          {actions?.update && (
+            <UpdateCard record={record} />
+          )}
           {actions?.delete && (
-            <DeleteAction record={record} />
+            <DeleteCard record={record} />
           )}
         </div>
       ),

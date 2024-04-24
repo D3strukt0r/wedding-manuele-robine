@@ -5,7 +5,7 @@ import { Table } from '../components/types';
 export default function useTableUpdate(
   id: Table['id'],
   queryOptions?: Omit<
-    UseMutationOptions<Omit<Table, 'id'>, DefaultError, Table>,
+    UseMutationOptions<Table, DefaultError, Omit<Table, 'id'>>,
     'mutationFn'
   >,
 ) {

@@ -4,7 +4,7 @@ import { User } from '../components/types';
 
 export default function useUserCreate(
   queryOptions?: Omit<
-    UseMutationOptions<Omit<User, 'id'>, DefaultError, User>,
+    UseMutationOptions<User, DefaultError, Omit<User, 'id'>>,
     'mutationFn'
   >,
 ) {

@@ -5,7 +5,7 @@ import { Invitee } from '../components/types';
 export default function useInviteeUpdate(
   id: Invitee['id'],
   queryOptions?: Omit<
-    UseMutationOptions<Omit<Invitee, 'id'>, DefaultError, Invitee>,
+    UseMutationOptions<Invitee, DefaultError, Omit<Invitee, 'id'>>,
     'mutationFn'
   >,
 ) {

@@ -1,18 +1,180 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { DevTool } from '@hookform/devtools';
+import * as z from 'zod';
 import Table, { TableProps } from '../../../components/common/admin/Table';
 import BigSpinner from '../../../layout/BigSpinner';
 import useTables from '../../../hooks/useTables';
 import useCards from '../../../hooks/useCards';
 import useInvitees from '../../../hooks/useInvitees';
 import useLookupType, { EnumTypes } from '../../../hooks/useLookupType';
-import { Invitee } from '../../../components/types';
+import { Card, Invitee, Table as TableModel } from '../../../components/types';
 import Modal from '../../../components/common/admin/Modal';
 import useInviteeDelete from '../../../hooks/useInviteeDelete';
+import Alert from '../../../components/common/admin/Alert';
+import Input from '../../../form/admin/Input';
+import useInviteeUpdate from '../../../hooks/useInviteeUpdate';
 
-function DeleteAction({ record }: { record: Invitee }) {
+type Inputs = {
+  firstname: string;
+  lastname: string;
+  email: string | null;
+  // TODO: willCome: boolean | null;
+  // TODO: food: string | null; // Enum
+  allergies: string | null;
+  // TODO: tableId: TableModel['id'] | null;
+  // TODO: cardId: Card['id'] | null;
+};
+
+function UpdateInvitee({ record }: { record: Invitee }) {
   const { t } = useTranslation('app');
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const schema = useMemo(() => {
+    return z.object({
+      firstname: z
+        .string({ required_error: t('form.errors.required') })
+        .min(1, { message: t('form.errors.required') })
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      lastname: z
+        .string({ required_error: t('form.errors.required') })
+        .min(1, { message: t('form.errors.required') })
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      email: z.nullable(
+        z.union([
+          z
+            .string()
+            .max(255, { message: t('form.errors.max', { max: 255 }) })
+            .email(t('form.errors.email')),
+          z.string().length(0),
+        ]),
+      ),
+      // TODO: willCome: z.nullable(z.boolean()),
+      // TODO: food: z.nullable(z.string()),
+      allergies: z.nullable(
+        z
+          .string()
+          .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      ),
+      // TODO: tableId
+      // TODO: cardId
+    });
+  }, [t]);
+
+  const updateInvitee = useInviteeUpdate(record.id);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(schema),
+    defaultValues: record,
+  });
+  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
+    setLoading(true);
+    try {
+      await updateInvitee.mutateAsync(data);
+      await queryClient.invalidateQueries({ queryKey: ['tables'] });
+      setOpen(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [updateInvitee, queryClient]);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="text-blue-600 hover:text-blue-900"
+      >
+        {t('actions.update')}
+        <span className="sr-only">, {record.id}</span>
+      </button>
+      <Modal
+        title={t('invitee.actions.update.title')}
+        open={open}
+        setOpen={() => {
+          if (!loading) setOpen(false);
+        }}
+        actions={[
+          {
+            text: t('actions.update'),
+            layout: 'primary',
+            loading,
+            onClick: () => {
+              handleSubmit(onSubmit)();
+            },
+          },
+          {
+            text: t('actions.cancel'),
+            layout: 'secondary',
+            onClick: () => {
+              if (!loading) setOpen(false);
+            },
+          },
+        ]}
+      >
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {updateInvitee.isError ? (
+            <Alert
+              type="error"
+              title={t('form.errors.general')}
+              text={<p>{updateInvitee.error.response.data.message}</p>}
+            />
+          ) : null}
+          <div>
+            <Input
+              {...register('firstname', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.firstname')}
+              placeholder={record.firstname}
+              required
+            />
+            {errors.firstname?.message && <span>{errors.firstname.message}</span>}
+          </div>
+          <div>
+            <Input
+              {...register('lastname', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.lastname')}
+              placeholder={record.lastname}
+              required
+            />
+            {errors.lastname?.message && <span>{errors.lastname.message}</span>}
+          </div>
+          <div>
+            <Input
+              {...register('email', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.email')}
+              placeholder={record.email || undefined}
+            />
+            {errors.email?.message && <span>{errors.email.message}</span>}
+          </div>
+          <div>
+            <Input
+              {...register('allergies', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.allergies')}
+              placeholder={record.allergies || undefined}
+            />
+            {errors.allergies?.message && <span>{errors.allergies.message}</span>}
+          </div>
+        </form>
+        {import.meta.env.MODE === 'development' && (
+          <DevTool control={control} />
+        )}
+      </Modal>
+    </>
+  );
+}
+
+function DeleteInvitee({record}: { record: Invitee }) {
+  const {t} = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +193,7 @@ function DeleteAction({ record }: { record: Invitee }) {
       </button>
       <Modal
         type="warning"
-        title={t('invitee.action.delete.title')}
+        title={t('invitee.actions.delete.title')}
         open={open}
         setOpen={() => {
           if (!loading) setOpen(false);
@@ -62,7 +224,7 @@ function DeleteAction({ record }: { record: Invitee }) {
         ]}
       >
         <p className="text-sm text-gray-500">
-          {t('invitee.action.delete.text', { firstname: record.firstname, lastname: record.lastname })}
+          {t('invitee.actions.delete.text', { firstname: record.firstname, lastname: record.lastname })}
         </p>
       </Modal>
     </>
@@ -99,9 +261,11 @@ export default function ListInvitees() {
       title: <span className="sr-only">{t('table.actions')}</span>,
       render: (actions, record) => (
         <div className="flex space-x-4">
-          {actions?.update && null}
+          {actions?.update && (
+            <UpdateInvitee record={record} />
+          )}
           {actions?.delete && (
-            <DeleteAction record={record} />
+            <DeleteInvitee record={record} />
           )}
         </div>
       ),

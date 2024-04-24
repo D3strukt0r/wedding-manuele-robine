@@ -4,7 +4,7 @@ import { Card } from '../components/types';
 
 export default function useCardCreate(
   queryOptions?: Omit<
-    UseMutationOptions<Omit<Card, 'id'>, DefaultError, Card>,
+    UseMutationOptions<Card, DefaultError, Omit<Card, 'id'>>,
     'mutationFn'
   >,
 ) {

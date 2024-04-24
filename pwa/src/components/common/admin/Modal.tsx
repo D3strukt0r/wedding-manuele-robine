@@ -17,7 +17,7 @@ interface ActionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
 }
 interface Props {
-  type: 'success' | 'info' | 'warning' | 'error';
+  type?: 'success' | 'info' | 'warning' | 'error';
   title: ReactNode;
   children: ReactNode;
   open: boolean;
@@ -81,27 +81,32 @@ export default function Modal({ type, title, children, open, setOpen, actions }:
                   </button>
                 </div>
                 <div className="sm:flex sm:items-start">
-                  <div
-                    className={clsx('mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10', {
-                      'bg-green-100': type === 'success',
-                      'bg-blue-100': type === 'info',
-                      'bg-yellow-100': type === 'warning',
-                      'bg-red-100': type === 'error',
-                    })}
-                  >
-                    <FontAwesomeIcon
-                      icon={icon}
-                      className={clsx('h-6 w-6', {
-                        'text-green-600': type === 'success',
-                        'text-blue-600': type === 'info',
-                        'text-yellow-600': type === 'warning',
-                        'text-red-600': type === 'error',
+                  {icon && (
+                    <div
+                      className={clsx('mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10 mb-3 sm:mr-4 sm:mb-0', {
+                        'bg-green-100': type === 'success',
+                        'bg-blue-100': type === 'info',
+                        'bg-yellow-100': type === 'warning',
+                        'bg-red-100': type === 'error',
                       })}
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                    >
+                      <FontAwesomeIcon
+                        icon={icon}
+                        className={clsx('h-6 w-6', {
+                          'text-green-600': type === 'success',
+                          'text-blue-600': type === 'info',
+                          'text-yellow-600': type === 'warning',
+                          'text-red-600': type === 'error',
+                        })}
+                        aria-hidden="true"
+                      />
+                    </div>
+                  )}
+                  <div className="text-center sm:text-left w-full">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-base font-semibold leading-6 text-gray-900"
+                    >
                       {title}
                     </Dialog.Title>
                     <div className="mt-2">

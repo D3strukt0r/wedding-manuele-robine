@@ -346,7 +346,9 @@ function InviteesListOnMyCardForm({
           {t('form.save')}
         </Button>
       </form>
-      {import.meta.env.MODE === 'development' && <DevTool control={control} />}
+      {import.meta.env.MODE === 'development' && (
+        <DevTool control={control} />
+      )}
     </>
   );
 }

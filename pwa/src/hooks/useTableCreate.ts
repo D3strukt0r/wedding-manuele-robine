@@ -4,7 +4,7 @@ import { Table } from '../components/types';
 
 export default function useTableCreate(
   queryOptions?: Omit<
-    UseMutationOptions<Omit<Table, 'id'>, DefaultError, Table>,
+    UseMutationOptions<Table, DefaultError, Omit<Table, 'id'>>,
     'mutationFn'
   >,
 ) {
