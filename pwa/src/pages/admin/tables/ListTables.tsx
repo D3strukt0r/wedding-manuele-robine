@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import * as z from 'zod';
@@ -25,7 +25,7 @@ function UpdateTable({ record }: { record: TableModel }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const schema = useMemo(() => {
     return z.object({
@@ -48,15 +48,10 @@ function UpdateTable({ record }: { record: TableModel }) {
     defaultValues: record,
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    setLoading(true);
-    try {
-      await updateTable.mutateAsync(data);
-      await queryClient.invalidateQueries({ queryKey: ['tables'] });
-      setOpen(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [updateTable, queryClient]);
+    await updateTable.mutateAsync(data);
+    await queryClient.invalidateQueries({ queryKey: ['tables'] });
+    setOpen(false);
+  }, [updateTable, queryClient, setOpen]);
 
   return (
     <>
@@ -70,15 +65,17 @@ function UpdateTable({ record }: { record: TableModel }) {
       </button>
       <Modal
         title={t('table.actions.update.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!updateTable.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading,
+            loading: updateTable.isPending,
+            ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();
             },
@@ -86,8 +83,9 @@ function UpdateTable({ record }: { record: TableModel }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: updateTable.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!updateTable.isPending) setOpen(false);
             },
           },
         ]}
@@ -106,6 +104,7 @@ function UpdateTable({ record }: { record: TableModel }) {
               type="number"
               label={t('table.seats')}
               placeholder={`${record.seats}`}
+              disabled={updateTable.isPending}
               required
             />
             {errors.seats?.message && <span>{errors.seats.message}</span>}
@@ -123,7 +122,7 @@ function DeleteTable({ record }: { record: TableModel }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const deleteTable = useTableDelete(record.id);
 
@@ -140,31 +139,29 @@ function DeleteTable({ record }: { record: TableModel }) {
       <Modal
         type="warning"
         title={t('table.actions.delete.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!deleteTable.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading,
+            loading: deleteTable.isPending,
+            ref: saveButtonRef,
             onClick: async () => {
-              setLoading(true);
-              try {
-                await deleteTable.mutateAsync();
-                await queryClient.invalidateQueries({ queryKey: ['tables'] });
-                setOpen(false);
-              } finally {
-                setLoading(false);
-              }
+              await deleteTable.mutateAsync();
+              await queryClient.invalidateQueries({ queryKey: ['tables'] });
+              setOpen(false);
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: deleteTable.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!deleteTable.isPending) setOpen(false);
             },
           },
         ]}

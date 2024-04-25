@@ -1,31 +1,34 @@
 import clsx from 'clsx';
-import { ButtonHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  layout?: 'primary' | 'secondary';
+  layout?: 'primary' | 'secondary' | 'danger';
   loading?: boolean;
 }
-export default function Button({
+const Button = forwardRef<HTMLButtonElement, Props>(({
   layout = 'primary',
   loading = false,
   children,
   ...props
-}: Props) {
+}, ref) => {
+  const disabled = loading || props.disabled;
   return (
     <button
       {...props}
+      ref={ref}
       className={clsx(
-        'flex justify-center items-center text-sm font-semibold leading-6',
+        'inline-flex justify-center items-center text-sm font-semibold leading-6 rounded-md px-3 py-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
         props.className,
         {
-          'rounded-md bg-blue-600 px-3 py-1.5 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600':
-            layout === 'primary',
-          'text-gray-900': layout === 'secondary',
+          'bg-blue-600 hover:bg-blue-500 text-white focus-visible:outline-blue-600': !disabled && layout === 'primary',
+          'bg-white hover:bg-gray-50 text-gray-900 ring-1 ring-inset ring-gray-300 ': !disabled && layout === 'secondary',
+          'bg-red-600 hover:bg-red-500 text-white focus-visible:outline-red-600': !disabled && layout === 'danger',
+          'bg-gray-300 text-gray-600': disabled,
         },
       )}
-      disabled={loading || props.disabled}
+      disabled={disabled}
     >
       {loading && (
         <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
@@ -33,4 +36,6 @@ export default function Button({
       {children}
     </button>
   );
-}
+});
+
+export default Button;

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import * as z from 'zod';
@@ -26,7 +26,7 @@ function UpdateUser({ record }: { record: User }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const schema = useMemo(() => {
     return z.object({
@@ -56,15 +56,11 @@ function UpdateUser({ record }: { record: User }) {
     defaultValues: record,
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    setLoading(true);
-    try {
-      await updateUser.mutateAsync(data);
-      await queryClient.invalidateQueries({ queryKey: ['users'] });
-      setOpen(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [updateUser, queryClient]);
+    await updateUser.mutateAsync(data);
+    await queryClient.invalidateQueries({ queryKey: ['users'] });
+    setOpen(false);
+    // TODO: Notification about possibly new generated password
+  }, [updateUser, queryClient, setOpen]);
 
   return (
     <>
@@ -78,15 +74,17 @@ function UpdateUser({ record }: { record: User }) {
       </button>
       <Modal
         title={t('user.actions.update.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!updateUser.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading,
+            loading: updateUser.isPending,
+            ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();
             },
@@ -94,8 +92,9 @@ function UpdateUser({ record }: { record: User }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: updateUser.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!updateUser.isPending) setOpen(false);
             },
           },
         ]}
@@ -113,6 +112,7 @@ function UpdateUser({ record }: { record: User }) {
               {...register('username', { setValueAs: (value) => value === '' ? null : value })}
               label={t('user.username')}
               placeholder={record.username}
+              disabled={updateUser.isPending}
               required
             />
             {errors.username?.message && <span>{errors.username.message}</span>}
@@ -121,6 +121,7 @@ function UpdateUser({ record }: { record: User }) {
             <Input
               {...register('newPassword', { setValueAs: (value) => value === '' ? null : value })}
               label={t('user.newPassword')}
+              disabled={updateUser.isPending}
             />
             {errors.newPassword?.message && <span>{errors.newPassword.message}</span>}
           </div>
@@ -137,7 +138,7 @@ function DeleteUser({ record }: { record: User }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const deleteUser = useUserDelete(record.id);
 
@@ -154,31 +155,29 @@ function DeleteUser({ record }: { record: User }) {
       <Modal
         type="warning"
         title={t('user.actions.delete.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!deleteUser.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading,
+            loading: deleteUser.isPending,
+            ref: saveButtonRef,
             onClick: async () => {
-              setLoading(true);
-              try {
-                await deleteUser.mutateAsync();
-                await queryClient.invalidateQueries({ queryKey: ['users'] });
-                setOpen(false);
-              } finally {
-                setLoading(false);
-              }
+              await deleteUser.mutateAsync();
+              await queryClient.invalidateQueries({ queryKey: ['users'] });
+              setOpen(false);
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: deleteUser.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!deleteUser.isPending) setOpen(false);
             },
           },
         ]}

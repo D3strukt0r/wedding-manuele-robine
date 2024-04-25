@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import * as z from 'zod';
@@ -25,7 +25,7 @@ function UpdateCard({ record }: { record: Card }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const schema = useMemo(() => {
     return z.object({
@@ -46,15 +46,10 @@ function UpdateCard({ record }: { record: Card }) {
     defaultValues: record,
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    setLoading(true);
-    try {
-      await updateCard.mutateAsync(data);
-      await queryClient.invalidateQueries({ queryKey: ['cards'] });
-      setOpen(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [updateCard, queryClient]);
+    await updateCard.mutateAsync(data);
+    await queryClient.invalidateQueries({ queryKey: ['cards'] });
+    setOpen(false);
+  }, [updateCard, queryClient, setOpen]);
 
   return (
     <>
@@ -68,15 +63,17 @@ function UpdateCard({ record }: { record: Card }) {
       </button>
       <Modal
         title={t('card.actions.update.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!updateCard.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading,
+            loading: updateCard.isPending,
+            ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();
             },
@@ -84,8 +81,9 @@ function UpdateCard({ record }: { record: Card }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: updateCard.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!updateCard.isPending) setOpen(false);
             },
           },
         ]}
@@ -111,7 +109,7 @@ function DeleteCard({ record }: { record: Card }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const deleteCard = useCardDelete(record.id);
 
@@ -128,31 +126,29 @@ function DeleteCard({ record }: { record: Card }) {
       <Modal
         type="warning"
         title={t('card.actions.delete.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!deleteCard.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading,
+            loading: deleteCard.isPending,
+            ref: saveButtonRef,
             onClick: async () => {
-              setLoading(true);
-              try {
-                await deleteCard.mutateAsync();
-                await queryClient.invalidateQueries({ queryKey: ['cards'] });
-                setOpen(false);
-              } finally {
-                setLoading(false);
-              }
+              await deleteCard.mutateAsync();
+              await queryClient.invalidateQueries({ queryKey: ['cards'] });
+              setOpen(false);
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: deleteCard.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!deleteCard.isPending) setOpen(false);
             },
           },
         ]}

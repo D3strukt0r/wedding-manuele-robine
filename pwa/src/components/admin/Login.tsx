@@ -70,6 +70,7 @@ export default function Login() {
             <Input
               {...register('username')}
               label={t('admin.login.username')}
+              disabled={login.isPending}
               autoComplete="username"
               required
             />
@@ -88,6 +89,7 @@ export default function Login() {
               //     </a>
               //   </div>
               // )}
+              disabled={login.isPending}
               autoComplete="current-password"
               required
             />

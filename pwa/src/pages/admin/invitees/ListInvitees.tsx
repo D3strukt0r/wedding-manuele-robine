@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -33,7 +33,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
   const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const schema = useMemo(() => {
     return z.object({
@@ -78,15 +78,10 @@ function UpdateInvitee({ record }: { record: Invitee }) {
     defaultValues: record,
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    setLoading(true);
-    try {
-      await updateInvitee.mutateAsync(data);
-      await queryClient.invalidateQueries({ queryKey: ['tables'] });
-      setOpen(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [updateInvitee, queryClient]);
+    await updateInvitee.mutateAsync(data);
+    await queryClient.invalidateQueries({ queryKey: ['tables'] });
+    setOpen(false);
+  }, [updateInvitee, queryClient, setOpen]);
 
   return (
     <>
@@ -100,15 +95,17 @@ function UpdateInvitee({ record }: { record: Invitee }) {
       </button>
       <Modal
         title={t('invitee.actions.update.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!updateInvitee.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading,
+            loading: updateInvitee.isPending,
+            ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();
             },
@@ -116,8 +113,9 @@ function UpdateInvitee({ record }: { record: Invitee }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: updateInvitee.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!updateInvitee.isPending) setOpen(false);
             },
           },
         ]}
@@ -135,6 +133,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('firstname', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.firstname')}
               placeholder={record.firstname}
+              disabled={updateInvitee.isPending}
               required
             />
             {errors.firstname?.message && <span>{errors.firstname.message}</span>}
@@ -144,6 +143,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('lastname', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.lastname')}
               placeholder={record.lastname}
+              disabled={updateInvitee.isPending}
               required
             />
             {errors.lastname?.message && <span>{errors.lastname.message}</span>}
@@ -153,6 +153,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('email', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.email')}
               placeholder={record.email || undefined}
+              disabled={updateInvitee.isPending}
             />
             {errors.email?.message && <span>{errors.email.message}</span>}
           </div>
@@ -161,6 +162,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('allergies', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.allergies')}
               placeholder={record.allergies || undefined}
+              disabled={updateInvitee.isPending}
             />
             {errors.allergies?.message && <span>{errors.allergies.message}</span>}
           </div>
@@ -174,10 +176,10 @@ function UpdateInvitee({ record }: { record: Invitee }) {
 }
 
 function DeleteInvitee({record}: { record: Invitee }) {
-  const {t} = useTranslation('app');
+  const { t } = useTranslation('app');
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const deleteInvitee = useInviteeDelete(record.id);
 
@@ -194,31 +196,29 @@ function DeleteInvitee({record}: { record: Invitee }) {
       <Modal
         type="warning"
         title={t('invitee.actions.delete.title')}
+        initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!loading) setOpen(false);
+          if (!deleteInvitee.isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading,
+            loading: deleteInvitee.isPending,
+            ref: saveButtonRef,
             onClick: async () => {
-              setLoading(true);
-              try {
-                await deleteInvitee.mutateAsync();
-                await queryClient.invalidateQueries({ queryKey: ['invitees'] });
-                setOpen(false);
-              } finally {
-                setLoading(false);
-              }
+              await deleteInvitee.mutateAsync();
+              await queryClient.invalidateQueries({ queryKey: ['invitees'] });
+              setOpen(false);
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
+            disabled: deleteInvitee.isPending,
             onClick: () => {
-              if (!loading) setOpen(false);
+              if (!deleteInvitee.isPending) setOpen(false);
             },
           },
         ]}

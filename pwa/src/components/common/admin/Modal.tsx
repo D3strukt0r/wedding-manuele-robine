@@ -1,20 +1,22 @@
-import { ButtonHTMLAttributes, Fragment, ReactNode, useMemo } from 'react';
+import {ButtonHTMLAttributes, Fragment, MutableRefObject, ReactNode, useMemo} from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
   faCircleCheck,
   faCircleInfo,
-  faCircleXmark, faSpinner,
+  faCircleXmark,
   faTriangleExclamation,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import Button from '../../../form/admin/Button';
 
 interface ActionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
   layout: 'primary' | 'secondary' | 'danger';
   loading?: boolean;
+  ref?: MutableRefObject<HTMLButtonElement | null>;
 }
 interface Props {
   type?: 'success' | 'info' | 'warning' | 'error';
@@ -23,8 +25,9 @@ interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
   actions: ActionProps[];
+  initialFocus?: MutableRefObject<HTMLElement | null>;
 }
-export default function Modal({ type, title, children, open, setOpen, actions }: Props) {
+export default function Modal({ type, title, children, open, setOpen, actions, initialFocus }: Props) {
   const { t } = useTranslation('app');
 
   const icon = useMemo(() => {
@@ -45,7 +48,7 @@ export default function Modal({ type, title, children, open, setOpen, actions }:
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={setOpen}>
+      <Dialog as="div" className="relative z-50" onClose={setOpen} initialFocus={initialFocus}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -69,7 +72,7 @@ export default function Modal({ type, title, children, open, setOpen, actions }:
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 w-full max-w-md sm:w-full sm:max-w-lg sm:p-6">
                 <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
                   <button
                     type="button"
@@ -115,29 +118,22 @@ export default function Modal({ type, title, children, open, setOpen, actions }:
                   </div>
                 </div>
                 <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-                  {actions.map(({text, layout, loading = false, ...action}, index) => {
+                  {actions.map(({ text, ...action }, index) => {
                     const isFirst = index === 0;
                     const isLast = index === actions.length - 1;
                     return (
-                      <button
+                      <Button
                         key={text}
                         type="button"
                         {...action}
-                        className={clsx('inline-flex w-full justify-center items-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm sm:w-auto', {
-                          'bg-red-600 text-white hover:bg-red-500': layout === 'danger',
-                          'bg-blue-600 text-white hover:bg-blue-500': layout === 'primary',
-                          'bg-white text-gray-900 hover:bg-gray-50 ring-1 ring-inset ring-gray-300': layout === 'secondary',
+                        className={clsx('w-full sm:w-auto', {
                           'sm:ml-3': !isLast,
                           'mt-3 sm:mt-0': !isFirst,
                         })}
                         onClick={action.onClick}
-                        disabled={loading || action.disabled}
                       >
-                        {loading && (
-                          <FontAwesomeIcon icon={faSpinner} spin className="mr-2" />
-                        )}
                         {text}
-                      </button>
+                      </Button>
                     );
                   })}
                 </div>
