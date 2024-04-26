@@ -1,22 +1,21 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQueryClient } from '@tanstack/react-query';
+import * as z from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import * as z from 'zod';
-import Table, { TableProps } from '../../../components/common/admin/Table';
-import BigSpinner from '../../../layout/BigSpinner';
-import useTables from '../../../hooks/useTables';
-import useCards from '../../../hooks/useCards';
-import useInvitees from '../../../hooks/useInvitees';
-import useLookupType, { EnumTypes } from '../../../hooks/useLookupType';
-import { Card, Invitee, Table as TableModel } from '../../../components/types';
-import Modal from '../../../components/common/admin/Modal';
-import useInviteeDelete from '../../../hooks/useInviteeDelete';
-import Alert from '../../../components/common/admin/Alert';
-import Input from '../../../form/admin/Input';
-import useInviteeUpdate from '../../../hooks/useInviteeUpdate';
+import Table, { TableProps } from '#/components/common/admin/Table';
+import BigSpinner from '#/layout/BigSpinner';
+import Modal from '#/components/common/admin/Modal';
+import Alert from '#/components/common/admin/Alert';
+import Input from '#/form/admin/Input';
+import { Card, Invitee, Table as TableModel } from '#/components/types';
+import useTables from '#/api/admin/table/useTables';
+import useCards from '#/api/admin/cards/useCards';
+import useInvitees from '#/api/admin/invitee/useInvitees';
+import useDeleteInvitee from '#/api/admin/invitee/useDeleteInvitee';
+import useUpdateInvitee from '#/api/admin/invitee/useUpdateInvitee';
+import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
 
 type Inputs = {
   firstname: string;
@@ -31,7 +30,6 @@ type Inputs = {
 
 function UpdateInvitee({ record }: { record: Invitee }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
@@ -66,7 +64,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
     });
   }, [t]);
 
-  const updateInvitee = useInviteeUpdate(record.id);
+  const updateInvitee = useUpdateInvitee(record.id);
 
   const {
     register,
@@ -82,11 +80,13 @@ function UpdateInvitee({ record }: { record: Invitee }) {
       allergies: record.allergies,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    await updateInvitee.mutateAsync(data);
-    await queryClient.invalidateQueries({ queryKey: ['tables'] });
-    setOpen(false);
-  }, [updateInvitee, queryClient, setOpen]);
+  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
+    updateInvitee.mutate(data, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
+  }, [updateInvitee, setOpen]);
 
   return (
     <>
@@ -181,13 +181,12 @@ function UpdateInvitee({ record }: { record: Invitee }) {
   );
 }
 
-function DeleteInvitee({record}: { record: Invitee }) {
+function DeleteInvitee({ record }: { record: Invitee }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteInvitee = useInviteeDelete(record.id);
+  const deleteInvitee = useDeleteInvitee(record.id);
 
   return (
     <>
@@ -213,10 +212,12 @@ function DeleteInvitee({record}: { record: Invitee }) {
             layout: 'danger',
             loading: deleteInvitee.isPending,
             ref: saveButtonRef,
-            onClick: async () => {
-              await deleteInvitee.mutateAsync();
-              await queryClient.invalidateQueries({ queryKey: ['invitees'] });
-              setOpen(false);
+            onClick: () => {
+              deleteInvitee.mutate(undefined, {
+                onSuccess: () => {
+                  setOpen(false);
+                },
+              });
             },
           },
           {

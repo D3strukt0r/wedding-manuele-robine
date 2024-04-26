@@ -9,7 +9,7 @@ import QrScanner from 'qr-scanner';
 // import QrCode from "@material-design-icons/svg/outlined/qr_code_scanner.svg?react";
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import QrCode from '../../assets/QrCode';
+import QrCode from '#/assets/QrCode';
 
 type MessageType = 'success' | 'error';
 

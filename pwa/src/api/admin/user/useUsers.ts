@@ -1,19 +1,18 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
-import { Card } from '../components/types';
+import { ListResponse, User } from '#/components/types';
 
-export default function useCard(
-  id: Card['id'],
+export default function useUsers(
   queryOptions?: Omit<
-    UseQueryOptions<Card>,
+    UseQueryOptions<ListResponse<User>>,
     'queryKey' | 'queryFn'
   >,
 ) {
   return useQuery({
     ...(queryOptions ?? {}),
-    queryKey: ['card', id],
+    queryKey: ['users'],
     queryFn: async () => {
-      const { data: response } = await axios.get<Card>(`/admin/api/cards/${id}`);
+      const { data: response } = await axios.get<ListResponse<User>>('/admin/api/users');
       return response;
     },
   });

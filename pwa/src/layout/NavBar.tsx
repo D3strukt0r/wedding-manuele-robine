@@ -6,7 +6,7 @@ import { faBars, faX } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { Link, LinkProps } from 'react-router-dom';
-import AuthenticationContext from '../context/AuthenticationContext';
+import AuthenticationContext from '#/context/AuthenticationContext';
 
 const DisclosureLink = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => (
   <Link ref={ref} {...props} />

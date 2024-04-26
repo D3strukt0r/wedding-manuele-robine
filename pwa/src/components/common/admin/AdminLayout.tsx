@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import Logo from '../../../assets/Logo';
+import Logo from '#/assets/Logo';
 
 interface Navigation {
   name: string;

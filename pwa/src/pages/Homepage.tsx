@@ -1,11 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import NavBar from '../layout/NavBar';
-import Logo from '../assets/Logo';
-import HowToWedding from '../components/homepage/HowToWedding';
-import MenuAndSelection from '../components/homepage/MenuAndSelection';
-import MapAndPlan from '../components/homepage/MapAndPlan';
-import ImportantInfo from '../components/homepage/ImportantInfo';
-import Gallery from '../components/homepage/Gallery';
+import NavBar from '#/layout/NavBar';
+import Logo from '#/assets/Logo';
+import HowToWedding from '#/components/homepage/HowToWedding';
+import MenuAndSelection from '#/components/homepage/MenuAndSelection';
+import MapAndPlan from '#/components/homepage/MapAndPlan';
+import ImportantInfo from '#/components/homepage/ImportantInfo';
+import Gallery from '#/components/homepage/Gallery';
 
 export default function Homepage() {
   const { t } = useTranslation('app');

@@ -8,9 +8,9 @@ import { Suspense, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router-dom';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
-import BigSpinner from '../../layout/BigSpinner';
-import AuthenticationContext from '../../context/AuthenticationContext';
-import AdminLayout, { AdminLayoutProps } from '../common/admin/AdminLayout';
+import BigSpinner from '#/layout/BigSpinner';
+import AuthenticationContext from '#/context/AuthenticationContext';
+import AdminLayout, { AdminLayoutProps } from '#/components/common/admin/AdminLayout';
 
 export default function Dashboard() {
   const { t } = useTranslation('app');

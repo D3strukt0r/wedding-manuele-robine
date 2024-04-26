@@ -10,7 +10,7 @@ import NotFound from './layout/NotFound';
 import { AuthenticationContextLoader } from './context/AuthenticationContext';
 import adminRoutes from './pages/admin/routes';
 
-const Homepage = lazy(() => import('./pages/Homepage.tsx'));
+const Homepage = lazy(() => import('./pages/Homepage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {

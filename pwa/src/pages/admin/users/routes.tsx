@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 
-const ListUsers = lazy(() => import('./ListUsers.tsx'));
-const ShowUser = lazy(() => import('./ShowUser.tsx'));
+const ListUsers = lazy(() => import('./ListUsers'));
+const ShowUser = lazy(() => import('./ShowUser'));
 
 type Routes = Parameters<typeof createBrowserRouter>[0][number];
 export default function userRoutes() {

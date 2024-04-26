@@ -1,20 +1,19 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQueryClient } from '@tanstack/react-query';
 import * as z from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import Table, { TableProps } from '../../../components/common/admin/Table';
-import BigSpinner from '../../../layout/BigSpinner';
-import useUsers from '../../../hooks/useUsers';
-import useTables from '../../../hooks/useTables';
-import { Invitee, Table as TableModel } from '../../../components/types';
-import Modal from '../../../components/common/admin/Modal';
-import useTableDelete from '../../../hooks/useTableDelete';
-import useTableUpdate from '../../../hooks/useTableUpdate';
-import Alert from '../../../components/common/admin/Alert';
-import Input from '../../../form/admin/Input';
+import Table, { TableProps } from '#/components/common/admin/Table';
+import BigSpinner from '#/layout/BigSpinner';
+import Modal from '#/components/common/admin/Modal';
+import Alert from '#/components/common/admin/Alert';
+import Input from '#/form/admin/Input';
+import { Invitee, Table as TableModel } from '#/components/types';
+import useUsers from '#/api/admin/user/useUsers';
+import useTables from '#/api/admin/table/useTables';
+import useDeleteTable from '#/api/admin/table/useDeleteTable';
+import useUpdateTable from '#/api/admin/table/useUpdateTable';
 
 type Inputs = {
   seats: number;
@@ -23,7 +22,6 @@ type Inputs = {
 
 function UpdateTable({ record }: { record: TableModel }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
@@ -36,7 +34,7 @@ function UpdateTable({ record }: { record: TableModel }) {
     });
   }, [t]);
 
-  const updateTable = useTableUpdate(record.id);
+  const updateTable = useUpdateTable(record.id);
 
   const {
     register,
@@ -49,11 +47,13 @@ function UpdateTable({ record }: { record: TableModel }) {
       seats: record.seats,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    await updateTable.mutateAsync(data);
-    await queryClient.invalidateQueries({ queryKey: ['tables'] });
-    setOpen(false);
-  }, [updateTable, queryClient, setOpen]);
+  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
+    updateTable.mutate(data, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
+  }, [updateTable, setOpen]);
 
   return (
     <>
@@ -123,11 +123,10 @@ function UpdateTable({ record }: { record: TableModel }) {
 
 function DeleteTable({ record }: { record: TableModel }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteTable = useTableDelete(record.id);
+  const deleteTable = useDeleteTable(record.id);
 
   return (
     <>
@@ -153,10 +152,12 @@ function DeleteTable({ record }: { record: TableModel }) {
             layout: 'danger',
             loading: deleteTable.isPending,
             ref: saveButtonRef,
-            onClick: async () => {
-              await deleteTable.mutateAsync();
-              await queryClient.invalidateQueries({ queryKey: ['tables'] });
-              setOpen(false);
+            onClick: () => {
+              deleteTable.mutate(undefined, {
+                onSuccess: async () => {
+                  setOpen(false);
+                },
+              });
             },
           },
           {

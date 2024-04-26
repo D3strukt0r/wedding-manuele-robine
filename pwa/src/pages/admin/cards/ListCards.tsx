@@ -1,20 +1,19 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQueryClient } from '@tanstack/react-query';
 import * as z from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { DevTool } from '@hookform/devtools';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Table, { TableProps } from '../../../components/common/admin/Table';
-import BigSpinner from '../../../layout/BigSpinner';
-import useCards from '../../../hooks/useCards';
-import useInvitees from '../../../hooks/useInvitees';
-import useUsers from '../../../hooks/useUsers';
-import { Card, Invitee, User } from '../../../components/types';
-import Modal from '../../../components/common/admin/Modal';
-import useCardDelete from '../../../hooks/useCardDelete';
-import Alert from '../../../components/common/admin/Alert';
-import useCardUpdate from '../../../hooks/useCardUpdate';
+import { DevTool } from '@hookform/devtools';
+import Table, { TableProps } from '#/components/common/admin/Table';
+import BigSpinner from '#/layout/BigSpinner';
+import Modal from '#/components/common/admin/Modal';
+import Alert from '#/components/common/admin/Alert';
+import { Card, Invitee, User } from '#/components/types';
+import useCards from '#/api/admin/cards/useCards';
+import useDeleteCard from '#/api/admin/cards/useDeleteCard';
+import useUpdateCard from '#/api/admin/cards/useUpdateCard';
+import useInvitees from '#/api/admin/invitee/useInvitees';
+import useUsers from '#/api/admin/user/useUsers';
 
 type Inputs = {
   // TODO: userLoginId: User['id'];
@@ -23,7 +22,6 @@ type Inputs = {
 
 function UpdateCard({ record }: { record: Card }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
@@ -34,7 +32,7 @@ function UpdateCard({ record }: { record: Card }) {
     });
   }, [t]);
 
-  const updateCard = useCardUpdate(record.id);
+  const updateCard = useUpdateCard(record.id);
 
   const {
     register,
@@ -45,11 +43,13 @@ function UpdateCard({ record }: { record: Card }) {
     resolver: zodResolver(schema),
     defaultValues: {},
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    await updateCard.mutateAsync(data);
-    await queryClient.invalidateQueries({ queryKey: ['cards'] });
-    setOpen(false);
-  }, [updateCard, queryClient, setOpen]);
+  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
+    updateCard.mutate(data, {
+      onSuccess: () => {
+        setOpen(false);
+      },
+    });
+  }, [updateCard, setOpen]);
 
   return (
     <>
@@ -108,11 +108,10 @@ function UpdateCard({ record }: { record: Card }) {
 
 function DeleteCard({ record }: { record: Card }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteCard = useCardDelete(record.id);
+  const deleteCard = useDeleteCard(record.id);
 
   return (
     <>
@@ -138,10 +137,12 @@ function DeleteCard({ record }: { record: Card }) {
             layout: 'danger',
             loading: deleteCard.isPending,
             ref: saveButtonRef,
-            onClick: async () => {
-              await deleteCard.mutateAsync();
-              await queryClient.invalidateQueries({ queryKey: ['cards'] });
-              setOpen(false);
+            onClick: () => {
+              deleteCard.mutate(undefined, {
+                onSuccess: () => {
+                  setOpen(false);
+                },
+              });
             },
           },
           {

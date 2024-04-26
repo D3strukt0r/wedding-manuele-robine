@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 
-const ListTables = lazy(() => import('./ListTables.tsx'));
-const ShowTable = lazy(() => import('./ShowTable.tsx'));
+const ListTables = lazy(() => import('./ListTables'));
+const ShowTable = lazy(() => import('./ShowTable'));
 
 type Routes = Parameters<typeof createBrowserRouter>[0][number];
 export default function tableRoutes() {

@@ -9,17 +9,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { DevTool } from '@hookform/devtools';
-import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
 import menu from '/menu.png';
-import AlignedCard from '../../layout/AlignedCard';
-import Collapsible from '../../layout/Collapsible';
-import AuthenticationContext from '../../context/AuthenticationContext';
-import { api } from '../api';
-import { Invitee } from '../types';
-import Input from '../../form/Input';
-import Checkbox from '../../form/Checkbox';
-import RadioGroup from '../../form/RadioGroup';
-import Button from '../../form/Button';
+import AlignedCard from '#/layout/AlignedCard';
+import Collapsible from '#/layout/Collapsible';
+import AuthenticationContext from '#/context/AuthenticationContext';
+import { Invitee } from '#/components/types';
+import Input from '#/form/Input';
+import Checkbox from '#/form/Checkbox';
+import RadioGroup from '#/form/RadioGroup';
+import Button from '#/form/Button';
+import { api } from '#/components/api';
+import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {

@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { Markup } from 'interweave';
 import infos from '/infos.png';
-import AlignedCard from '../../layout/AlignedCard';
-import Collapsible from '../../layout/Collapsible';
+import AlignedCard from '#/layout/AlignedCard';
+import Collapsible from '#/layout/Collapsible';
 
 interface Props {
   id?: string;

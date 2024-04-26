@@ -4,10 +4,10 @@ import cardRoutes from './cards/routes';
 import inviteeRoutes from './invitees/routes';
 import tableRoutes from './tables/routes';
 import userRoutes from './users/routes';
-import ErrorBoundary from '../../layout/ErrorBoundary';
+import ErrorBoundary from '#/layout/ErrorBoundary';
 
-const LoginOrDashboard = lazy(() => import('./LoginOrDashboard.tsx'));
-const HomepageAdmin = lazy(() => import('./HomepageAdmin.tsx'));
+const LoginOrDashboard = lazy(() => import('./LoginOrDashboard'));
+const HomepageAdmin = lazy(() => import('./HomepageAdmin'));
 
 type Routes = Parameters<typeof createBrowserRouter>[0][number];
 export default function adminRoutes() {

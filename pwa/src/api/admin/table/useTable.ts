@@ -1,18 +1,19 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
-import { ListResponse, User } from '../components/types';
+import { Table } from '#/components/types';
 
-export default function useUsers(
+export default function useTable(
+  id: Table['id'],
   queryOptions?: Omit<
-    UseQueryOptions<ListResponse<User>>,
+    UseQueryOptions<Table>,
     'queryKey' | 'queryFn'
   >,
 ) {
   return useQuery({
     ...(queryOptions ?? {}),
-    queryKey: ['users'],
+    queryKey: ['table', id],
     queryFn: async () => {
-      const { data: response } = await axios.get<ListResponse<User>>('/admin/api/users');
+      const { data: response } = await axios.get<Table>(`/admin/api/tables/${id}`);
       return response;
     },
   });

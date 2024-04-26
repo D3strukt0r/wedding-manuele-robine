@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 
-const ListInvitees = lazy(() => import('./ListInvitees.tsx'));
-const ShowInvitee = lazy(() => import('./ShowInvitee.tsx'));
+const ListInvitees = lazy(() => import('./ListInvitees'));
+const ShowInvitee = lazy(() => import('./ShowInvitee'));
 
 type Routes = Parameters<typeof createBrowserRouter>[0][number];
 export default function inviteeRoutes() {

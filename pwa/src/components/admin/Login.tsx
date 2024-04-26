@@ -4,11 +4,11 @@ import * as z from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import AuthenticationContext from '../../context/AuthenticationContext';
-import Input from '../../form/admin/Input';
-import Button from '../../form/admin/Button';
-import Alert from '../common/admin/Alert';
-import useLogin from '../../hooks/useLogin';
+import AuthenticationContext from '#/context/AuthenticationContext';
+import Input from '#/form/admin/Input';
+import Button from '#/form/admin/Button';
+import Alert from '#/components/common/admin/Alert';
+import useLogin from '#/api/common/authentication/useLogin';
 
 type Inputs = {
   username: string;
@@ -31,11 +31,7 @@ export default function Login() {
     });
   }, [t]);
 
-  const login = useLogin({
-    onSuccess: async (response) => {
-      updateAuthentication(response.token);
-    },
-  });
+  const login = useLogin();
 
   const {
     register,
@@ -50,7 +46,11 @@ export default function Login() {
     },
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    login.mutate(data);
+    login.mutate(data, {
+      onSuccess: (response) => {
+        updateAuthentication(response.token);
+      },
+    });
   }, [login]);
 
   return (

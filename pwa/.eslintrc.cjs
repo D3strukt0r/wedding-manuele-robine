@@ -63,10 +63,12 @@ module.exports = {
   settings: {
     'import/resolver': {
       typescript: {},
-      // alias: [
-      //   ['@', './assets'],
-      //   ['@components', './assets/components'],
-      // ],
+      alias: {
+        map: [
+          ['#', './src'],
+        ],
+        extensions: ['.ts', '.tsx', '.js', '.jsx'],
+      },
     },
   },
   env: {

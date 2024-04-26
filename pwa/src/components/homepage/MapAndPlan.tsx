@@ -5,8 +5,8 @@ import Heart from '@material-design-icons/svg/outlined/favorite_border.svg?react
 import Note from '@material-design-icons/svg/outlined/music_note.svg?react';
 import Moon from '@material-design-icons/svg/outlined/bedtime.svg?react';
 import { Map, AdvancedMarker } from '@vis.gl/react-google-maps';
-import Timeline from '../../layout/Timeline';
-import AlignedCard from '../../layout/AlignedCard';
+import Timeline from '#/layout/Timeline';
+import AlignedCard from '#/layout/AlignedCard';
 
 interface Props {
   id?: string;

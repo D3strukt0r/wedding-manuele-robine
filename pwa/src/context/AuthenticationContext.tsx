@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import axios from 'axios';
-import { api } from '../components/api';
+import { api } from '#/components/api';
 
 interface DecodedJwtPayload extends JwtPayload {
   roles: string[];

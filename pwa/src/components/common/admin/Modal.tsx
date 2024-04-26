@@ -1,4 +1,4 @@
-import {ButtonHTMLAttributes, Fragment, MutableRefObject, ReactNode, useMemo} from 'react';
+import { ButtonHTMLAttributes, Fragment, MutableRefObject, ReactNode, useMemo } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import {
   faCircleCheck,
@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../form/admin/Button';
+import Button from '#/form/admin/Button';
 
 interface ActionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;

@@ -1,20 +1,19 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQueryClient } from '@tanstack/react-query';
 import * as z from 'zod';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import Table, { TableProps } from '../../../components/common/admin/Table';
-import BigSpinner from '../../../layout/BigSpinner';
-import { User } from '../../../components/types';
-import useUsers from '../../../hooks/useUsers';
-import useLookupType, { EnumTypes } from '../../../hooks/useLookupType';
-import Modal from '../../../components/common/admin/Modal';
-import useUserDelete from '../../../hooks/useUserDelete';
-import Alert from '../../../components/common/admin/Alert';
-import Input from '../../../form/admin/Input';
-import useUserUpdate from '../../../hooks/useUserUpdate';
+import Table, { TableProps } from '#/components/common/admin/Table';
+import BigSpinner from '#/layout/BigSpinner';
+import Modal from '#/components/common/admin/Modal';
+import Alert from '#/components/common/admin/Alert';
+import Input from '#/form/admin/Input';
+import { User } from '#/components/types';
+import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
+import useUsers from '#/api/admin/user/useUsers';
+import useDeleteUser from '#/api/admin/user/useDeleteUser';
+import useUpdateUser from '#/api/admin/user/useUpdateUser';
 
 type Inputs = {
   username: string;
@@ -24,7 +23,6 @@ type Inputs = {
 
 function UpdateUser({ record }: { record: User }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
@@ -44,7 +42,7 @@ function UpdateUser({ record }: { record: User }) {
     });
   }, [t]);
 
-  const updateUser = useUserUpdate(record.id);
+  const updateUser = useUpdateUser(record.id);
 
   const {
     register,
@@ -58,12 +56,14 @@ function UpdateUser({ record }: { record: User }) {
       newPassword: null,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    await updateUser.mutateAsync(data);
-    await queryClient.invalidateQueries({ queryKey: ['users'] });
-    setOpen(false);
-    // TODO: Notification about possibly new generated password
-  }, [updateUser, queryClient, setOpen]);
+  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
+    updateUser.mutate(data, {
+      onSuccess: () => {
+        setOpen(false);
+        // TODO: Notification about possibly new generated password
+      },
+    });
+  }, [updateUser, setOpen]);
 
   return (
     <>
@@ -140,11 +140,10 @@ function UpdateUser({ record }: { record: User }) {
 
 function DeleteUser({ record }: { record: User }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteUser = useUserDelete(record.id);
+  const deleteUser = useDeleteUser(record.id);
 
   return (
     <>
@@ -170,10 +169,12 @@ function DeleteUser({ record }: { record: User }) {
             layout: 'danger',
             loading: deleteUser.isPending,
             ref: saveButtonRef,
-            onClick: async () => {
-              await deleteUser.mutateAsync();
-              await queryClient.invalidateQueries({ queryKey: ['users'] });
-              setOpen(false);
+            onClick: () => {
+              deleteUser.mutate(undefined, {
+                onSuccess: async () => {
+                  setOpen(false);
+                },
+              });
             },
           },
           {
