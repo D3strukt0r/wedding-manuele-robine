@@ -213,7 +213,9 @@ Vagrant.configure('2') do |config|
     # Add user bin and proxies (PHP, PHP-CS-Fixer, PHP_CodeSniffer, PHPStan)
     config.vm.provision 'install-php-proxy', type: 'shell', privileged: false, inline: <<-SCRIPT
         set -e -u -x -o pipefail
-        mkdir ~/bin
+        if [ ! -d ~/bin ]; then
+            mkdir ~/bin
+        fi
 
         {
             echo '#!/bin/bash'
@@ -229,19 +231,19 @@ Vagrant.configure('2') do |config|
         {
             echo '#!/bin/bash'
             echo 'set -e -u -o pipefail'
-            echo 'docker exec -t api-php php-cs-fixer "$@"'
+            echo 'docker exec -t api php-cs-fixer "$@"'
         } > ~/bin/php-cs-fixer
         chmod +x ~/bin/php-cs-fixer
 
         {
             echo '#!/bin/bash'
             echo 'set -e -u -o pipefail'
-            echo 'docker exec -t api-php phpcs "$@"'
+            echo 'docker exec -t api phpcs "$@"'
         } > ~/bin/phpcs
         {
             echo '#!/bin/bash'
             echo 'set -e -u -o pipefail'
-            echo 'docker exec -t api-php phpcbf "$@"'
+            echo 'docker exec -t api phpcbf "$@"'
         } > ~/bin/phpcbf
         chmod +x ~/bin/phpcs
         chmod +x ~/bin/phpcbf
@@ -249,9 +251,16 @@ Vagrant.configure('2') do |config|
         {
             echo '#!/bin/bash'
             echo 'set -e -u -o pipefail'
-            echo 'docker exec -t api-php phpstan "$@"'
+            echo 'docker exec -t api phpstan "$@"'
         } > ~/bin/phpstan
         chmod +x ~/bin/phpstan
+
+        {
+            echo '#!/bin/bash'
+            echo 'set -e -u -o pipefail'
+            echo 'docker exec -t api infection "$@"'
+        } > ~/bin/infection
+        chmod +x ~/bin/infection
     SCRIPT
 
     config.vm.provision 'create-app-data-folders', type: 'shell', privileged: false, inline: <<-SCRIPT

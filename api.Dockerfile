@@ -268,16 +268,17 @@ RUN \
     && chmod +x phive.phar \
     && mv phive.phar /usr/local/bin/phive \
     && mkdir --parents /var/cache/phive \
-    && phive --home /var/cache/phive --no-progress install --trust-gpg-keys 5E6DDE998AB73B8E,31C7E470E2138192,E82B2FB314E9906E --target /usr/local/bin \
+    && phive --home /var/cache/phive --no-progress install --trust-gpg-keys 5E6DDE998AB73B8E,31C7E470E2138192,E82B2FB314E9906E,C5095986493B4AA0 --target /usr/local/bin \
         phpcs \
         phpcbf \
         php-cs-fixer \
+        infection \
     # Install PHPStan
     && mkdir --parents /usr/local/src/phpstan \
     && COMPOSER_ALLOW_SUPERUSER=1 composer require --working-dir=/usr/local/src/phpstan phpstan/phpstan \
     && COMPOSER_ALLOW_SUPERUSER=1 composer config --working-dir=/usr/local/src/phpstan --no-plugins allow-plugins.phpstan/extension-installer true \
     && COMPOSER_ALLOW_SUPERUSER=1 composer require --working-dir=/usr/local/src/phpstan phpstan/extension-installer \
-    && COMPOSER_ALLOW_SUPERUSER=1 composer require --working-dir=/usr/local/src/phpstan phpstan/phpstan-doctrine phpstan/phpstan-phpunit phpstan/phpstan-symfony \
+    && COMPOSER_ALLOW_SUPERUSER=1 composer require --working-dir=/usr/local/src/phpstan phpstan/phpstan-doctrine phpstan/phpstan-phpunit phpstan/phpstan-symfony phpstan/phpstan-strict-rules \
     && ln --symbolic /usr/local/src/phpstan/vendor/bin/phpstan /usr/local/bin/phpstan \
     # Install Rector
     && mkdir --parents /usr/local/src/rector \
@@ -292,7 +293,8 @@ RUN \
     && phpcbf --version \
     && php-cs-fixer --version \
     && phpstan --version \
-    && rector --version
+    && rector --version \
+    && infection --version
 RUN \
     # Values used inside php.ini-development
     sed -i 's/^\(zend.exception_ignore_args =\).*/\1\ Off/' "$PHP_DIR/php.ini" \

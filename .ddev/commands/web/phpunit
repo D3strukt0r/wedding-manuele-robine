@@ -1,7 +1,0 @@
-#!/bin/bash
-
-## https://github.com/ddev/ddev-contrib/blob/master/custom-commands/symfony/web/phpunit
-## Description: Run Symphony phpunit tests
-## Usage: phpunit <test>
-## Example: "ddev phpunit" or "ddev phpunit tests/Util"
-bin/phpunit $@

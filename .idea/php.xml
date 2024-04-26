@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="LaravelPintOptionsConfiguration">
-    <option name="ruleset" value="laravel" />
-  </component>
   <component name="MessDetectorOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
   <component name="PHPCSFixerOptionsConfiguration">
+    <option name="allowRiskyRules" value="true" />
     <option name="transferred" value="true" />
   </component>
   <component name="PHPCodeSnifferOptionsConfiguration">
-    <option name="highlightLevel" value="WARNING" />
     <option name="transferred" value="true" />
+  </component>
+  <component name="PhpCSFixer">
+    <phpcsfixer_settings>
+      <phpcs_fixer_by_interpreter interpreter_id="c97d3750-4fcf-40fb-aa18-7493e210a817" tool_path="/home/vagrant/bin/php-cs-fixer" timeout="30000" />
+    </phpcsfixer_settings>
+  </component>
+  <component name="PhpCodeSniffer">
+    <phpcs_settings>
+      <phpcs_by_interpreter interpreter_id="c97d3750-4fcf-40fb-aa18-7493e210a817" beautifier_path="/home/vagrant/bin/phpcbf" tool_path="/home/vagrant/bin/phpcs" timeout="30000" />
+    </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
@@ -161,28 +168,6 @@
   </component>
   <component name="PhpInterpreters">
     <interpreters>
-      <interpreter id="ff7eb03a-9854-4726-b07c-e66e6539ed1e" name="wedding-manuele-robine" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug">
-        <remote_data INTERPRETER_PATH="php8.2" HELPERS_PATH="/opt/.phpstorm_helpers" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DOCKER_ACCOUNT_NAME="Docker" DOCKER_COMPOSE_SERVICE_NAME="web" DOCKER_REMOTE_PROJECT_PATH="/opt/project">
-          <PathMappingSettings>
-            <option name="pathMappings">
-              <list>
-                <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/html" />
-                <mapping local-root="$PROJECT_DIR$/.ddev" remote-root="/mnt/ddev_config" />
-                <mapping local-root="$PROJECT_DIR$/.ddev/xhprof" remote-root="/usr/local/bin/xhprof" />
-                <mapping local-root="$PROJECT_DIR$/.git" remote-root="/var/www/html/.git" />
-                <mapping local-root="$APPLICATION_CONFIG_DIR$/scratches" remote-root="/opt/scratches" />
-              </list>
-            </option>
-          </PathMappingSettings>
-          <type_data command="EXEC" />
-          <dockerComposeConfigurationPaths>
-            <item value="$PROJECT_DIR$/.ddev/.ddev-docker-compose-full.yaml" />
-          </dockerComposeConfigurationPaths>
-          <envs>
-            <env name="COMPOSE_PROJECT_NAME" value="ddev-wedding-manuele-robine" />
-          </envs>
-        </remote_data>
-      </interpreter>
       <interpreter id="c97d3750-4fcf-40fb-aa18-7493e210a817" name="Wedding Manuele Robine VM" home="sshConfig://DATA" auto="false" debugger_id="php.debugger.XDebug">
         <configuration_options>
           <configuration_option name="xdebug.client_host" value="10.0.2.2" />
@@ -355,7 +340,14 @@
       <extension name="zmq" enabled="false" />
     </extensions>
   </component>
+  <component name="PhpStan">
+    <PhpStan_settings>
+      <phpstan_by_interpreter interpreter_id="c97d3750-4fcf-40fb-aa18-7493e210a817" tool_path="/home/vagrant/bin/phpstan" timeout="60000" />
+    </PhpStan_settings>
+  </component>
   <component name="PhpStanOptionsConfiguration">
+    <option name="config" value="/usr/local/src/app/phpstan.neon.dist" />
+    <option name="level" value="8" />
     <option name="transferred" value="true" />
   </component>
   <component name="PhpUnit">

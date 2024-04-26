@@ -1,0 +1,27 @@
+{
+    "$schema": "https://raw.githubusercontent.com/infection/infection/master/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ],
+        "excludes": [
+            "Migrations",
+            "DataFixtures"
+        ]
+    },
+    "logs": {
+        "text": "infection.log",
+        "html": "infection.html",
+        "gitlab": "gitlab-code-quality.json"
+    },
+    "mutators": {
+        "@default": true,
+        "global-ignore": [
+            "App\\Repository\\*::__construct", // ignore repository construction (only necessary to find unused repositories)
+        ],
+        "global-ignoreSourceCodeByRegex": [
+            "#\\[OA.*", // do not mutate api doc annotations
+            "#\\[Route.*", // do not mutate route parameters (could be useful but is not covered in our tests)
+        ],
+    }
+}
