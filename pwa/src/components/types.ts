@@ -12,7 +12,7 @@ export type Invitee = {
 
 export type Card = {
   id: number;
-  userLoginId: string | null;
+  userLoginId: number | null;
   inviteeIds: number[];
 };
 

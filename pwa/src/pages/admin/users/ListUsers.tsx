@@ -61,7 +61,7 @@ function CreateUser() {
       // TODO: Notification about possibly new generated password
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 
@@ -184,7 +184,7 @@ function UpdateUser({ record }: { record: User }) {
       // TODO: Notification about possibly new generated password
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 

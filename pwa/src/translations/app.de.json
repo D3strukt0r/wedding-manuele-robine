@@ -113,6 +113,7 @@
   "invitee.actions.delete.title": "Eingeladenen löschen",
   "invitee.actions.delete.text": "Möchten Sie den eingeladenen '{{name}}' wirklich löschen?",
   "card.userLogin": "Benutzer Login",
+  "card.invitees": "Eingeladene",
   "card.actions.create.title": "Karte erstellen",
   "card.actions.update.title": "Karte bearbeiten",
   "card.actions.delete.title": "Karte löschen",

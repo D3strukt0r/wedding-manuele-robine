@@ -88,7 +88,7 @@ function CreateInvitee() {
       reset();
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 
@@ -285,7 +285,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
       reset();
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 

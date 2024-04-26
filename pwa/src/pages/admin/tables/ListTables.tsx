@@ -52,7 +52,7 @@ function CreateTable() {
       reset();
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 
@@ -159,7 +159,7 @@ function UpdateTable({ record }: { record: TableModel }) {
       reset();
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 

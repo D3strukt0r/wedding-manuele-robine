@@ -54,7 +54,7 @@ function CreateCard() {
       reset();
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 
@@ -163,7 +163,7 @@ function UpdateCard({ record }: { record: Card }) {
       reset();
     },
     onError: (error) => {
-      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
   });
 
