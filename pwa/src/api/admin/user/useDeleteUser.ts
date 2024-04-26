@@ -1,11 +1,11 @@
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { User } from '#/components/types';
+import axios, { AxiosError } from 'axios';
+import { SymfonyValidationFailedResponse, User } from '#/components/types';
 
 export default function useDeleteUser(
   id: User['id'],
   queryOptions?: Omit<
-    UseMutationOptions,
+    UseMutationOptions<unknown, AxiosError<SymfonyValidationFailedResponse>>,
     'mutationFn'
   >,
 ) {

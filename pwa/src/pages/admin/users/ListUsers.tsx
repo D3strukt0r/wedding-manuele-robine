@@ -16,6 +16,7 @@ import useUsers from '#/api/admin/user/useUsers';
 import useDeleteUser from '#/api/admin/user/useDeleteUser';
 import useUpdateUser from '#/api/admin/user/useUpdateUser';
 import useCreateUser from '#/api/admin/user/useCreateUser';
+import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
 
 function CreateUser() {
   const { t } = useTranslation('app');
@@ -43,6 +44,7 @@ function CreateUser() {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -58,6 +60,9 @@ function CreateUser() {
       reset();
       // TODO: Notification about possibly new generated password
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -101,7 +106,7 @@ function CreateUser() {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
           <div>
@@ -109,17 +114,17 @@ function CreateUser() {
               {...register('username', { setValueAs: (value) => value === '' ? null : value })}
               label={t('user.username')}
               disabled={isPending}
+              error={errors.username}
               required
             />
-            {errors.username?.message && <span>{errors.username.message}</span>}
           </div>
           <div>
             <Input
               {...register('password', { setValueAs: (value) => value === '' ? null : value })}
               label={t('user.password')}
               disabled={isPending}
+              error={errors.password}
             />
-            {errors.password?.message && <span>{errors.password.message}</span>}
           </div>
         </form>
         {import.meta.env.MODE === 'development' && (
@@ -156,6 +161,7 @@ function UpdateUser({ record }: { record: User }) {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -171,6 +177,9 @@ function UpdateUser({ record }: { record: User }) {
       reset();
       // TODO: Notification about possibly new generated password
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -216,7 +225,7 @@ function UpdateUser({ record }: { record: User }) {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
           <div>
@@ -225,17 +234,17 @@ function UpdateUser({ record }: { record: User }) {
               label={t('user.username')}
               placeholder={record.username}
               disabled={isPending}
+              error={errors.username}
               required
             />
-            {errors.username?.message && <span>{errors.username.message}</span>}
           </div>
           <div>
             <Input
               {...register('newPassword', { setValueAs: (value) => value === '' ? null : value })}
               label={t('user.newPassword')}
               disabled={isPending}
+              error={errors.newPassword}
             />
-            {errors.newPassword?.message && <span>{errors.newPassword.message}</span>}
           </div>
         </form>
         {import.meta.env.MODE === 'development' && (

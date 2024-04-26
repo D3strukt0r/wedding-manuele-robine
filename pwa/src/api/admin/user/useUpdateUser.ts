@@ -1,11 +1,11 @@
-import { DefaultError, useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { User } from '#/components/types';
+import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
+import { SymfonyValidationFailedResponse, User } from '#/components/types';
 
 export default function useUpdateUser(
   id: User['id'],
   queryOptions?: Omit<
-    UseMutationOptions<User, DefaultError, Omit<User, 'id'>>,
+    UseMutationOptions<User, AxiosError<SymfonyValidationFailedResponse>, Omit<User, 'id'>>,
     'mutationFn'
   >,
 ) {

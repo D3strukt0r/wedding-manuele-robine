@@ -1,10 +1,10 @@
-import { DefaultError, useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { Card } from '#/components/types';
+import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
+import { Card, SymfonyValidationFailedResponse } from '#/components/types';
 
 export default function useCreateCard(
   queryOptions?: Omit<
-    UseMutationOptions<Card, DefaultError, Omit<Card, 'id'>>,
+    UseMutationOptions<Card, AxiosError<SymfonyValidationFailedResponse>, Omit<Card, 'id'>>,
     'mutationFn'
   >,
 ) {

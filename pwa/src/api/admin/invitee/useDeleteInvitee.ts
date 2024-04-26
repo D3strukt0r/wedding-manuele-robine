@@ -1,11 +1,11 @@
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { Invitee } from '#/components/types';
+import axios, { AxiosError } from 'axios';
+import { Invitee, SymfonyValidationFailedResponse } from '#/components/types';
 
 export default function useDeleteInvitee(
   id: Invitee['id'],
   queryOptions?: Omit<
-    UseMutationOptions,
+    UseMutationOptions<unknown, AxiosError<SymfonyValidationFailedResponse>>,
     'mutationFn'
   >,
 ) {

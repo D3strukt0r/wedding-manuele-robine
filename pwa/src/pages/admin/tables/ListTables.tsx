@@ -16,6 +16,7 @@ import useTables from '#/api/admin/table/useTables';
 import useDeleteTable from '#/api/admin/table/useDeleteTable';
 import useUpdateTable from '#/api/admin/table/useUpdateTable';
 import useCreateTable from '#/api/admin/table/useCreateTable.ts';
+import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
 
 function CreateTable() {
   const { t } = useTranslation('app');
@@ -36,6 +37,7 @@ function CreateTable() {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -49,6 +51,9 @@ function CreateTable() {
       setOpen(false);
       reset();
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -92,7 +97,7 @@ function CreateTable() {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
           <div>
@@ -101,9 +106,9 @@ function CreateTable() {
               type="number"
               label={t('table.seats')}
               disabled={isPending}
+              error={errors.seats}
               required
             />
-            {errors.seats?.message && <span>{errors.seats.message}</span>}
           </div>
         </form>
         {import.meta.env.MODE === 'development' && (
@@ -133,6 +138,7 @@ function UpdateTable({ record }: { record: TableModel }) {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -146,6 +152,9 @@ function UpdateTable({ record }: { record: TableModel }) {
       setOpen(false);
       reset();
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -191,7 +200,7 @@ function UpdateTable({ record }: { record: TableModel }) {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
           <div>
@@ -201,9 +210,9 @@ function UpdateTable({ record }: { record: TableModel }) {
               label={t('table.seats')}
               placeholder={`${record.seats}`}
               disabled={isPending}
+              error={errors.seats}
               required
             />
-            {errors.seats?.message && <span>{errors.seats.message}</span>}
           </div>
         </form>
         {import.meta.env.MODE === 'development' && (

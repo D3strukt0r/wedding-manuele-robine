@@ -1,11 +1,11 @@
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { Card } from '#/components/types';
+import axios, { AxiosError } from 'axios';
+import { Card, SymfonyValidationFailedResponse } from '#/components/types';
 
 export default function useDeleteCard(
   id: Card['id'],
   queryOptions?: Omit<
-    UseMutationOptions,
+    UseMutationOptions<unknown, AxiosError<SymfonyValidationFailedResponse>>,
     'mutationFn'
   >,
 ) {

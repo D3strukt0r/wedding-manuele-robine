@@ -61,7 +61,7 @@ export default function Login() {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.message}</p>}
             />
           ) : null}
           <div>

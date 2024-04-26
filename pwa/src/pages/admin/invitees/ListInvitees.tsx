@@ -18,6 +18,7 @@ import useUpdateInvitee from '#/api/admin/invitee/useUpdateInvitee';
 import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
 import useCreateInvitee from '#/api/admin/invitee/useCreateInvitee.ts';
 import Button from '#/form/admin/Button.tsx';
+import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
 
 function CreateInvitee() {
   const { t } = useTranslation('app');
@@ -60,6 +61,7 @@ function CreateInvitee() {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -76,6 +78,9 @@ function CreateInvitee() {
       setOpen(false);
       reset();
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -119,7 +124,7 @@ function CreateInvitee() {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
           <div>
@@ -127,34 +132,34 @@ function CreateInvitee() {
               {...register('firstname', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.firstname')}
               disabled={isPending}
+              error={errors.firstname}
               required
             />
-            {errors.firstname?.message && <span>{errors.firstname.message}</span>}
           </div>
           <div>
             <Input
               {...register('lastname', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.lastname')}
               disabled={isPending}
+              error={errors.lastname}
               required
             />
-            {errors.lastname?.message && <span>{errors.lastname.message}</span>}
           </div>
           <div>
             <Input
               {...register('email', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.email')}
               disabled={isPending}
+              error={errors.email}
             />
-            {errors.email?.message && <span>{errors.email.message}</span>}
           </div>
           <div>
             <Input
               {...register('allergies', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.allergies')}
               disabled={isPending}
+              error={errors.allergies}
             />
-            {errors.allergies?.message && <span>{errors.allergies.message}</span>}
           </div>
         </form>
         {import.meta.env.MODE === 'development' && (
@@ -206,6 +211,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -222,6 +228,9 @@ function UpdateInvitee({ record }: { record: Invitee }) {
       setOpen(false);
       reset();
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -267,7 +276,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
           <div>
@@ -276,9 +285,9 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               label={t('invitee.firstname')}
               placeholder={record.firstname}
               disabled={isPending}
+              error={errors.firstname}
               required
             />
-            {errors.firstname?.message && <span>{errors.firstname.message}</span>}
           </div>
           <div>
             <Input
@@ -286,9 +295,9 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               label={t('invitee.lastname')}
               placeholder={record.lastname}
               disabled={isPending}
+              error={errors.lastname}
               required
             />
-            {errors.lastname?.message && <span>{errors.lastname.message}</span>}
           </div>
           <div>
             <Input
@@ -296,8 +305,8 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               label={t('invitee.email')}
               placeholder={record.email || undefined}
               disabled={isPending}
+              error={errors.email}
             />
-            {errors.email?.message && <span>{errors.email.message}</span>}
           </div>
           <div>
             <Input
@@ -305,8 +314,8 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               label={t('invitee.allergies')}
               placeholder={record.allergies || undefined}
               disabled={isPending}
+              error={errors.allergies}
             />
-            {errors.allergies?.message && <span>{errors.allergies.message}</span>}
           </div>
         </form>
         {import.meta.env.MODE === 'development' && (

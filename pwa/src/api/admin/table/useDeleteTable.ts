@@ -1,11 +1,11 @@
 import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { Table } from '#/components/types';
+import axios, { AxiosError } from 'axios';
+import { SymfonyValidationFailedResponse, Table } from '#/components/types';
 
 export default function useDeleteTable(
   id: Table['id'],
   queryOptions?: Omit<
-    UseMutationOptions,
+    UseMutationOptions<unknown, AxiosError<SymfonyValidationFailedResponse>>,
     'mutationFn'
   >,
 ) {

@@ -1,13 +1,18 @@
 import { forwardRef, InputHTMLAttributes, ReactNode, useMemo } from 'react';
 import clsx from 'clsx';
+import { FieldError } from 'react-hook-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: ReactNode;
   extra?: ReactNode;
+  error?: FieldError;
 }
 const Input = forwardRef<HTMLInputElement, Props>(({
   label,
   extra,
+  error,
   disabled,
   ...props
 }, ref) => {
@@ -39,23 +44,42 @@ const Input = forwardRef<HTMLInputElement, Props>(({
   return (
     <>
       {labelBar}
-      <div className={clsx({ 'mt-2': labelBar })}>
+      <div className={clsx('relative rounded-md shadow-sm', { 'mt-2': labelBar })}>
         <input
           type="text"
           {...props}
           id={props.id ?? props.name}
           className={clsx(
             props.className,
-            'block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6',
+            'block w-full rounded-md border-0 py-1.5 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
             {
               'text-gray-900 placeholder:text-gray-400': !disabled,
               'bg-gray-300 text-gray-600 placeholder:text-gray-500': disabled,
+              'ring-gray-300 focus:ring-blue-600': !error,
+              'pr-10 text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500': error,
             },
           )}
           disabled={disabled}
           ref={ref}
+          aria-describedby={error ? `${props.id ?? props.name}-error` : undefined}
         />
+        {error && (
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <FontAwesomeIcon
+              icon={faCircleExclamation}
+              className="h-5 w-5 text-red-500"
+              aria-hidden="true"
+            />
+          </div>
+        )}
       </div>
+      {error && (
+        <div className="mt-2 text-sm text-red-600" id={`${props.id ?? props.name}-error`}>
+          {Object.entries(error.types ?? {}).map(([type, message]) => (
+            <p key={type}>{message}</p>
+          ))}
+        </div>
+      )}
     </>
   );
 });

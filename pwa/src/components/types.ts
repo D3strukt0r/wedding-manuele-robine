@@ -34,3 +34,33 @@ export type ListResponse<T> = {
   limit: number;
   records: T[];
 };
+
+export type SymfonyAuthenticationFailedResponse = {
+  code: number;
+  message: string;
+}
+
+export type SymfonyValidationFailedResponse = {
+  class: string;
+  detail: string;
+  status: number;
+  title: string;
+  trace: {
+    args: string[][];
+    class: string;
+    file: string;
+    function: string;
+    line: number;
+    namespace: string;
+    short_class: string;
+    type: string;
+  }[];
+  type: string;
+  violations: {
+    parameters: Record<string, string>;
+    propertyPath: string;
+    template: string;
+    title: string;
+    type: string;
+  }[];
+}

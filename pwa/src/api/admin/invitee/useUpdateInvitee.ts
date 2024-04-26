@@ -1,11 +1,11 @@
-import { DefaultError, useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { Invitee } from '#/components/types';
+import { useMutation, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
+import axios, { AxiosError } from 'axios';
+import { Invitee, SymfonyValidationFailedResponse } from '#/components/types';
 
 export default function useUpdateInvitee(
   id: Invitee['id'],
   queryOptions?: Omit<
-    UseMutationOptions<Invitee, DefaultError, Omit<Invitee, 'id'>>,
+    UseMutationOptions<Invitee, AxiosError<SymfonyValidationFailedResponse>, Omit<Invitee, 'id'>>,
     'mutationFn'
   >,
 ) {

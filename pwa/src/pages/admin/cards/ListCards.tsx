@@ -16,6 +16,7 @@ import useInvitees from '#/api/admin/invitee/useInvitees';
 import useUsers from '#/api/admin/user/useUsers';
 import Button from '#/form/admin/Button.tsx';
 import useCreateCard from '#/api/admin/cards/useCreateCard.ts';
+import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
 
 function CreateCard() {
   const { t } = useTranslation('app');
@@ -34,6 +35,7 @@ function CreateCard() {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -45,6 +47,9 @@ function CreateCard() {
       setOpen(false);
       reset();
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -88,7 +93,7 @@ function CreateCard() {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
         </form>
@@ -117,6 +122,7 @@ function UpdateCard({ record }: { record: Card }) {
     control,
     handleSubmit,
     reset,
+    setError,
     formState: { errors, isDirty, isValid },
   } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -128,6 +134,9 @@ function UpdateCard({ record }: { record: Card }) {
       setOpen(false);
       reset();
     },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(schema, setError, error.response?.data?.violations)
+    }
   });
 
   return (
@@ -173,7 +182,7 @@ function UpdateCard({ record }: { record: Card }) {
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{error.response.data.message}</p>}
+              text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
         </form>
