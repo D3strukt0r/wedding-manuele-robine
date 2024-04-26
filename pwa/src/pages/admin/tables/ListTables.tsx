@@ -9,14 +9,14 @@ import BigSpinner from '#/layout/BigSpinner';
 import Modal from '#/components/common/admin/Modal';
 import Alert from '#/components/common/admin/Alert';
 import Input from '#/form/admin/Input';
-import Button from '#/form/admin/Button.tsx';
-import { Invitee, Table as TableModel } from '#/components/types';
+import Button from '#/form/admin/Button';
+import { Table as TableModel } from '#/components/types';
 import useUsers from '#/api/admin/user/useUsers';
 import useTables from '#/api/admin/table/useTables';
 import useDeleteTable from '#/api/admin/table/useDeleteTable';
 import useUpdateTable from '#/api/admin/table/useUpdateTable';
-import useCreateTable from '#/api/admin/table/useCreateTable.ts';
-import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
+import useCreateTable from '#/api/admin/table/useCreateTable';
+import { setErrorFromSymfonyViolations } from '#/utils/form';
 
 function CreateTable() {
   const { t } = useTranslation('app');
@@ -68,8 +68,11 @@ function CreateTable() {
         title={t('table.actions.create.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -87,7 +90,10 @@ function CreateTable() {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -171,8 +177,11 @@ function UpdateTable({ record }: { record: TableModel }) {
         title={t('table.actions.update.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -190,7 +199,10 @@ function UpdateTable({ record }: { record: TableModel }) {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -245,7 +257,7 @@ function DeleteTable({ id, name }: { id: TableModel['id'], name: ReactNode }) {
         title={t('table.actions.delete.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
+        onClose={() => {
           if (!isPending) setOpen(false);
         }}
         actions={[

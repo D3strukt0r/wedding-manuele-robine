@@ -13,7 +13,6 @@ const Input = forwardRef<HTMLInputElement, Props>(({
   label,
   extra,
   error,
-  disabled,
   ...props
 }, ref) => {
   const labelLinked = useMemo(() => {
@@ -48,19 +47,19 @@ const Input = forwardRef<HTMLInputElement, Props>(({
         <input
           type="text"
           {...props}
+          ref={ref}
           id={props.id ?? props.name}
           className={clsx(
             props.className,
             'block w-full rounded-md border-0 py-1.5 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
             {
-              'text-gray-900 placeholder:text-gray-400': !disabled,
-              'bg-gray-300 text-gray-600 placeholder:text-gray-500': disabled,
+              'text-gray-900 placeholder:text-gray-400': !props.disabled,
+              'bg-gray-300 text-gray-600 placeholder:text-gray-500': props.disabled,
               'ring-gray-300 focus:ring-blue-600': !error,
               'pr-10 text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500': error,
             },
           )}
-          disabled={disabled}
-          ref={ref}
+          aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${props.id ?? props.name}-error` : undefined}
         />
         {error && (
@@ -75,9 +74,11 @@ const Input = forwardRef<HTMLInputElement, Props>(({
       </div>
       {error && (
         <div className="mt-2 text-sm text-red-600" id={`${props.id ?? props.name}-error`}>
-          {Object.entries(error.types ?? {}).map(([type, message]) => (
+          {error.types ? Object.entries(error.types).map(([type, message]) => (
             <p key={type}>{message}</p>
-          ))}
+          )) : (
+            <p>{error.message}</p>
+          )}
         </div>
       )}
     </>

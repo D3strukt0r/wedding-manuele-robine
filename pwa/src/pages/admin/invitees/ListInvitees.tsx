@@ -9,21 +9,26 @@ import BigSpinner from '#/layout/BigSpinner';
 import Modal from '#/components/common/admin/Modal';
 import Alert from '#/components/common/admin/Alert';
 import Input from '#/form/admin/Input';
-import { Card, Invitee, Table as TableModel } from '#/components/types';
+import { Invitee } from '#/components/types';
 import useTables from '#/api/admin/table/useTables';
 import useCards from '#/api/admin/cards/useCards';
 import useInvitees from '#/api/admin/invitee/useInvitees';
 import useDeleteInvitee from '#/api/admin/invitee/useDeleteInvitee';
 import useUpdateInvitee from '#/api/admin/invitee/useUpdateInvitee';
 import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
-import useCreateInvitee from '#/api/admin/invitee/useCreateInvitee.ts';
-import Button from '#/form/admin/Button.tsx';
-import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
+import useCreateInvitee from '#/api/admin/invitee/useCreateInvitee';
+import Button from '#/form/admin/Button';
+import { setErrorFromSymfonyViolations } from '#/utils/form';
+import Select from '#/form/admin/Select';
 
 function CreateInvitee() {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
+
+  const food = useLookupType(EnumTypes.FOOD);
+  const tables = useTables();
+  const cards = useCards();
 
   const schema = useMemo(() => {
     return z.object({
@@ -45,17 +50,18 @@ function CreateInvitee() {
         ]),
       ),
       // TODO: willCome: z.nullable(z.boolean()),
-      // TODO: food: z.nullable(z.string()), // Enum
+      food: z.nullable(z.enum(food.data ?? [])),
       allergies: z.nullable(
         z
           .string()
           .max(255, { message: t('form.errors.max', { max: 255 }) }),
       ),
-      // TODO: tableId: TableModel['id'] | null;
-      // TODO: cardId: Card['id'] | null;
+      tableId: z.nullable(z.number()),
+      cardId: z.nullable(z.number()),
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -63,13 +69,16 @@ function CreateInvitee() {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       firstname: null,
       lastname: null,
       email: null,
+      food: null,
       allergies: null,
+      tableId: null,
+      cardId: null,
     },
   });
 
@@ -95,8 +104,11 @@ function CreateInvitee() {
         title={t('invitee.actions.create.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -114,7 +126,10 @@ function CreateInvitee() {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -154,11 +169,44 @@ function CreateInvitee() {
             />
           </div>
           <div>
+            <Select<Inputs>
+              name="food"
+              control={control}
+              options={food.data?.map((item) => ({ label: t(`enum.food.${item}`), value: item })) ?? []}
+              nullable
+              label={t('invitee.food')}
+              disabled={isPending}
+              error={errors.food}
+            />
+          </div>
+          <div>
             <Input
               {...register('allergies', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.allergies')}
               disabled={isPending}
               error={errors.allergies}
+            />
+          </div>
+          <div>
+            <Select<Inputs>
+              name="tableId"
+              control={control}
+              options={tables.data?.records?.map((table) => ({ label: `X (ID: ${table.id})`, value: table.id })) ?? []}
+              nullable
+              label={t('invitee.table')}
+              disabled={isPending}
+              error={errors.food}
+            />
+          </div>
+          <div>
+            <Select<Inputs>
+              name="cardId"
+              control={control}
+              options={cards.data?.records?.map((card) => ({ label: `X (ID: ${card.id})`, value: card.id })) ?? []}
+              nullable
+              label={t('invitee.card')}
+              disabled={isPending}
+              error={errors.food}
             />
           </div>
         </form>
@@ -174,6 +222,10 @@ function UpdateInvitee({ record }: { record: Invitee }) {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
+
+  const food = useLookupType(EnumTypes.FOOD);
+  const tables = useTables();
+  const cards = useCards();
 
   const schema = useMemo(() => {
     return z.object({
@@ -195,17 +247,18 @@ function UpdateInvitee({ record }: { record: Invitee }) {
         ]),
       ),
       // TODO: willCome: z.nullable(z.boolean()),
-      // TODO: food: z.nullable(z.string()), // Enum
+      food: z.nullable(z.enum(food.data ?? [])),
       allergies: z.nullable(
         z
           .string()
           .max(255, { message: t('form.errors.max', { max: 255 }) }),
       ),
-      // TODO: tableId: TableModel['id'] | null;
-      // TODO: cardId: Card['id'] | null;
+      tableId: z.nullable(z.number()),
+      cardId: z.nullable(z.number()),
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -213,13 +266,16 @@ function UpdateInvitee({ record }: { record: Invitee }) {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       firstname: record.firstname,
       lastname: record.lastname,
       email: record.email,
+      food: record.food,
       allergies: record.allergies,
+      tableId: record.tableId,
+      cardId: record.cardId,
     },
   });
 
@@ -247,8 +303,11 @@ function UpdateInvitee({ record }: { record: Invitee }) {
         title={t('invitee.actions.update.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -266,7 +325,10 @@ function UpdateInvitee({ record }: { record: Invitee }) {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -309,12 +371,45 @@ function UpdateInvitee({ record }: { record: Invitee }) {
             />
           </div>
           <div>
+            <Select<Inputs>
+              name="food"
+              control={control}
+              options={food.data?.map((item) => ({label: t(`enum.food.${item}`), value: item})) ?? []}
+              nullable
+              label={t('invitee.food')}
+              disabled={isPending}
+              error={errors.food}
+            />
+          </div>
+          <div>
             <Input
               {...register('allergies', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.allergies')}
               placeholder={record.allergies || undefined}
               disabled={isPending}
               error={errors.allergies}
+            />
+          </div>
+          <div>
+            <Select<Inputs>
+              name="tableId"
+              control={control}
+              options={tables.data?.records?.map((table) => ({label: `X (ID: ${table.id})`, value: table.id})) ?? []}
+              nullable
+              label={t('invitee.table')}
+              disabled={isPending}
+              error={errors.food}
+            />
+          </div>
+          <div>
+            <Select<Inputs>
+              name="cardId"
+              control={control}
+              options={cards.data?.records?.map((card) => ({label: `X (ID: ${card.id})`, value: card.id})) ?? []}
+              nullable
+              label={t('invitee.card')}
+              disabled={isPending}
+              error={errors.food}
             />
           </div>
         </form>
@@ -348,7 +443,7 @@ function DeleteInvitee({ id, name }: { id: Invitee['id'], name: ReactNode }) {
         title={t('invitee.actions.delete.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
+        onClose={() => {
           if (!isPending) setOpen(false);
         }}
         actions={[

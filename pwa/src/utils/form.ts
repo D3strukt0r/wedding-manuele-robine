@@ -1,4 +1,4 @@
-import { SymfonyValidationFailedResponse } from '#/components/types.ts';
+import { SymfonyValidationFailedResponse } from '#/components/types';
 import * as z from 'zod';
 import { MultipleFieldErrors } from 'react-hook-form/dist/types/errors';
 import { UseFormSetError } from 'react-hook-form';

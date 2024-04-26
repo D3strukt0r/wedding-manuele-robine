@@ -8,28 +8,32 @@ import Table, { TableProps } from '#/components/common/admin/Table';
 import BigSpinner from '#/layout/BigSpinner';
 import Modal from '#/components/common/admin/Modal';
 import Alert from '#/components/common/admin/Alert';
-import { Card, Invitee, User } from '#/components/types';
+import { Card } from '#/components/types';
 import useCards from '#/api/admin/cards/useCards';
 import useDeleteCard from '#/api/admin/cards/useDeleteCard';
 import useUpdateCard from '#/api/admin/cards/useUpdateCard';
 import useInvitees from '#/api/admin/invitee/useInvitees';
 import useUsers from '#/api/admin/user/useUsers';
-import Button from '#/form/admin/Button.tsx';
-import useCreateCard from '#/api/admin/cards/useCreateCard.ts';
-import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
+import Button from '#/form/admin/Button';
+import useCreateCard from '#/api/admin/cards/useCreateCard';
+import { setErrorFromSymfonyViolations } from '#/utils/form';
+import Select from '#/form/admin/Select';
 
 function CreateCard() {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
+  const users = useUsers();
+
   const schema = useMemo(() => {
     return z.object({
-      // TODO: userLoginId: User['id'] | null;
+      userLoginId: z.nullable(z.number()),
       // TODO: inviteeIds: (Invitee['id'])[] | null;
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -37,9 +41,11 @@ function CreateCard() {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: {},
+    defaultValues: {
+      userLoginId: null,
+    },
   });
 
   const { mutate, isPending, isError, error } = useCreateCard({
@@ -64,8 +70,11 @@ function CreateCard() {
         title={t('card.actions.create.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -83,7 +92,10 @@ function CreateCard() {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -96,6 +108,17 @@ function CreateCard() {
               text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
+          <div>
+            <Select<Inputs>
+              name="userLoginId"
+              control={control}
+              options={users.data?.records?.map((user) => ({label: `${user.username} (ID: ${user.id})`, value: user.id})) ?? []}
+              nullable
+              label={t('card.userLogin')}
+              disabled={isPending}
+              error={errors.userLoginId}
+            />
+          </div>
         </form>
         {import.meta.env.MODE === 'development' && (
           <DevTool control={control} />
@@ -110,13 +133,16 @@ function UpdateCard({ record }: { record: Card }) {
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
+  const users = useUsers();
+
   const schema = useMemo(() => {
     return z.object({
-      // TODO: userLoginId: User['id'] | null;
+      userLoginId: z.nullable(z.number()),
       // TODO: inviteeIds: (Invitee['id'])[] | null;
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -124,9 +150,11 @@ function UpdateCard({ record }: { record: Card }) {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: {},
+    defaultValues: {
+      userLoginId: record.userLoginId,
+    },
   });
 
   const { mutate, isPending, isError, error } = useUpdateCard(record.id, {
@@ -153,8 +181,11 @@ function UpdateCard({ record }: { record: Card }) {
         title={t('card.actions.update.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -172,7 +203,10 @@ function UpdateCard({ record }: { record: Card }) {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -185,6 +219,17 @@ function UpdateCard({ record }: { record: Card }) {
               text={<p>{error.response?.data?.title}</p>}
             />
           ) : null}
+          <div>
+            <Select<Inputs>
+              name="userLoginId"
+              control={control}
+              options={users.data?.records?.map((user) => ({label: `${user.username} (ID: ${user.id})`, value: user.id})) ?? []}
+              nullable
+              label={t('card.userLogin')}
+              disabled={isPending}
+              error={errors.userLoginId}
+            />
+          </div>
         </form>
         {import.meta.env.MODE === 'development' && (
           <DevTool control={control} />
@@ -216,7 +261,7 @@ function DeleteCard({ id, name }: { id: Card['id'], name: ReactNode }) {
         title={t('card.actions.delete.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
+        onClose={() => {
           if (!isPending) setOpen(false);
         }}
         actions={[

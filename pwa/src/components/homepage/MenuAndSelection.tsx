@@ -19,9 +19,9 @@ import RadioGroup from '#/form/RadioGroup';
 import Button from '#/form/Button';
 import { api } from '#/components/api';
 import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
-import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType.ts';
-import useInviteesOnCard from '#/api/invited/useInviteesOnCard.ts';
-import useUpdateInviteesOnCard from '#/api/invited/useUpdateInviteesOnCard.ts';
+import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
+import useInviteesOnCard from '#/api/invited/useInviteesOnCard';
+import useUpdateInviteesOnCard from '#/api/invited/useUpdateInviteesOnCard';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {

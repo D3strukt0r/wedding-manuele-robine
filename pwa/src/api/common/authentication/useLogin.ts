@@ -1,6 +1,6 @@
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import axios, { AxiosError } from 'axios';
-import { SymfonyAuthenticationFailedResponse } from '#/components/types.ts';
+import { SymfonyAuthenticationFailedResponse } from '#/components/types';
 
 export default function useLogin(
   queryOptions?: Omit<

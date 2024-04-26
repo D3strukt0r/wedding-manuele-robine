@@ -16,7 +16,7 @@ import useUsers from '#/api/admin/user/useUsers';
 import useDeleteUser from '#/api/admin/user/useDeleteUser';
 import useUpdateUser from '#/api/admin/user/useUpdateUser';
 import useCreateUser from '#/api/admin/user/useCreateUser';
-import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
+import { setErrorFromSymfonyViolations } from '#/utils/form';
 
 function CreateUser() {
   const { t } = useTranslation('app');
@@ -77,8 +77,11 @@ function CreateUser() {
         title={t('user.actions.create.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -96,7 +99,10 @@ function CreateUser() {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -196,8 +202,11 @@ function UpdateUser({ record }: { record: User }) {
         title={t('user.actions.update.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
-          if (!isPending) setOpen(false);
+        onClose={() => {
+          if (!isPending) {
+            setOpen(false);
+            reset();
+          }
         }}
         actions={[
           {
@@ -215,7 +224,10 @@ function UpdateUser({ record }: { record: User }) {
             layout: 'secondary',
             disabled: isPending,
             onClick: () => {
-              if (!isPending) setOpen(false);
+              if (!isPending) {
+                setOpen(false);
+                reset();
+              }
             },
           },
         ]}
@@ -277,7 +289,7 @@ function DeleteUser({ id, name }: { id: User['id'], name: ReactNode }) {
         title={t('user.actions.delete.title')}
         initialFocus={saveButtonRef}
         open={open}
-        setOpen={() => {
+        onClose={() => {
           if (!isPending) setOpen(false);
         }}
         actions={[

@@ -23,11 +23,11 @@ interface Props {
   title: ReactNode;
   children: ReactNode;
   open: boolean;
-  setOpen: (open: boolean) => void;
+  onClose: () => void;
   actions: ActionProps[];
   initialFocus?: MutableRefObject<HTMLElement | null>;
 }
-export default function Modal({ type, title, children, open, setOpen, actions, initialFocus }: Props) {
+export default function Modal({ type, title, children, open, onClose, actions, initialFocus }: Props) {
   const { t } = useTranslation('app');
 
   const icon = useMemo(() => {
@@ -48,7 +48,7 @@ export default function Modal({ type, title, children, open, setOpen, actions, i
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={setOpen} initialFocus={initialFocus}>
+      <Dialog as="div" className="relative z-50" onClose={onClose} initialFocus={initialFocus}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -77,7 +77,7 @@ export default function Modal({ type, title, children, open, setOpen, actions, i
                   <button
                     type="button"
                     className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => setOpen(false)}
+                    onClick={onClose}
                   >
                     <span className="sr-only">{t('modal.close')}</span>
                     <FontAwesomeIcon icon={faX} className="h-6 w-6" aria-hidden="true" />
