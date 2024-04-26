@@ -5,7 +5,6 @@ import { AxiosError } from 'axios';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { DevTool } from '@hookform/devtools';
@@ -20,6 +19,9 @@ import RadioGroup from '#/form/RadioGroup';
 import Button from '#/form/Button';
 import { api } from '#/components/api';
 import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
+import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType.ts';
+import useInviteesOnCard from '#/api/invited/useInviteesOnCard.ts';
+import useUpdateInviteesOnCard from '#/api/invited/useUpdateInviteesOnCard.ts';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -137,15 +139,9 @@ export default function ManuAndSelection({ id }: Props) {
 }
 
 function InviteesListOnMyCardLoader() {
-  const invitees = useQuery({
-    queryKey: ['myInvitees'],
-    queryFn: api.invited.invitees.list,
-  });
+  const invitees = useInviteesOnCard();
 
-  const foodOptions = useQuery({
-    queryKey: ['enum', 'food'],
-    queryFn: () => api.common.lookup.type('food'),
-  });
+  const foodOptions = useLookupType(EnumTypes.FOOD);
 
   if (invitees.isPending || foodOptions.isPending) {
     return <FontAwesomeIcon icon={faSpinner} spin />;
@@ -188,7 +184,6 @@ function InviteesListOnMyCardForm({
   foodOptions: string[];
 }) {
   const { t } = useTranslation('app');
-  const queryClient = useQueryClient();
 
   const schema = useMemo(() => {
     return z.record(
@@ -234,13 +229,7 @@ function InviteesListOnMyCardForm({
     return mappedObject;
   }, [invitees]);
 
-  const updateInvitees = useMutation({
-    mutationFn: api.invited.invitees.update,
-    onSuccess: async () => {
-      // Invalidate and re-fetch
-      await queryClient.invalidateQueries({ queryKey: ['myInvitees'] });
-    },
-  });
+  const updateInvitees = useUpdateInviteesOnCard();
 
   const {
     register,
@@ -252,7 +241,7 @@ function InviteesListOnMyCardForm({
     defaultValues: mappedInvitees,
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    updateInvitees.mutate(data);
+    updateInvitees.mutate({ invitees: data });
   }, [updateInvitees]);
 
   return (
