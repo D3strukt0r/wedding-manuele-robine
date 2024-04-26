@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Dto\Admin\User\CreateUserDto;
 use App\Dto\Admin\User\UpdateUserDto;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -95,15 +96,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function update(UpdateUserDto $dto, ?UserPasswordHasherInterface $passwordHasher = null): void
-    {
-        $this->username = $dto->username;
-        if ($passwordHasher && $dto->newPassword) {
-            $this->password = $passwordHasher->hashPassword($this, $dto->newPassword);
-        }
-        $this->setRoles($dto->roles);
-    }
-
     public function getCard(): ?Card
     {
         return $this->card;
@@ -119,5 +111,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->card = $card;
 
         return $this;
+    }
+
+    public static function create(CreateUserDto $dto, UserPasswordHasherInterface $passwordHasher, string $plainPassword): self
+    {
+        $entity = new self(
+            $dto->username,
+            $passwordHasher,
+            $plainPassword,
+        );
+        $entity->setRoles($dto->roles);
+
+        return $entity;
+    }
+
+    public function update(UpdateUserDto $dto, ?UserPasswordHasherInterface $passwordHasher = null): void
+    {
+        $this->username = $dto->username;
+        if ($passwordHasher && $dto->newPassword) {
+            $this->password = $passwordHasher->hashPassword($this, $dto->newPassword);
+        }
+        $this->setRoles($dto->roles);
     }
 }

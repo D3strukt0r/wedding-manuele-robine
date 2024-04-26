@@ -9,7 +9,7 @@ export enum EnumTypes {
 export default function useLookupType(
   type: EnumTypes,
   queryOptions?: Omit<
-    UseQueryOptions<string[]>,
+    UseQueryOptions<[string, ...string[]]>,
     'queryKey' | 'queryFn'
   >,
 ) {
@@ -17,7 +17,7 @@ export default function useLookupType(
     ...(queryOptions ?? {}),
     queryKey: ['enum', type],
     queryFn: async () => {
-      const { data: response } = await axios.get<string[]>(`/common/api/lookup/type/${type}`);
+      const { data: response } = await axios.get<[string, ...string[]]>(`/common/api/lookup/type/${type}`);
       return response;
     },
   });

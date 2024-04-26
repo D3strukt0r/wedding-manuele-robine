@@ -25,11 +25,12 @@ function CreateCard() {
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const users = useUsers();
+  const invitees = useInvitees();
 
   const schema = useMemo(() => {
     return z.object({
       userLoginId: z.nullable(z.number()),
-      // TODO: inviteeIds: (Invitee['id'])[] | null;
+      inviteeIds: z.array(z.number()),
     });
   }, [t]);
 
@@ -45,6 +46,7 @@ function CreateCard() {
     resolver: zodResolver(schema),
     defaultValues: {
       userLoginId: null,
+      inviteeIds: [],
     },
   });
 
@@ -119,6 +121,17 @@ function CreateCard() {
               error={errors.userLoginId}
             />
           </div>
+          <div>
+            <Select<Inputs>
+              name="inviteeIds"
+              control={control}
+              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              multiple
+              label={t('card.invitees')}
+              disabled={isPending}
+              error={errors.inviteeIds}
+            />
+          </div>
         </form>
         {import.meta.env.MODE === 'development' && (
           <DevTool control={control} />
@@ -134,11 +147,12 @@ function UpdateCard({ record }: { record: Card }) {
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
   const users = useUsers();
+  const invitees = useInvitees();
 
   const schema = useMemo(() => {
     return z.object({
       userLoginId: z.nullable(z.number()),
-      // TODO: inviteeIds: (Invitee['id'])[] | null;
+      inviteeIds: z.array(z.number()),
     });
   }, [t]);
 
@@ -154,6 +168,7 @@ function UpdateCard({ record }: { record: Card }) {
     resolver: zodResolver(schema),
     defaultValues: {
       userLoginId: record.userLoginId,
+      inviteeIds: record.inviteeIds,
     },
   });
 
@@ -228,6 +243,17 @@ function UpdateCard({ record }: { record: Card }) {
               label={t('card.userLogin')}
               disabled={isPending}
               error={errors.userLoginId}
+            />
+          </div>
+          <div>
+            <Select<Inputs>
+              name="inviteeIds"
+              control={control}
+              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              multiple
+              label={t('card.invitees')}
+              disabled={isPending}
+              error={errors.inviteeIds}
             />
           </div>
         </form>
@@ -310,7 +336,7 @@ export default function ListInvitees() {
     },
     {
       key: 'actions',
-      title: <span className="sr-only">{t('table.actions')}</span>,
+      title: <span className="sr-only">{t('card.actions')}</span>,
       render: (actions, record) => (
         <div className="flex space-x-4">
           {actions?.update && (

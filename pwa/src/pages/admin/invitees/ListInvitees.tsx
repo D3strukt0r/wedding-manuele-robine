@@ -505,7 +505,7 @@ export default function ListInvitees() {
     },
     {
       key: 'actions',
-      title: <span className="sr-only">{t('table.actions')}</span>,
+      title: <span className="sr-only">{t('invitee.actions')}</span>,
       render: (actions, record) => (
         <div className="flex space-x-4">
           {actions?.update && (

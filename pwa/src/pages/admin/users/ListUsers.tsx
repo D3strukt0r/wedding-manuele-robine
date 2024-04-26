@@ -17,11 +17,14 @@ import useDeleteUser from '#/api/admin/user/useDeleteUser';
 import useUpdateUser from '#/api/admin/user/useUpdateUser';
 import useCreateUser from '#/api/admin/user/useCreateUser';
 import { setErrorFromSymfonyViolations } from '#/utils/form';
+import Select from '#/form/admin/Select.tsx';
 
 function CreateUser() {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
+
+  const roles = useLookupType(EnumTypes.ROLE);
 
   const schema = useMemo(() => {
     return z.object({
@@ -35,10 +38,11 @@ function CreateUser() {
           z.string().length(0),
         ]),
       ),
-      // TODO: roles: string[] | null;
+      roles: z.array(z.string()),
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -46,11 +50,12 @@ function CreateUser() {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       username: null,
       password: null,
+      roles: [],
     },
   });
 
@@ -132,6 +137,17 @@ function CreateUser() {
               error={errors.password}
             />
           </div>
+          <div>
+            <Select<Inputs>
+              name="roles"
+              control={control}
+              options={roles.data?.map((role) => ({ label: t(`enum.role.${role}`), value: role })) ?? []}
+              multiple
+              label={t('user.roles')}
+              disabled={isPending}
+              error={errors.roles}
+            />
+          </div>
         </form>
         {import.meta.env.MODE === 'development' && (
           <DevTool control={control} />
@@ -146,6 +162,8 @@ function UpdateUser({ record }: { record: User }) {
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
+  const roles = useLookupType(EnumTypes.ROLE);
+
   const schema = useMemo(() => {
     return z.object({
       username: z
@@ -158,10 +176,11 @@ function UpdateUser({ record }: { record: User }) {
           z.string().length(0),
         ]),
       ),
-      // TODO: roles: string[] | null;
+      roles: z.array(z.string()),
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -169,11 +188,12 @@ function UpdateUser({ record }: { record: User }) {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       username: record.username,
       newPassword: null,
+      roles: record.roles,
     },
   });
 
@@ -256,6 +276,17 @@ function UpdateUser({ record }: { record: User }) {
               label={t('user.newPassword')}
               disabled={isPending}
               error={errors.newPassword}
+            />
+          </div>
+          <div>
+            <Select<Inputs>
+              name="roles"
+              control={control}
+              options={roles.data?.map((role) => ({label: t(`enum.role.${role}`), value: role})) ?? []}
+              multiple
+              label={t('table.invitees')}
+              disabled={isPending}
+              error={errors.roles}
             />
           </div>
         </form>
@@ -343,7 +374,7 @@ export default function ListUsers() {
     },
     {
       key: 'actions',
-      title: <span className="sr-only">{t('table.actions')}</span>,
+      title: <span className="sr-only">{t('user.actions')}</span>,
       render: (actions, record) => (
         <div className="flex space-x-4">
           {actions?.update && (

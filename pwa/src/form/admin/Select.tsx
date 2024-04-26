@@ -43,7 +43,13 @@ const Select = <TFieldValues extends FieldValues>({
 
   // Can't use register and it's onChange function, as it expects an event object (will fail accessing 'event.target.name')
   return (
-    <Combobox as={Fragment} value={field.value} onChange={(option) => field.onChange(option?.value ?? null)} nullable={nullable} multiple={multiple}>
+    <Combobox
+      as={Fragment}
+      value={multiple && !nullable ? (field.value ?? []) : field.value}
+      onChange={(optionOrOptions) => field.onChange(optionOrOptions)}
+      nullable={nullable}
+      multiple={multiple}
+    >
       {label && (
         <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">
           {label}
@@ -66,7 +72,13 @@ const Select = <TFieldValues extends FieldValues>({
             }
           )}
           onChange={(event) => setQuery(event.target.value)}
-          displayValue={(value) => options.find((option) => option.value === value)?.label ?? ''}
+          displayValue={(value) => {
+            if (multiple) {
+              return value.map((v) => options.find((option) => option.value === v)?.label).join(', ');
+            }
+            return options.find((option) => option.value === value)?.label ?? '';
+
+          }}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${props.id ?? props.name}-error` : undefined}
         />
@@ -88,7 +100,7 @@ const Select = <TFieldValues extends FieldValues>({
             {filteredOptions.map((option) => (
               <Combobox.Option
                 key={option.value}
-                value={option}
+                value={option.value}
                 className={({ active }) =>
                   clsx(
                     'relative cursor-default select-none py-2 pl-3 pr-9',

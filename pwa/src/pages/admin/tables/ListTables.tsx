@@ -17,21 +17,26 @@ import useDeleteTable from '#/api/admin/table/useDeleteTable';
 import useUpdateTable from '#/api/admin/table/useUpdateTable';
 import useCreateTable from '#/api/admin/table/useCreateTable';
 import { setErrorFromSymfonyViolations } from '#/utils/form';
+import useInvitees from '#/api/admin/invitee/useInvitees';
+import Select from '#/form/admin/Select.tsx';
 
 function CreateTable() {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
+  const invitees = useInvitees();
+
   const schema = useMemo(() => {
     return z.object({
       seats: z
         .number({ required_error: t('form.errors.required') })
         .min(0, { message: t('form.errors.required') }),
-      // TODO: inviteeIds: (Invitee['id'])[] | null;
+      inviteeIds: z.array(z.number()),
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -39,10 +44,11 @@ function CreateTable() {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       seats: null,
+      inviteeIds: [],
     },
   });
 
@@ -116,6 +122,17 @@ function CreateTable() {
               required
             />
           </div>
+          <div>
+            <Select<Inputs>
+              name="inviteeIds"
+              control={control}
+              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              multiple
+              label={t('table.invitees')}
+              disabled={isPending}
+              error={errors.inviteeIds}
+            />
+          </div>
         </form>
         {import.meta.env.MODE === 'development' && (
           <DevTool control={control} />
@@ -130,15 +147,18 @@ function UpdateTable({ record }: { record: TableModel }) {
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
+  const invitees = useInvitees();
+
   const schema = useMemo(() => {
     return z.object({
       seats: z
         .number({ required_error: t('form.errors.required') })
         .min(0, { message: t('form.errors.required') }),
-      // TODO: inviteeIds: (Invitee['id'])[] | null;
+      inviteeIds: z.array(z.number()),
     });
   }, [t]);
 
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
@@ -146,10 +166,11 @@ function UpdateTable({ record }: { record: TableModel }) {
     reset,
     setError,
     formState: { errors, isDirty, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
       seats: record.seats,
+      inviteeIds: record.inviteeIds,
     },
   });
 
@@ -224,6 +245,17 @@ function UpdateTable({ record }: { record: TableModel }) {
               disabled={isPending}
               error={errors.seats}
               required
+            />
+          </div>
+          <div>
+            <Select<Inputs>
+              name="inviteeIds"
+              control={control}
+              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              multiple
+              label={t('table.invitees')}
+              disabled={isPending}
+              error={errors.inviteeIds}
             />
           </div>
         </form>
