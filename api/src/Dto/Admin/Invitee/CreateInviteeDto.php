@@ -6,7 +6,7 @@ use App\Entity\Food;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class InviteeCreateDto
+readonly class CreateInviteeDto
 {
     public function __construct(
         #[Assert\NotBlank]

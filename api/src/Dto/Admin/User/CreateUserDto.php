@@ -6,7 +6,7 @@ use App\Entity\Role;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class UserCreateDto
+readonly class CreateUserDto
 {
     public function __construct(
         #[Assert\NotBlank]

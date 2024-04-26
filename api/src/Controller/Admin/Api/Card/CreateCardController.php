@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Admin\Card\CardCreateDto;
+use App\Dto\Admin\Card\CreateCardDto;
 use App\Dto\Admin\Card\CardShowDto;
 use App\Entity\Card;
 use App\Entity\Role;
@@ -36,12 +36,12 @@ class CreateCardController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CardCreateDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateCardDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns a card', content: new OA\JsonContent(ref: new Model(type: CardShowDto::class)))]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
     #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Card')]
-    public function __invoke(#[MapRequestPayload] CardCreateDto $dto): JsonResponse
+    public function __invoke(#[MapRequestPayload] CreateCardDto $dto): JsonResponse
     {
         $card = new Card();
         foreach ($dto->inviteeIds as $invitee) {

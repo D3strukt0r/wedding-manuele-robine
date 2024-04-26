@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Api\Invitee;
 
-use App\Dto\Admin\Invitee\InviteeCreateDto;
+use App\Dto\Admin\Invitee\CreateInviteeDto;
 use App\Dto\Admin\Invitee\InviteeShowDto;
 use App\Entity\Invitee;
 use App\Entity\Role;
@@ -37,12 +37,12 @@ class CreateInviteeController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: InviteeCreateDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateInviteeDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns an invitee', content: new OA\JsonContent(ref: new Model(type: InviteeShowDto::class)))]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
     #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/Invitee')]
-    public function __invoke(#[MapRequestPayload] InviteeCreateDto $dto): JsonResponse
+    public function __invoke(#[MapRequestPayload] CreateInviteeDto $dto): JsonResponse
     {
         $table = $dto->tableId ? $this->tableRepository->find($dto->tableId) : null;
         $card = $dto->cardId ? $this->cardRepository->find($dto->cardId) : null;

@@ -5,7 +5,7 @@ namespace App\Dto\Admin\Card;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class CardCreateDto
+readonly class UpdateCardDto
 {
     public function __construct(
         #[OA\Property(example: 1)]

@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Api\User;
 
 use App\Dto\Admin\User\UserShowDto;
-use App\Dto\Admin\User\UserUpdateDto;
+use App\Dto\Admin\User\UpdateUserDto;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -37,7 +37,7 @@ class UpdateUserController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UserUpdateDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateUserDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Return a user', content: new OA\JsonContent(ref: new Model(type: UserShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
@@ -45,7 +45,7 @@ class UpdateUserController extends AbstractController
     #[OA\Tag('Admin/User')]
     public function __invoke(
         #[MapEntity(id: 'user_id')] User $user,
-        #[MapRequestPayload] UserUpdateDto $dto
+        #[MapRequestPayload] UpdateUserDto $dto
     ): JsonResponse {
         if (
             $user->getUsername() !== $dto->username

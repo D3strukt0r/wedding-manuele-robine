@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Api\Table;
 
 use App\Dto\Admin\Table\TableShowDto;
-use App\Dto\Admin\Table\TableUpdateDto;
+use App\Dto\Admin\Table\UpdateTableDto;
 use App\Entity\Invitee;
 use App\Entity\Role;
 use App\Entity\Table;
@@ -38,7 +38,7 @@ class UpdateTableController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: TableUpdateDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateTableDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns a table', content: new OA\JsonContent(ref: new Model(type: TableShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
@@ -46,7 +46,7 @@ class UpdateTableController extends AbstractController
     #[OA\Tag('Admin/Table')]
     public function __invoke(
         #[MapEntity(id: 'table_id')] Table $table,
-        #[MapRequestPayload] TableUpdateDto $dto
+        #[MapRequestPayload] UpdateTableDto $dto
     ): JsonResponse {
         $table->update($dto);
 

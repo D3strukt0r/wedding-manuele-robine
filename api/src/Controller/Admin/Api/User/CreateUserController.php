@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin\Api\User;
 
-use App\Dto\Admin\User\UserCreateDto;
+use App\Dto\Admin\User\CreateUserDto;
 use App\Dto\Admin\User\UserShowDto;
 use App\Entity\Role;
 use App\Entity\User;
@@ -37,12 +37,12 @@ class CreateUserController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UserCreateDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CreateUserDto::class)))]
     #[OA\Response(response: Response::HTTP_CREATED, description: 'Returns a user', content: new OA\JsonContent(ref: new Model(type: UserShowDto::class)))]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
     #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/User')]
-    public function __invoke(#[MapRequestPayload] UserCreateDto $dto): JsonResponse
+    public function __invoke(#[MapRequestPayload] CreateUserDto $dto): JsonResponse
     {
         if ($this->userRepository->findOneBy(['username' => $dto->username])) {
             throw new UnprocessableEntityHttpException(sprintf('User with username %s already exists', $dto->username));

@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Api\Invitee;
 
 use App\Dto\Admin\Invitee\InviteeShowDto;
-use App\Dto\Admin\Invitee\InviteeUpdateDto;
+use App\Dto\Admin\Invitee\UpdateInviteeDto;
 use App\Entity\Invitee;
 use App\Entity\Role;
 use App\Repository\CardRepository;
@@ -39,7 +39,7 @@ class UpdateInviteeController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: InviteeUpdateDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateInviteeDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns an invitee', content: new OA\JsonContent(ref: new Model(type: InviteeShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
@@ -47,7 +47,7 @@ class UpdateInviteeController extends AbstractController
     #[OA\Tag('Admin/Invitee')]
     public function __invoke(
         #[MapEntity(id: 'invitee_id')] Invitee $invitee,
-        #[MapRequestPayload] InviteeUpdateDto $dto
+        #[MapRequestPayload] UpdateInviteeDto $dto
     ): JsonResponse {
         $table = $dto->tableId ? $this->tableRepository->find($dto->tableId) : null;
         $card = $dto->cardId ? $this->cardRepository->find($dto->cardId) : null;

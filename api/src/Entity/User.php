@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Dto\Admin\User\UserUpdateDto;
+use App\Dto\Admin\User\UpdateUserDto;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -95,7 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function update(UserUpdateDto $dto, ?UserPasswordHasherInterface $passwordHasher = null): void
+    public function update(UpdateUserDto $dto, ?UserPasswordHasherInterface $passwordHasher = null): void
     {
         $this->username = $dto->username;
         if ($passwordHasher && $dto->newPassword) {

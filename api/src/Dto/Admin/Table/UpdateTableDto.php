@@ -5,7 +5,7 @@ namespace App\Dto\Admin\Table;
 use OpenApi\Attributes as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class TableCreateDto
+readonly class UpdateTableDto
 {
     public function __construct(
         #[Assert\NotNull]

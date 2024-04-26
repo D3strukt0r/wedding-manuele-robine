@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Api\Card;
 
 use App\Dto\Admin\Card\CardShowDto;
-use App\Dto\Admin\Card\CardUpdateDto;
+use App\Dto\Admin\Card\UpdateCardDto;
 use App\Entity\Card;
 use App\Entity\Invitee;
 use App\Entity\Role;
@@ -40,7 +40,7 @@ class UpdateCardController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: CardUpdateDto::class)))]
+    #[OA\RequestBody(content: new OA\JsonContent(ref: new Model(type: UpdateCardDto::class)))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns a card', content: new OA\JsonContent(ref: new Model(type: CardShowDto::class)))]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Entity with ID not found')]
     #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Body is invalid')]
@@ -48,7 +48,7 @@ class UpdateCardController extends AbstractController
     #[OA\Tag('Admin/Card')]
     public function __invoke(
         #[MapEntity(id: 'card_id')] Card $card,
-        #[MapRequestPayload] CardUpdateDto $dto
+        #[MapRequestPayload] UpdateCardDto $dto
     ): JsonResponse {
         $user = $this->userRepository->find($dto->userLoginId);
         $card->setUserLogin($user);
