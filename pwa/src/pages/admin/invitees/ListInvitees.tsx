@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as z from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
 import Table, { TableProps } from '#/components/common/admin/Table';
@@ -16,17 +16,154 @@ import useInvitees from '#/api/admin/invitee/useInvitees';
 import useDeleteInvitee from '#/api/admin/invitee/useDeleteInvitee';
 import useUpdateInvitee from '#/api/admin/invitee/useUpdateInvitee';
 import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
+import useCreateInvitee from '#/api/admin/invitee/useCreateInvitee.ts';
+import Button from '#/form/admin/Button.tsx';
 
-type Inputs = {
-  firstname: string;
-  lastname: string;
-  email: string | null;
-  // TODO: willCome: boolean | null;
-  // TODO: food: string | null; // Enum
-  allergies: string | null;
-  // TODO: tableId: TableModel['id'] | null;
-  // TODO: cardId: Card['id'] | null;
-};
+function CreateInvitee() {
+  const { t } = useTranslation('app');
+  const [open, setOpen] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
+
+  const schema = useMemo(() => {
+    return z.object({
+      firstname: z
+        .string({ required_error: t('form.errors.required') })
+        .min(1, { message: t('form.errors.required') })
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      lastname: z
+        .string({ required_error: t('form.errors.required') })
+        .min(1, { message: t('form.errors.required') })
+        .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      email: z.nullable(
+        z.union([
+          z
+            .string()
+            .max(255, { message: t('form.errors.max', { max: 255 }) })
+            .email(t('form.errors.email')),
+          z.string().length(0),
+        ]),
+      ),
+      // TODO: willCome: z.nullable(z.boolean()),
+      // TODO: food: z.nullable(z.string()), // Enum
+      allergies: z.nullable(
+        z
+          .string()
+          .max(255, { message: t('form.errors.max', { max: 255 }) }),
+      ),
+      // TODO: tableId: TableModel['id'] | null;
+      // TODO: cardId: Card['id'] | null;
+    });
+  }, [t]);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid },
+  } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      firstname: null,
+      lastname: null,
+      email: null,
+      allergies: null,
+    },
+  });
+
+  const { mutate, isPending, isError, error } = useCreateInvitee({
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+    },
+  });
+
+  return (
+    <>
+      <Button
+        type="button"
+        onClick={() => setOpen(true)}
+      >
+        {t('invitee.actions.create.title')}
+      </Button>
+      <Modal
+        title={t('invitee.actions.create.title')}
+        initialFocus={saveButtonRef}
+        open={open}
+        setOpen={() => {
+          if (!isPending) setOpen(false);
+        }}
+        actions={[
+          {
+            text: t('actions.update'),
+            layout: 'primary',
+            loading: isPending,
+            disabled: !isDirty || !isValid,
+            ref: saveButtonRef,
+            onClick: () => {
+              handleSubmit(mutate)();
+            },
+          },
+          {
+            text: t('actions.cancel'),
+            layout: 'secondary',
+            disabled: isPending,
+            onClick: () => {
+              if (!isPending) setOpen(false);
+            },
+          },
+        ]}
+      >
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
+            <Alert
+              type="error"
+              title={t('form.errors.general')}
+              text={<p>{error.response.data.message}</p>}
+            />
+          ) : null}
+          <div>
+            <Input
+              {...register('firstname', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.firstname')}
+              disabled={isPending}
+              required
+            />
+            {errors.firstname?.message && <span>{errors.firstname.message}</span>}
+          </div>
+          <div>
+            <Input
+              {...register('lastname', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.lastname')}
+              disabled={isPending}
+              required
+            />
+            {errors.lastname?.message && <span>{errors.lastname.message}</span>}
+          </div>
+          <div>
+            <Input
+              {...register('email', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.email')}
+              disabled={isPending}
+            />
+            {errors.email?.message && <span>{errors.email.message}</span>}
+          </div>
+          <div>
+            <Input
+              {...register('allergies', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('invitee.allergies')}
+              disabled={isPending}
+            />
+            {errors.allergies?.message && <span>{errors.allergies.message}</span>}
+          </div>
+        </form>
+        {import.meta.env.MODE === 'development' && (
+          <DevTool control={control} />
+        )}
+      </Modal>
+    </>
+  );
+}
 
 function UpdateInvitee({ record }: { record: Invitee }) {
   const { t } = useTranslation('app');
@@ -53,25 +190,24 @@ function UpdateInvitee({ record }: { record: Invitee }) {
         ]),
       ),
       // TODO: willCome: z.nullable(z.boolean()),
-      // TODO: food: z.nullable(z.string()),
+      // TODO: food: z.nullable(z.string()), // Enum
       allergies: z.nullable(
         z
           .string()
           .max(255, { message: t('form.errors.max', { max: 255 }) }),
       ),
-      // TODO: tableId
-      // TODO: cardId
+      // TODO: tableId: TableModel['id'] | null;
+      // TODO: cardId: Card['id'] | null;
     });
   }, [t]);
-
-  const updateInvitee = useUpdateInvitee(record.id);
 
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors, isDirty, isValid },
-  } = useForm<Inputs>({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       firstname: record.firstname,
@@ -80,13 +216,13 @@ function UpdateInvitee({ record }: { record: Invitee }) {
       allergies: record.allergies,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
-    updateInvitee.mutate(data, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
-  }, [updateInvitee, setOpen]);
+
+  const { mutate, isPending, isError, error } = useUpdateInvitee(record.id, {
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+    },
+  });
 
   return (
     <>
@@ -103,35 +239,35 @@ function UpdateInvitee({ record }: { record: Invitee }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!updateInvitee.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading: updateInvitee.isPending,
+            loading: isPending,
             disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
-              handleSubmit(onSubmit)();
+              handleSubmit(mutate)();
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: updateInvitee.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!updateInvitee.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {updateInvitee.isError ? (
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{updateInvitee.error.response.data.message}</p>}
+              text={<p>{error.response.data.message}</p>}
             />
           ) : null}
           <div>
@@ -139,7 +275,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('firstname', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.firstname')}
               placeholder={record.firstname}
-              disabled={updateInvitee.isPending}
+              disabled={isPending}
               required
             />
             {errors.firstname?.message && <span>{errors.firstname.message}</span>}
@@ -149,7 +285,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('lastname', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.lastname')}
               placeholder={record.lastname}
-              disabled={updateInvitee.isPending}
+              disabled={isPending}
               required
             />
             {errors.lastname?.message && <span>{errors.lastname.message}</span>}
@@ -159,7 +295,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('email', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.email')}
               placeholder={record.email || undefined}
-              disabled={updateInvitee.isPending}
+              disabled={isPending}
             />
             {errors.email?.message && <span>{errors.email.message}</span>}
           </div>
@@ -168,7 +304,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               {...register('allergies', { setValueAs: (value) => value === '' ? null : value })}
               label={t('invitee.allergies')}
               placeholder={record.allergies || undefined}
-              disabled={updateInvitee.isPending}
+              disabled={isPending}
             />
             {errors.allergies?.message && <span>{errors.allergies.message}</span>}
           </div>
@@ -181,12 +317,12 @@ function UpdateInvitee({ record }: { record: Invitee }) {
   );
 }
 
-function DeleteInvitee({ record }: { record: Invitee }) {
+function DeleteInvitee({ id, name }: { id: Invitee['id'], name: ReactNode }) {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteInvitee = useDeleteInvitee(record.id);
+  const { mutate, isPending } = useDeleteInvitee(id);
 
   return (
     <>
@@ -196,7 +332,7 @@ function DeleteInvitee({ record }: { record: Invitee }) {
         className="text-red-600 hover:text-red-900"
       >
         {t('actions.delete')}
-        <span className="sr-only">, {record.firstname} {record.lastname}</span>
+        <span className="sr-only">, {name}</span>
       </button>
       <Modal
         type="warning"
@@ -204,16 +340,16 @@ function DeleteInvitee({ record }: { record: Invitee }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!deleteInvitee.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading: deleteInvitee.isPending,
+            loading: isPending,
             ref: saveButtonRef,
             onClick: () => {
-              deleteInvitee.mutate(undefined, {
+              mutate(undefined, {
                 onSuccess: () => {
                   setOpen(false);
                 },
@@ -223,15 +359,15 @@ function DeleteInvitee({ record }: { record: Invitee }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: deleteInvitee.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!deleteInvitee.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
         <p className="text-sm text-gray-500">
-          {t('invitee.actions.delete.text', { firstname: record.firstname, lastname: record.lastname })}
+          {t('invitee.actions.delete.text', { name })}
         </p>
       </Modal>
     </>
@@ -272,7 +408,7 @@ export default function ListInvitees() {
             <UpdateInvitee record={record} />
           )}
           {actions?.delete && (
-            <DeleteInvitee record={record} />
+            <DeleteInvitee id={record.id} name={`${record.firstname} ${record.lastname}`} />
           )}
         </div>
       ),
@@ -281,7 +417,12 @@ export default function ListInvitees() {
 
   if (invitees.data && tables.data && cards.data && food.data) {
     return (
-      <Table rowKey="id" columns={columns} dataSource={invitees.data.records} />
+      <>
+        <div className="flex justify-end mb-2">
+          <CreateInvitee />
+        </div>
+        <Table rowKey="id" columns={columns} dataSource={invitees.data.records} />
+      </>
     );
   }
 

@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as z from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
 import Table, { TableProps } from '#/components/common/admin/Table';
@@ -14,11 +14,91 @@ import useDeleteCard from '#/api/admin/cards/useDeleteCard';
 import useUpdateCard from '#/api/admin/cards/useUpdateCard';
 import useInvitees from '#/api/admin/invitee/useInvitees';
 import useUsers from '#/api/admin/user/useUsers';
+import Button from '#/form/admin/Button.tsx';
+import useCreateCard from '#/api/admin/cards/useCreateCard.ts';
 
-type Inputs = {
-  // TODO: userLoginId: User['id'];
-  // TODO: inviteeIds: (Invitee['id'])[]
-};
+function CreateCard() {
+  const { t } = useTranslation('app');
+  const [open, setOpen] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
+
+  const schema = useMemo(() => {
+    return z.object({
+      // TODO: userLoginId: User['id'] | null;
+      // TODO: inviteeIds: (Invitee['id'])[] | null;
+    });
+  }, [t]);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid },
+  } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {},
+  });
+
+  const { mutate, isPending, isError, error } = useCreateCard({
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+    },
+  });
+
+  return (
+    <>
+      <Button
+        type="button"
+        onClick={() => setOpen(true)}
+      >
+        {t('card.actions.create.title')}
+      </Button>
+      <Modal
+        title={t('card.actions.create.title')}
+        initialFocus={saveButtonRef}
+        open={open}
+        setOpen={() => {
+          if (!isPending) setOpen(false);
+        }}
+        actions={[
+          {
+            text: t('actions.create'),
+            layout: 'primary',
+            loading: isPending,
+            disabled: !isDirty || !isValid,
+            ref: saveButtonRef,
+            onClick: () => {
+              handleSubmit(mutate)();
+            },
+          },
+          {
+            text: t('actions.cancel'),
+            layout: 'secondary',
+            disabled: isPending,
+            onClick: () => {
+              if (!isPending) setOpen(false);
+            },
+          },
+        ]}
+      >
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
+            <Alert
+              type="error"
+              title={t('form.errors.general')}
+              text={<p>{error.response.data.message}</p>}
+            />
+          ) : null}
+        </form>
+        {import.meta.env.MODE === 'development' && (
+          <DevTool control={control} />
+        )}
+      </Modal>
+    </>
+  );
+}
 
 function UpdateCard({ record }: { record: Card }) {
   const { t } = useTranslation('app');
@@ -27,29 +107,28 @@ function UpdateCard({ record }: { record: Card }) {
 
   const schema = useMemo(() => {
     return z.object({
-      // TODO: userLoginId
-      // TODO: inviteeIds
+      // TODO: userLoginId: User['id'] | null;
+      // TODO: inviteeIds: (Invitee['id'])[] | null;
     });
   }, [t]);
-
-  const updateCard = useUpdateCard(record.id);
 
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors, isDirty, isValid },
-  } = useForm<Inputs>({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {},
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
-    updateCard.mutate(data, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
-  }, [updateCard, setOpen]);
+
+  const { mutate, isPending, isError, error } = useUpdateCard(record.id, {
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+    },
+  });
 
   return (
     <>
@@ -66,35 +145,35 @@ function UpdateCard({ record }: { record: Card }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!updateCard.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading: updateCard.isPending,
+            loading: isPending,
             disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
-              handleSubmit(onSubmit)();
+              handleSubmit(mutate)();
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: updateCard.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!updateCard.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {updateCard.isError ? (
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{updateCard.error.response.data.message}</p>}
+              text={<p>{error.response.data.message}</p>}
             />
           ) : null}
         </form>
@@ -106,12 +185,12 @@ function UpdateCard({ record }: { record: Card }) {
   );
 }
 
-function DeleteCard({ record }: { record: Card }) {
+function DeleteCard({ id, name }: { id: Card['id'], name: ReactNode }) {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteCard = useDeleteCard(record.id);
+  const { mutate, isPending } = useDeleteCard(id);
 
   return (
     <>
@@ -121,7 +200,7 @@ function DeleteCard({ record }: { record: Card }) {
         className="text-red-600 hover:text-red-900"
       >
         {t('actions.delete')}
-        <span className="sr-only">, {record.id}</span>
+        <span className="sr-only">, {name}</span>
       </button>
       <Modal
         type="warning"
@@ -129,16 +208,16 @@ function DeleteCard({ record }: { record: Card }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!deleteCard.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading: deleteCard.isPending,
+            loading: isPending,
             ref: saveButtonRef,
             onClick: () => {
-              deleteCard.mutate(undefined, {
+              mutate(undefined, {
                 onSuccess: () => {
                   setOpen(false);
                 },
@@ -148,15 +227,15 @@ function DeleteCard({ record }: { record: Card }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: deleteCard.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!deleteCard.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
         <p className="text-sm text-gray-500">
-          {t('card.actions.delete.text', { id: record.id })}
+          {t('card.actions.delete.text', { name })}
         </p>
       </Modal>
     </>
@@ -184,7 +263,7 @@ export default function ListInvitees() {
             <UpdateCard record={record} />
           )}
           {actions?.delete && (
-            <DeleteCard record={record} />
+            <DeleteCard id={record.id} name={record.id} />
           )}
         </div>
       ),
@@ -193,7 +272,12 @@ export default function ListInvitees() {
 
   if (cards.data && invitees.data && users.data) {
     return (
-      <Table rowKey="id" columns={columns} dataSource={cards.data.records} />
+      <>
+        <div className="flex justify-end mb-2">
+          <CreateCard />
+        </div>
+        <Table rowKey="id" columns={columns} dataSource={cards.data.records} />
+      </>
     );
   }
 

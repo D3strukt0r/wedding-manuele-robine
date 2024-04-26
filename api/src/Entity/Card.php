@@ -20,7 +20,7 @@ class Card
     private Collection $invitees;
 
     #[ORM\OneToOne(inversedBy: 'card', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $userLogin = null;
 
     public function __construct()

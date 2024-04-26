@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as z from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
 import Table, { TableProps } from '#/components/common/admin/Table';
@@ -9,17 +9,126 @@ import BigSpinner from '#/layout/BigSpinner';
 import Modal from '#/components/common/admin/Modal';
 import Alert from '#/components/common/admin/Alert';
 import Input from '#/form/admin/Input';
+import Button from '#/form/admin/Button';
 import { User } from '#/components/types';
 import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
 import useUsers from '#/api/admin/user/useUsers';
 import useDeleteUser from '#/api/admin/user/useDeleteUser';
 import useUpdateUser from '#/api/admin/user/useUpdateUser';
+import useCreateUser from '#/api/admin/user/useCreateUser';
 
-type Inputs = {
-  username: string;
-  newPassword: string | null;
-  // TODO: roles: string[];
-};
+function CreateUser() {
+  const { t } = useTranslation('app');
+  const [open, setOpen] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
+
+  const schema = useMemo(() => {
+    return z.object({
+      username: z
+        .string({ required_error: t('form.errors.required') })
+        .min(1, { message: t('form.errors.required') })
+        .max(180, { message: t('form.errors.max', { max: 180 }) }),
+      password: z.nullable(
+        z.union([
+          z.string(),
+          z.string().length(0),
+        ]),
+      ),
+      // TODO: roles: string[] | null;
+    });
+  }, [t]);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid },
+  } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      username: null,
+      password: null,
+    },
+  });
+
+  const { mutate, isPending, isError, error } = useCreateUser({
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+      // TODO: Notification about possibly new generated password
+    },
+  });
+
+  return (
+    <>
+      <Button
+        type="button"
+        onClick={() => setOpen(true)}
+      >
+        {t('user.actions.create.title')}
+      </Button>
+      <Modal
+        title={t('user.actions.create.title')}
+        initialFocus={saveButtonRef}
+        open={open}
+        setOpen={() => {
+          if (!isPending) setOpen(false);
+        }}
+        actions={[
+          {
+            text: t('actions.create'),
+            layout: 'primary',
+            loading: isPending,
+            disabled: !isDirty || !isValid,
+            ref: saveButtonRef,
+            onClick: () => {
+              handleSubmit(mutate)();
+            },
+          },
+          {
+            text: t('actions.cancel'),
+            layout: 'secondary',
+            disabled: isPending,
+            onClick: () => {
+              if (!isPending) setOpen(false);
+            },
+          },
+        ]}
+      >
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
+            <Alert
+              type="error"
+              title={t('form.errors.general')}
+              text={<p>{error.response.data.message}</p>}
+            />
+          ) : null}
+          <div>
+            <Input
+              {...register('username', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('user.username')}
+              disabled={isPending}
+              required
+            />
+            {errors.username?.message && <span>{errors.username.message}</span>}
+          </div>
+          <div>
+            <Input
+              {...register('password', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('user.password')}
+              disabled={isPending}
+            />
+            {errors.password?.message && <span>{errors.password.message}</span>}
+          </div>
+        </form>
+        {import.meta.env.MODE === 'development' && (
+          <DevTool control={control} />
+        )}
+      </Modal>
+    </>
+  );
+}
 
 function UpdateUser({ record }: { record: User }) {
   const { t } = useTranslation('app');
@@ -38,32 +147,31 @@ function UpdateUser({ record }: { record: User }) {
           z.string().length(0),
         ]),
       ),
-      // TODO: roles
+      // TODO: roles: string[] | null;
     });
   }, [t]);
-
-  const updateUser = useUpdateUser(record.id);
 
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors, isDirty, isValid },
-  } = useForm<Inputs>({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       username: record.username,
       newPassword: null,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
-    updateUser.mutate(data, {
-      onSuccess: () => {
-        setOpen(false);
-        // TODO: Notification about possibly new generated password
-      },
-    });
-  }, [updateUser, setOpen]);
+
+  const { mutate, isPending, isError, error } = useUpdateUser(record.id, {
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+      // TODO: Notification about possibly new generated password
+    },
+  });
 
   return (
     <>
@@ -80,35 +188,35 @@ function UpdateUser({ record }: { record: User }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!updateUser.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading: updateUser.isPending,
+            loading: isPending,
             disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
-              handleSubmit(onSubmit)();
+              handleSubmit(mutate)();
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: updateUser.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!updateUser.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {updateUser.isError ? (
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{updateUser.error.response.data.message}</p>}
+              text={<p>{error.response.data.message}</p>}
             />
           ) : null}
           <div>
@@ -116,7 +224,7 @@ function UpdateUser({ record }: { record: User }) {
               {...register('username', { setValueAs: (value) => value === '' ? null : value })}
               label={t('user.username')}
               placeholder={record.username}
-              disabled={updateUser.isPending}
+              disabled={isPending}
               required
             />
             {errors.username?.message && <span>{errors.username.message}</span>}
@@ -125,7 +233,7 @@ function UpdateUser({ record }: { record: User }) {
             <Input
               {...register('newPassword', { setValueAs: (value) => value === '' ? null : value })}
               label={t('user.newPassword')}
-              disabled={updateUser.isPending}
+              disabled={isPending}
             />
             {errors.newPassword?.message && <span>{errors.newPassword.message}</span>}
           </div>
@@ -138,12 +246,12 @@ function UpdateUser({ record }: { record: User }) {
   );
 }
 
-function DeleteUser({ record }: { record: User }) {
+function DeleteUser({ id, name }: { id: User['id'], name: ReactNode }) {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteUser = useDeleteUser(record.id);
+  const { mutate, isPending } = useDeleteUser(id);
 
   return (
     <>
@@ -153,7 +261,7 @@ function DeleteUser({ record }: { record: User }) {
         className="text-red-600 hover:text-red-900"
       >
         {t('actions.delete')}
-        <span className="sr-only">, {record.username}</span>
+        <span className="sr-only">, {name}</span>
       </button>
       <Modal
         type="warning"
@@ -161,16 +269,16 @@ function DeleteUser({ record }: { record: User }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!deleteUser.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading: deleteUser.isPending,
+            loading: isPending,
             ref: saveButtonRef,
             onClick: () => {
-              deleteUser.mutate(undefined, {
+              mutate(undefined, {
                 onSuccess: async () => {
                   setOpen(false);
                 },
@@ -180,15 +288,15 @@ function DeleteUser({ record }: { record: User }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: deleteUser.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!deleteUser.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
         <p className="text-sm text-gray-500">
-          {t('user.actions.delete.text', { username: record.username })}
+          {t('user.actions.delete.text', { name })}
         </p>
       </Modal>
     </>
@@ -221,7 +329,7 @@ export default function ListUsers() {
             <UpdateUser record={record} />
           )}
           {actions?.delete && (
-            <DeleteUser record={record} />
+            <DeleteUser id={record.id} name={record.username} />
           )}
         </div>
       ),
@@ -230,7 +338,12 @@ export default function ListUsers() {
 
   if (users.data && roles.data) {
     return (
-      <Table rowKey="id" columns={columns} dataSource={users.data.records} />
+      <>
+        <div className="flex justify-end mb-2">
+          <CreateUser />
+        </div>
+        <Table rowKey="id" columns={columns} dataSource={users.data.records} />
+      </>
     );
   }
 

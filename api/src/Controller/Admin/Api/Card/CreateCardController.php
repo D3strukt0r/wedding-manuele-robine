@@ -47,8 +47,10 @@ class CreateCardController extends AbstractController
         foreach ($dto->inviteeIds as $invitee) {
             $card->addInvitee($this->inviteeRepository->find($invitee));
         }
-        $user = $this->userRepository->find($dto->userLoginId);
-        $card->setUserLogin($user);
+        if ($dto->userLoginId !== null) {
+            $user = $this->userRepository->find($dto->userLoginId);
+            $card->setUserLogin($user);
+        }
         $this->cardRepository->save($card, true);
 
         return $this->json(new CardShowDto($card), Response::HTTP_CREATED);

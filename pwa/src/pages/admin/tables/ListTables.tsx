@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as z from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
 import Table, { TableProps } from '#/components/common/admin/Table';
@@ -9,16 +9,110 @@ import BigSpinner from '#/layout/BigSpinner';
 import Modal from '#/components/common/admin/Modal';
 import Alert from '#/components/common/admin/Alert';
 import Input from '#/form/admin/Input';
+import Button from '#/form/admin/Button.tsx';
 import { Invitee, Table as TableModel } from '#/components/types';
 import useUsers from '#/api/admin/user/useUsers';
 import useTables from '#/api/admin/table/useTables';
 import useDeleteTable from '#/api/admin/table/useDeleteTable';
 import useUpdateTable from '#/api/admin/table/useUpdateTable';
+import useCreateTable from '#/api/admin/table/useCreateTable.ts';
 
-type Inputs = {
-  seats: number;
-  // TODO: inviteeIds: (Invitee['id'])[];
-};
+function CreateTable() {
+  const { t } = useTranslation('app');
+  const [open, setOpen] = useState(false);
+  const saveButtonRef = useRef<null | HTMLButtonElement>(null);
+
+  const schema = useMemo(() => {
+    return z.object({
+      seats: z
+        .number({ required_error: t('form.errors.required') })
+        .min(0, { message: t('form.errors.required') }),
+      // TODO: inviteeIds: (Invitee['id'])[] | null;
+    });
+  }, [t]);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty, isValid },
+  } = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      seats: null,
+    },
+  });
+
+  const { mutate, isPending, isError, error } = useCreateTable({
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+    },
+  });
+
+  return (
+    <>
+      <Button
+        type="button"
+        onClick={() => setOpen(true)}
+      >
+        {t('table.actions.create.title')}
+      </Button>
+      <Modal
+        title={t('table.actions.create.title')}
+        initialFocus={saveButtonRef}
+        open={open}
+        setOpen={() => {
+          if (!isPending) setOpen(false);
+        }}
+        actions={[
+          {
+            text: t('actions.create'),
+            layout: 'primary',
+            loading: isPending,
+            disabled: !isDirty || !isValid,
+            ref: saveButtonRef,
+            onClick: () => {
+              handleSubmit(mutate)();
+            },
+          },
+          {
+            text: t('actions.cancel'),
+            layout: 'secondary',
+            disabled: isPending,
+            onClick: () => {
+              if (!isPending) setOpen(false);
+            },
+          },
+        ]}
+      >
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
+            <Alert
+              type="error"
+              title={t('form.errors.general')}
+              text={<p>{error.response.data.message}</p>}
+            />
+          ) : null}
+          <div>
+            <Input
+              {...register('seats', { valueAsNumber: true })}
+              type="number"
+              label={t('table.seats')}
+              disabled={isPending}
+              required
+            />
+            {errors.seats?.message && <span>{errors.seats.message}</span>}
+          </div>
+        </form>
+        {import.meta.env.MODE === 'development' && (
+          <DevTool control={control} />
+        )}
+      </Modal>
+    </>
+  );
+}
 
 function UpdateTable({ record }: { record: TableModel }) {
   const { t } = useTranslation('app');
@@ -30,30 +124,29 @@ function UpdateTable({ record }: { record: TableModel }) {
       seats: z
         .number({ required_error: t('form.errors.required') })
         .min(0, { message: t('form.errors.required') }),
-      // TODO: inviteeIds
+      // TODO: inviteeIds: (Invitee['id'])[] | null;
     });
   }, [t]);
-
-  const updateTable = useUpdateTable(record.id);
 
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors, isDirty, isValid },
-  } = useForm<Inputs>({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       seats: record.seats,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback((data) => {
-    updateTable.mutate(data, {
-      onSuccess: () => {
-        setOpen(false);
-      },
-    });
-  }, [updateTable, setOpen]);
+
+  const { mutate, isPending, isError, error } = useUpdateTable(record.id, {
+    onSuccess: () => {
+      setOpen(false);
+      reset();
+    },
+  });
 
   return (
     <>
@@ -70,35 +163,35 @@ function UpdateTable({ record }: { record: TableModel }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!updateTable.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.update'),
             layout: 'primary',
-            loading: updateTable.isPending,
+            loading: isPending,
             disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
-              handleSubmit(onSubmit)();
+              handleSubmit(mutate)();
             },
           },
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: updateTable.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!updateTable.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {updateTable.isError ? (
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{updateTable.error.response.data.message}</p>}
+              text={<p>{error.response.data.message}</p>}
             />
           ) : null}
           <div>
@@ -107,7 +200,7 @@ function UpdateTable({ record }: { record: TableModel }) {
               type="number"
               label={t('table.seats')}
               placeholder={`${record.seats}`}
-              disabled={updateTable.isPending}
+              disabled={isPending}
               required
             />
             {errors.seats?.message && <span>{errors.seats.message}</span>}
@@ -121,12 +214,12 @@ function UpdateTable({ record }: { record: TableModel }) {
   );
 }
 
-function DeleteTable({ record }: { record: TableModel }) {
+function DeleteTable({ id, name }: { id: TableModel['id'], name: ReactNode }) {
   const { t } = useTranslation('app');
   const [open, setOpen] = useState(false);
   const saveButtonRef = useRef<null | HTMLButtonElement>(null);
 
-  const deleteTable = useDeleteTable(record.id);
+  const { mutate, isPending } = useDeleteTable(id);
 
   return (
     <>
@@ -136,7 +229,7 @@ function DeleteTable({ record }: { record: TableModel }) {
         className="text-red-600 hover:text-red-900"
       >
         {t('actions.delete')}
-        <span className="sr-only">, {record.id}</span>
+        <span className="sr-only">, {name}</span>
       </button>
       <Modal
         type="warning"
@@ -144,16 +237,16 @@ function DeleteTable({ record }: { record: TableModel }) {
         initialFocus={saveButtonRef}
         open={open}
         setOpen={() => {
-          if (!deleteTable.isPending) setOpen(false);
+          if (!isPending) setOpen(false);
         }}
         actions={[
           {
             text: t('actions.delete'),
             layout: 'danger',
-            loading: deleteTable.isPending,
+            loading: isPending,
             ref: saveButtonRef,
             onClick: () => {
-              deleteTable.mutate(undefined, {
+              mutate(undefined, {
                 onSuccess: async () => {
                   setOpen(false);
                 },
@@ -163,15 +256,15 @@ function DeleteTable({ record }: { record: TableModel }) {
           {
             text: t('actions.cancel'),
             layout: 'secondary',
-            disabled: deleteTable.isPending,
+            disabled: isPending,
             onClick: () => {
-              if (!deleteTable.isPending) setOpen(false);
+              if (!isPending) setOpen(false);
             },
           },
         ]}
       >
         <p className="text-sm text-gray-500">
-          {t('table.actions.delete.text', { id: record.id })}
+          {t('table.actions.delete.text', { name })}
         </p>
       </Modal>
     </>
@@ -198,7 +291,7 @@ export default function ListTables() {
             <UpdateTable record={record} />
           )}
           {actions?.delete && (
-            <DeleteTable record={record} />
+            <DeleteTable id={record.id} name={record.id} />
           )}
         </div>
       ),
@@ -207,7 +300,12 @@ export default function ListTables() {
 
   if (tables.data && users.data) {
     return (
-      <Table rowKey="id" columns={columns} dataSource={tables.data.records} />
+      <>
+        <div className="flex justify-end mb-2">
+          <CreateTable />
+        </div>
+        <Table rowKey="id" columns={columns} dataSource={tables.data.records} />
+      </>
     );
   }
 

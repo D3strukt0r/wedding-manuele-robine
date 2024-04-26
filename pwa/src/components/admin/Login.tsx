@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { useCallback, useContext, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import * as z from 'zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
 import AuthenticationContext from '#/context/AuthenticationContext';
@@ -9,11 +9,6 @@ import Input from '#/form/admin/Input';
 import Button from '#/form/admin/Button';
 import Alert from '#/components/common/admin/Alert';
 import useLogin from '#/api/common/authentication/useLogin';
-
-type Inputs = {
-  username: string;
-  password: string;
-};
 
 export default function Login() {
   const { t } = useTranslation('app');
@@ -31,27 +26,26 @@ export default function Login() {
     });
   }, [t]);
 
-  const login = useLogin();
-
   const {
     register,
     control,
     handleSubmit,
+    reset,
     formState: { errors, isDirty, isValid },
-  } = useForm<Inputs>({
+  } = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       username: null,
       password: null,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    login.mutate(data, {
-      onSuccess: (response) => {
-        updateAuthentication(response.token);
-      },
-    });
-  }, [login]);
+
+  const { mutate, isPending, isError, error } = useLogin({
+    onSuccess: (response) => {
+      updateAuthentication(response.token);
+      reset();
+    },
+  });
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -62,19 +56,19 @@ export default function Login() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {login.isError ? (
+        <form onSubmit={handleSubmit(mutate)} className="space-y-6">
+          {isError ? (
             <Alert
               type="error"
               title={t('form.errors.general')}
-              text={<p>{login.error.response.data.message}</p>}
+              text={<p>{error.response.data.message}</p>}
             />
           ) : null}
           <div>
             <Input
               {...register('username', { setValueAs: (value) => value === '' ? null : value })}
               label={t('admin.login.username')}
-              disabled={login.isPending}
+              disabled={isPending}
               autoComplete="username"
               required
             />
@@ -93,13 +87,13 @@ export default function Login() {
               //     </a>
               //   </div>
               // )}
-              disabled={login.isPending}
+              disabled={isPending}
               autoComplete="current-password"
               required
             />
             {errors.password?.message && <span>{errors.password.message}</span>}
           </div>
-          <Button type="submit" loading={login.isPending} disabled={!isDirty || !isValid} className="w-full">
+          <Button type="submit" loading={isPending} disabled={!isDirty || !isValid} className="w-full">
             {t('admin.login.login')}
           </Button>
         </form>
