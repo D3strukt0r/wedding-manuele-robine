@@ -50,10 +50,13 @@ function UpdateUser({ record }: { record: User }) {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: record,
+    defaultValues: {
+      username: record.username,
+      newPassword: null,
+    },
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     await updateUser.mutateAsync(data);
@@ -84,6 +87,7 @@ function UpdateUser({ record }: { record: User }) {
             text: t('actions.update'),
             layout: 'primary',
             loading: updateUser.isPending,
+            disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();

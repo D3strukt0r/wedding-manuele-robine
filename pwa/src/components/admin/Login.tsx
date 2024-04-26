@@ -41,9 +41,13 @@ export default function Login() {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      username: null,
+      password: null,
+    },
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     login.mutate(data);
@@ -68,7 +72,7 @@ export default function Login() {
           ) : null}
           <div>
             <Input
-              {...register('username')}
+              {...register('username', { setValueAs: (value) => value === '' ? null : value })}
               label={t('admin.login.username')}
               disabled={login.isPending}
               autoComplete="username"
@@ -79,7 +83,7 @@ export default function Login() {
 
           <div>
             <Input
-              {...register('password')}
+              {...register('password', { setValueAs: (value) => value === '' ? null : value })}
               type="password"
               label={t('admin.login.password')}
               // extra={(
@@ -95,7 +99,7 @@ export default function Login() {
             />
             {errors.password?.message && <span>{errors.password.message}</span>}
           </div>
-          <Button type="submit" loading={login.isPending} className="w-full">
+          <Button type="submit" loading={login.isPending} disabled={!isDirty || !isValid} className="w-full">
             {t('admin.login.login')}
           </Button>
         </form>

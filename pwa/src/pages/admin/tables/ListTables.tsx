@@ -42,10 +42,12 @@ function UpdateTable({ record }: { record: TableModel }) {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: record,
+    defaultValues: {
+      seats: record.seats,
+    },
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     await updateTable.mutateAsync(data);
@@ -75,6 +77,7 @@ function UpdateTable({ record }: { record: TableModel }) {
             text: t('actions.update'),
             layout: 'primary',
             loading: updateTable.isPending,
+            disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();

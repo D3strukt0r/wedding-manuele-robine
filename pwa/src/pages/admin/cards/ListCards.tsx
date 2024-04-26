@@ -40,10 +40,10 @@ function UpdateCard({ record }: { record: Card }) {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: record,
+    defaultValues: {},
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     await updateCard.mutateAsync(data);
@@ -73,6 +73,7 @@ function UpdateCard({ record }: { record: Card }) {
             text: t('actions.update'),
             layout: 'primary',
             loading: updateCard.isPending,
+            disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();

@@ -72,10 +72,15 @@ function UpdateInvitee({ record }: { record: Invitee }) {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: record,
+    defaultValues: {
+      firstname: record.firstname,
+      lastname: record.lastname,
+      email: record.email,
+      allergies: record.allergies,
+    },
   });
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     await updateInvitee.mutateAsync(data);
@@ -105,6 +110,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
             text: t('actions.update'),
             layout: 'primary',
             loading: updateInvitee.isPending,
+            disabled: !isDirty || !isValid,
             ref: saveButtonRef,
             onClick: () => {
               handleSubmit(onSubmit)();
