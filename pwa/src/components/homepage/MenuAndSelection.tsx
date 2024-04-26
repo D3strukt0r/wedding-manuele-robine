@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useContext, useMemo, useRef } from 'react';
 import QrScanner from 'qr-scanner';
-import { AxiosError } from 'axios';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -17,11 +16,11 @@ import Input from '#/form/Input';
 import Checkbox from '#/form/Checkbox';
 import RadioGroup from '#/form/RadioGroup';
 import Button from '#/form/Button';
-import { api } from '#/components/api';
 import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
 import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
 import useInviteesOnCard from '#/api/invited/useInviteesOnCard';
 import useUpdateInviteesOnCard from '#/api/invited/useUpdateInviteesOnCard';
+import useLogin from '#/api/common/authentication/useLogin.ts';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -41,12 +40,22 @@ interface Props {
 }
 export default function ManuAndSelection({ id }: Props) {
   const { t } = useTranslation('app');
-
   const qrRef = useRef<CountdownHandle>(null);
-
   const [authentication, updateAuthentication] = useContext(AuthenticationContext);
 
-  const handleScan = useCallback(async (result: QrScanner.ScanResult) => {
+  const { mutate } = useLogin({
+    onSuccess: (response) => {
+      updateAuthentication(response.token);
+    },
+    onError: (e) => {
+      qrRef.current?.showMessage(
+        'error',
+        t('homepage.qrScanner.loginFailed', { errorMessage: e.response?.data?.message }),
+      );
+    },
+  });
+
+  const handleScan = useCallback((result: QrScanner.ScanResult) => {
     if (!isValidHttpUrl(result.data)) {
       qrRef.current?.showMessage('error', t('homepage.qrScanner.invalid'));
       return;
@@ -62,26 +71,8 @@ export default function ManuAndSelection({ id }: Props) {
     }
 
     qrRef.current?.showMessage('success', t('homepage.qrScanner.loggingIn'));
-    try {
-      const response = await api.common.login({ username, password });
-      updateAuthentication(response.token);
-    } catch (e) {
-      // check if type is AxiosError
-      if (e instanceof AxiosError) {
-        qrRef.current?.showMessage(
-          'error',
-          t('homepage.qrScanner.loginFailed', {
-            errorMessage: e.response?.data?.message,
-          }),
-        );
-      } else {
-        qrRef.current?.showMessage(
-          'error',
-          t('homepage.qrScanner.loginFailed', { errorMessage: e }),
-        );
-      }
-    }
-  }, [qrRef, updateAuthentication, t]);
+    mutate({ username, password });
+  }, [qrRef, mutate, t]);
 
   return (
     <AlignedCard

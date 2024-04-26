@@ -20,6 +20,7 @@ import useCreateInvitee from '#/api/admin/invitee/useCreateInvitee';
 import Button from '#/form/admin/Button';
 import { setErrorFromSymfonyViolations } from '#/utils/form';
 import Select from '#/form/admin/Select';
+import Checkbox from '#/form/admin/Checkbox.tsx';
 
 function CreateInvitee() {
   const { t } = useTranslation('app');
@@ -49,7 +50,7 @@ function CreateInvitee() {
           z.string().length(0),
         ]),
       ),
-      // TODO: willCome: z.nullable(z.boolean()),
+      willCome: z.nullable(z.boolean()),
       food: z.nullable(z.enum(food.data ?? [])),
       allergies: z.nullable(
         z
@@ -75,6 +76,7 @@ function CreateInvitee() {
       firstname: null,
       lastname: null,
       email: null,
+      willCome: null,
       food: null,
       allergies: null,
       tableId: null,
@@ -169,6 +171,14 @@ function CreateInvitee() {
             />
           </div>
           <div>
+            <Checkbox
+              {...register('willCome')}
+              label={t('invitee.willCome')}
+              disabled={isPending}
+              error={errors.willCome}
+            />
+          </div>
+          <div>
             <Select<Inputs>
               name="food"
               control={control}
@@ -246,7 +256,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
           z.string().length(0),
         ]),
       ),
-      // TODO: willCome: z.nullable(z.boolean()),
+      willCome: z.nullable(z.boolean()),
       food: z.nullable(z.enum(food.data ?? [])),
       allergies: z.nullable(
         z
@@ -272,6 +282,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
       firstname: record.firstname,
       lastname: record.lastname,
       email: record.email,
+      willCome: record.willCome,
       food: record.food,
       allergies: record.allergies,
       tableId: record.tableId,
@@ -368,6 +379,14 @@ function UpdateInvitee({ record }: { record: Invitee }) {
               placeholder={record.email || undefined}
               disabled={isPending}
               error={errors.email}
+            />
+          </div>
+          <div>
+            <Checkbox
+              {...register('willCome')}
+              label={t('invitee.willCome')}
+              disabled={isPending}
+              error={errors.willCome}
             />
           </div>
           <div>

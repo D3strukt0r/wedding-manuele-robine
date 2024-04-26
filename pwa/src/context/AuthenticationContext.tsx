@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import axios from 'axios';
-import { api } from '#/components/api';
+import useLogin from '#/api/common/authentication/useLogin.ts';
 
 interface DecodedJwtPayload extends JwtPayload {
   roles: string[];
@@ -52,6 +52,8 @@ export function AuthenticationContextLoader({
     }
   }, [setAuthentication]);
 
+  const { mutateAsync } = useLogin();
+
   useEffect(() => {
     (async () => {
       const urlParam = new URLSearchParams(window.location.search);
@@ -59,7 +61,7 @@ export function AuthenticationContextLoader({
       const password = urlParam.get('password');
       if (username && password) {
         try {
-          const response = await api.common.login({ username, password });
+          const response = await mutateAsync({ username, password });
           updateAuthentication(response.token);
           // TODO: Uncomment before release
           // window.history.pushState({}, document.title, window.location.pathname);
