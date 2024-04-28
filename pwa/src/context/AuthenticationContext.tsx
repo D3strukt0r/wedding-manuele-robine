@@ -9,6 +9,7 @@ import {
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import axios from 'axios';
 import useLogin from '#/api/common/authentication/useLogin.ts';
+import BigSpinner from '#/layout/BigSpinner.tsx';
 
 interface DecodedJwtPayload extends JwtPayload {
   roles: string[];
@@ -127,7 +128,7 @@ export function AuthenticationContextLoader({
   }, [authentication, updateAuthentication]);
 
   if (loading) {
-    return null;
+    return <BigSpinner />;
   }
 
   return (
