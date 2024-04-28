@@ -3,7 +3,7 @@ import { Combobox, ComboboxProps } from '@headlessui/react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsUpDown, faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
-import { FieldError, useController, UseControllerProps } from 'react-hook-form';
+import { FieldError, Merge, useController, UseControllerProps } from 'react-hook-form';
 import { ComboboxInputProps } from '@headlessui/react/dist/components/combobox/combobox';
 import { FieldValues } from 'react-hook-form/dist/types';
 
@@ -13,7 +13,7 @@ interface Props<TFieldValues extends FieldValues> extends ComboboxInputProps, Us
     label: string;
     value: string | number;
   }[];
-  error?: FieldError;
+  error?: Merge<FieldError, (FieldError | undefined)[]>;
   className?: HTMLInputElement['className'];
   disabled?: HTMLInputElement['disabled'];
   nullable?: ComboboxProps<any, any, any, any>['nullable'];
