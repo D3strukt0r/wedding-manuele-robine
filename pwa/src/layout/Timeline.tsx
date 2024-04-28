@@ -19,7 +19,7 @@ export default function Timeline({
       <div className="hidden md:block">
         <ol className="items-center sm:flex">
           {points.map((point) => (
-            <li key={point.key} className="relative mb-6 sm:mb-0">
+            <li key={point.key} className="relative mb-6 sm:mb-0 flex-auto">
               <div className="flex items-center">
                 <div className="z-10 flex items-center justify-center w-6 h-6 bg-white rounded-full ring-white ring-2 ring-offset-4 ring-offset-app-gray-dark shrink-0" />
                 <div className="hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700" />
