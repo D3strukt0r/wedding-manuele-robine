@@ -8,6 +8,7 @@ import { ComboboxInputProps } from '@headlessui/react/dist/components/combobox/c
 import { FieldValues } from 'react-hook-form/dist/types';
 import { Float } from '@headlessui-float/react';
 import { useTranslation } from 'react-i18next';
+import { limitShift } from '@floating-ui/react';
 
 interface Props<TFieldValues extends FieldValues> extends ComboboxInputProps, UseControllerProps<TFieldValues> {
   label?: ReactNode;
@@ -72,6 +73,11 @@ const Select = <TFieldValues extends FieldValues>({
         onHide={() => setQuery('')}
         portal
         adaptiveWidth // calculates width with JS, required because of "portal" TODO: Only use when necessary (in modals)
+        shift={{
+          crossAxis: true,
+          limiter: limitShift(),
+          padding: 4 + 4,
+        }}
       >
         <div className="relative w-full">
           <Combobox.Input
