@@ -114,7 +114,7 @@ function CreateCard() {
             <Select<Inputs>
               name="userLoginId"
               control={control}
-              options={users.data?.records?.map((user) => ({label: `${user.username} (ID: ${user.id})`, value: user.id})) ?? []}
+              options={users.data?.records?.map((user) => ({label: user.username, value: user.id})) ?? []}
               nullable
               label={t('card.userLogin')}
               disabled={isPending}
@@ -238,7 +238,7 @@ function UpdateCard({ record }: { record: Card }) {
             <Select<Inputs>
               name="userLoginId"
               control={control}
-              options={users.data?.records?.map((user) => ({label: `${user.username} (ID: ${user.id})`, value: user.id})) ?? []}
+              options={users.data?.records?.map((user) => ({label: user.username, value: user.id})) ?? []}
               nullable
               label={t('card.userLogin')}
               disabled={isPending}

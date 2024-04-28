@@ -6,6 +6,8 @@ import { faArrowsUpDown, faCheck, faCircleExclamation } from '@fortawesome/free-
 import { FieldError, Merge, useController, UseControllerProps } from 'react-hook-form';
 import { ComboboxInputProps } from '@headlessui/react/dist/components/combobox/combobox';
 import { FieldValues } from 'react-hook-form/dist/types';
+import { Float } from '@headlessui-float/react';
+import { useTranslation } from 'react-i18next';
 
 interface Props<TFieldValues extends FieldValues> extends ComboboxInputProps, UseControllerProps<TFieldValues> {
   label?: ReactNode;
@@ -20,6 +22,8 @@ interface Props<TFieldValues extends FieldValues> extends ComboboxInputProps, Us
   multiple?: ComboboxProps<any, any, any, any>['multiple'];
 }
 
+// Float example taken from: https://github.com/ycs77/headlessui-float/blob/main/examples/example-react-ts/src/pages/combobox.tsx
+
 const Select = <TFieldValues extends FieldValues>({
   label,
   options,
@@ -30,6 +34,7 @@ const Select = <TFieldValues extends FieldValues>({
   multiple,
   ...props
 }: Props<TFieldValues>) => {
+  const { t } = useTranslation('app');
   const { field } = useController({ control, name });
 
   const [query, setQuery] = useState('');
@@ -55,45 +60,64 @@ const Select = <TFieldValues extends FieldValues>({
           {label}
         </Combobox.Label>
       )}
-      <div className={clsx('relative', { 'mt-2': label })}>
-        <Combobox.Input
-          {...props}
-          onBlur={field.onBlur}
-          name={field.name}
-          ref={field.ref}
-          className={clsx(
-            props.className,
-            'w-full rounded-md border-0 py-1.5 pl-3 pr-10 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
-            {
-              'bg-white text-gray-900': !props.disabled,
-              'bg-gray-300 text-gray-600 placeholder:text-gray-500': props.disabled,
-              'ring-gray-300 focus:ring-blue-600': !error,
-              'pr-14 text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500': error,
-            },
-          )}
-          onChange={(event) => setQuery(event.target.value)}
-          displayValue={(value) => {
-            if (multiple) {
-              return value.map((v) => options.find((option) => option.value === v)?.label).join(', ');
-            }
-            return options.find((option) => option.value === value)?.label ?? '';
+      <Float
+        as="div"
+        className={clsx('relative', { 'mt-2': label })}
+        placement="bottom-start"
+        offset={4}
+        leave="transition ease-in duration-100"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+        floatingAs={Fragment}
+        onHide={() => setQuery('')}
+        portal
+        adaptiveWidth // calculates width with JS, required because of "portal" TODO: Only use when necessary (in modals)
+      >
+        <div className="relative w-full">
+          <Combobox.Input
+            {...props}
+            onBlur={field.onBlur}
+            name={field.name}
+            ref={field.ref}
+            className={clsx(
+              props.className,
+              'w-full rounded-md border-0 py-1.5 pl-3 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+              {
+                'bg-white text-gray-900': !props.disabled,
+                'bg-gray-300 text-gray-600 placeholder:text-gray-500': props.disabled,
+                'pr-8 ring-gray-300 focus:ring-blue-600': !error,
+                'pr-14 text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500': error,
+              },
+            )}
+            onChange={(event) => setQuery(event.target.value)}
+            displayValue={(value) => {
+              if (multiple) {
+                return value.map((v) => options.find((option) => option.value === v)?.label).join(', ');
+              }
+              return options.find((option) => option.value === value)?.label ?? '';
 
-          }}
-          aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={error ? `${field.name}-error` : undefined}
-        />
-        {error && (
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-8">
-            <FontAwesomeIcon icon={faCircleExclamation} className="h-5 w-5 text-red-500" aria-hidden="true" />
-          </div>
-        )}
-        <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
-          <FontAwesomeIcon icon={faArrowsUpDown} className="h-5 w-5 text-gray-400" aria-hidden="true" />
-        </Combobox.Button>
+            }}
+            aria-invalid={error ? 'true' : 'false'}
+            aria-describedby={error ? `${field.name}-error` : undefined}
+          />
+          {error ? (
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-8">
+              <FontAwesomeIcon icon={faCircleExclamation} className="h-5 w-5 text-red-500" aria-hidden="true" />
+            </div>
+          ) : <></>}
 
-        {filteredOptions.length > 0 && (
-          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {filteredOptions.map((option) => (
+          <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+            <FontAwesomeIcon icon={faArrowsUpDown} className="h-5 w-5 text-gray-400" aria-hidden="true" />
+          </Combobox.Button>
+        </div>
+
+        <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          {filteredOptions.length === 0 && query !== '' ? (
+            <div className="relative py-2 px-4 text-gray-700 cursor-default select-none">
+              {t('form.select.nothingFound')}
+            </div>
+          ) : (
+            filteredOptions.map((option) => (
               <Combobox.Option
                 key={option.value}
                 value={option.value}
@@ -119,10 +143,10 @@ const Select = <TFieldValues extends FieldValues>({
                   </>
                 )}
               </Combobox.Option>
-            ))}
-          </Combobox.Options>
-        )}
-      </div>
+            ))
+          )}
+        </Combobox.Options>
+      </Float>
       {error && (
         <div className="mt-2 text-sm text-red-600" id={`${field.name}-error`}>
           {error.types ? Object.entries(error.types).map(([type, message]) => (
