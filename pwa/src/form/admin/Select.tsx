@@ -69,7 +69,7 @@ const Select = <TFieldValues extends FieldValues>({
               'bg-gray-300 text-gray-600 placeholder:text-gray-500': props.disabled,
               'ring-gray-300 focus:ring-blue-600': !error,
               'pr-14 text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500': error,
-            }
+            },
           )}
           onChange={(event) => setQuery(event.target.value)}
           displayValue={(value) => {
@@ -80,15 +80,11 @@ const Select = <TFieldValues extends FieldValues>({
 
           }}
           aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={error ? `${props.id ?? props.name}-error` : undefined}
+          aria-describedby={error ? `${field.name}-error` : undefined}
         />
         {error && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-8">
-            <FontAwesomeIcon
-              icon={faCircleExclamation}
-              className="h-5 w-5 text-red-500"
-              aria-hidden="true"
-            />
+            <FontAwesomeIcon icon={faCircleExclamation} className="h-5 w-5 text-red-500" aria-hidden="true" />
           </div>
         )}
         <Combobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
@@ -101,12 +97,10 @@ const Select = <TFieldValues extends FieldValues>({
               <Combobox.Option
                 key={option.value}
                 value={option.value}
-                className={({ active }) =>
-                  clsx(
-                    'relative cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-blue-600 text-white' : 'text-gray-900'
-                  )
-                }
+                className={({ active }) => clsx(
+                  'relative cursor-default select-none py-2 pl-3 pr-9',
+                  active ? 'bg-blue-600 text-white' : 'text-gray-900',
+                )}
               >
                 {({ active, selected }) => (
                   <>
@@ -116,7 +110,7 @@ const Select = <TFieldValues extends FieldValues>({
                       <span
                         className={clsx(
                           'absolute inset-y-0 right-0 flex items-center pr-4',
-                          active ? 'text-white' : 'text-blue-600'
+                          active ? 'text-white' : 'text-blue-600',
                         )}
                       >
                         <FontAwesomeIcon icon={faCheck} className="h-5 w-5" aria-hidden="true" />
@@ -130,7 +124,7 @@ const Select = <TFieldValues extends FieldValues>({
         )}
       </div>
       {error && (
-        <div className="mt-2 text-sm text-red-600" id={`${props.id ?? props.name}-error`}>
+        <div className="mt-2 text-sm text-red-600" id={`${field.name}-error`}>
           {error.types ? Object.entries(error.types).map(([type, message]) => (
             <p key={type}>{message}</p>
           )) : (
