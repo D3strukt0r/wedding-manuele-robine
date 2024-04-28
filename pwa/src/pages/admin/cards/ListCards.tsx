@@ -333,6 +333,11 @@ export default function ListInvitees() {
     {
       key: 'userLoginId',
       title: t('card.userLogin'),
+      render: (userLoginId) => {
+        return users.data?.records
+          .find((user) => user.id === userLoginId)
+          ?.username;
+      }
     },
     {
       key: 'inviteeIds',
