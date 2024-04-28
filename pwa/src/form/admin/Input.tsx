@@ -75,9 +75,9 @@ const Input = forwardRef<HTMLInputElement, Props>(({
       {error && (
         <div className="mt-2 text-sm text-red-600" id={`${props.id ?? props.name}-error`}>
           {error.types ? Object.entries(error.types).map(([type, message]) => (
-            <p key={type}>{message}</p>
+            <p key={type} role="alert">{message}</p>
           )) : (
-            <p>{error.message}</p>
+            <p role="alert">{error.message}</p>
           )}
         </div>
       )}
