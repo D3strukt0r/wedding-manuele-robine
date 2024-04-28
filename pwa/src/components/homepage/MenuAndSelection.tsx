@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useContext, useMemo, useRef } from 'react';
 import QrScanner from 'qr-scanner';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { DevTool } from '@hookform/devtools';
@@ -318,7 +318,7 @@ function InviteesListOnMyCardForm({
           type="submit"
           className="col-span-2"
           loading={isPending}
-          disabled={!isDirty || !isValid}
+          disabled={!isDirty/* || !isValid*/}
         >
           {t('form.save')}
         </Button>
