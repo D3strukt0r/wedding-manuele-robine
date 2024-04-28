@@ -4,8 +4,6 @@ import QrScanner from 'qr-scanner';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { DevTool } from '@hookform/devtools';
 import menu from '/menu.png';
 import AlignedCard from '#/layout/AlignedCard';
@@ -21,6 +19,9 @@ import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
 import useInviteesOnCard from '#/api/invited/useInviteesOnCard';
 import useUpdateInviteesOnCard from '#/api/invited/useUpdateInviteesOnCard';
 import useLogin from '#/api/common/authentication/useLogin.ts';
+import BigSpinner from '#/layout/BigSpinner.tsx';
+import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
+import Alert from '#/components/common/admin/Alert.tsx';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -134,8 +135,13 @@ function InviteesListOnMyCardLoader() {
 
   const foodOptions = useLookupType(EnumTypes.FOOD);
 
-  if (invitees.isPending || foodOptions.isPending) {
-    return <FontAwesomeIcon icon={faSpinner} spin />;
+  if (invitees.data && foodOptions.data) {
+    return (
+      <InviteesListOnMyCardForm
+        invitees={invitees.data.records}
+        foodOptions={foodOptions.data}
+      />
+    );
   }
 
   if (invitees.isError || foodOptions.isError) {
@@ -147,25 +153,8 @@ function InviteesListOnMyCardLoader() {
     );
   }
 
-  return (
-    <InviteesListOnMyCardForm
-      invitees={invitees.data.records}
-      foodOptions={foodOptions.data}
-    />
-  );
+  return <BigSpinner />
 }
-
-type Input = {
-  firstname: string;
-  lastname: string;
-  email: string | null;
-  willCome: boolean | null;
-  food: string | null;
-  allergies: string | null;
-};
-type Inputs = {
-  [key: string]: Input;
-};
 
 function InviteesListOnMyCardForm({
   invitees,
@@ -177,35 +166,37 @@ function InviteesListOnMyCardForm({
   const { t } = useTranslation('app');
 
   const schema = useMemo(() => {
-    return z.record(
-      z.string(),
-      z.object({
-        firstname: z
-          .string({ required_error: t('form.errors.required') })
-          .min(1, { message: t('form.errors.required') })
-          .max(255, { message: t('form.errors.max', { max: 255 }) }),
-        lastname: z
-          .string({ required_error: t('form.errors.required') })
-          .min(1, { message: t('form.errors.required') })
-          .max(255, { message: t('form.errors.max', { max: 255 }) }),
-        email: z.nullable(
-          z.union([
+    return z.object({
+      invitees: z.record(
+        z.string(),
+        z.object({
+          firstname: z
+            .string({ required_error: t('form.errors.required') })
+            .min(1, { message: t('form.errors.required') })
+            .max(255, { message: t('form.errors.max', { max: 255 }) }),
+          lastname: z
+            .string({ required_error: t('form.errors.required') })
+            .min(1, { message: t('form.errors.required') })
+            .max(255, { message: t('form.errors.max', { max: 255 }) }),
+          email: z.nullable(
+            z.union([
+              z
+                .string()
+                .max(255, { message: t('form.errors.max', { max: 255 }) })
+                .email(t('form.errors.email')),
+              z.string().length(0),
+            ]),
+          ),
+          willCome: z.nullable(z.boolean()),
+          food: z.nullable(z.string()),
+          allergies: z.nullable(
             z
               .string()
-              .max(255, { message: t('form.errors.max', { max: 255 }) })
-              .email(t('form.errors.email')),
-            z.string().length(0),
-          ]),
-        ),
-        willCome: z.nullable(z.boolean()),
-        food: z.nullable(z.string()),
-        allergies: z.nullable(
-          z
-            .string()
-            .max(255, { message: t('form.errors.max', { max: 255 }) }),
-        ),
-      }),
-    );
+              .max(255, { message: t('form.errors.max', { max: 255 }) }),
+          ),
+        }),
+      ),
+    });
   }, [t]);
 
   // map the id to the key of the object
@@ -220,27 +211,41 @@ function InviteesListOnMyCardForm({
     return mappedObject;
   }, [invitees]);
 
-  const updateInvitees = useUpdateInviteesOnCard();
-
+  type Inputs = z.infer<typeof schema>;
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    reset,
+    setError,
+    formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: mappedInvitees,
+    defaultValues: {
+      invitees: mappedInvitees,
+    },
   });
-  const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
-    updateInvitees.mutate({ invitees: data });
-  }, [updateInvitees]);
+
+  const { mutate, isPending, isError, error } = useUpdateInviteesOnCard({
+    onSuccess: () => {
+      reset();
+    },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
+    }
+  });
 
   return (
     <>
-      <form
-        className="grid grid-cols-2 gap-4"
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      {isError ? (
+        <Alert
+          type="error"
+          title={t('form.errors.general')}
+          text={<p>{error.response?.data?.title}</p>}
+          className="mb-4"
+        />
+      ) : null}
+      <form onSubmit={handleSubmit(mutate)} className="grid grid-cols-2 gap-4">
         {invitees.map((invitee) => (
           <div key={invitee.id}>
             <h3 className="text-xl philosopher-regular">
@@ -249,48 +254,41 @@ function InviteesListOnMyCardForm({
             <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
               <div className="sm:col-span-3">
                 <Input
+                  {...register(`invitees.${invitee.id}.firstname`, { setValueAs: (value) => value === '' ? null : value })}
                   label={t('homepage.manageCard.properties.firstname')}
-                  {...register(`${invitee.id}.firstname`, { setValueAs: (value) => value === '' ? null : value })}
+                  placeholder={invitee.firstname}
+                  disabled={isPending}
+                  error={errors.invitees?.[invitee.id]?.firstname}
                   required
-                  aria-invalid={
-                    errors[invitee.id]?.firstname ? 'true' : 'false'
-                  }
                 />
-                {errors[invitee.id]?.firstname?.message && (
-                  <span>{errors[invitee.id]?.firstname?.message}</span>
-                )}
               </div>
               <div className="sm:col-span-3">
                 <Input
+                  {...register(`invitees.${invitee.id}.lastname`, { setValueAs: (value) => value === '' ? null : value })}
                   label={t('homepage.manageCard.properties.lastname')}
-                  {...register(`${invitee.id}.lastname`, { setValueAs: (value) => value === '' ? null : value })}
+                  placeholder={invitee.lastname}
+                  disabled={isPending}
+                  error={errors.invitees?.[invitee.id]?.lastname}
                   required
-                  aria-invalid={errors[invitee.id]?.lastname ? 'true' : 'false'}
                 />
-                {errors[invitee.id]?.lastname?.message && (
-                  <span>{errors[invitee.id]?.lastname?.message}</span>
-                )}
               </div>
             </div>
             <div>
               <Input
+                {...register(`invitees.${invitee.id}.email`, { setValueAs: (value) => value === '' ? null : value })}
                 label={t('homepage.manageCard.properties.email')}
-                {...register(`${invitee.id}.email`, { setValueAs: (value) => value === '' ? null : value })}
-                aria-invalid={errors[invitee.id]?.email ? 'true' : 'false'}
+                placeholder={invitee.email || undefined}
+                disabled={isPending}
+                error={errors.invitees?.[invitee.id]?.email}
               />
-              {errors[invitee.id]?.email?.message && (
-                <span>{errors[invitee.id]?.email?.message}</span>
-              )}
             </div>
             <div className="my-2">
               <Checkbox
+                {...register(`invitees.${invitee.id}.willCome`)}
                 label={t('homepage.manageCard.properties.willCome')}
-                {...register(`${invitee.id}.willCome`)}
-                aria-invalid={errors[invitee.id]?.willCome ? 'true' : 'false'}
+                disabled={isPending}
+                error={errors.invitees?.[invitee.id]?.willCome}
               />
-              {errors[invitee.id]?.willCome?.message && (
-                <span>{errors[invitee.id]?.willCome?.message}</span>
-              )}
             </div>
             <div>
               <RadioGroup
@@ -299,29 +297,28 @@ function InviteesListOnMyCardForm({
                 options={foodOptions.map((food) => ({
                   value: food,
                   title: t(`enum.food.${food}`),
-                  ...register(`${invitee.id}.food`),
+                  ...register(`invitees.${invitee.id}.food`),
                 }))}
+                disabled={isPending}
+                error={errors.invitees?.[invitee.id]?.food}
               />
-              {errors[invitee.id]?.food?.message && (
-                <span>{errors[invitee.id]?.food?.message}</span>
-              )}
             </div>
             <div>
               <Input
+                {...register(`invitees.${invitee.id}.allergies`, { setValueAs: (value) => value === '' ? null : value })}
                 label={t('homepage.manageCard.properties.allergies')}
-                {...register(`${invitee.id}.allergies`, { setValueAs: (value) => value === '' ? null : value })}
-                aria-invalid={errors[invitee.id]?.allergies ? 'true' : 'false'}
+                placeholder={invitee.allergies || undefined}
+                disabled={isPending}
+                error={errors.invitees?.[invitee.id]?.allergies}
               />
-              {errors[invitee.id]?.allergies?.message && (
-                <span>{errors[invitee.id]?.allergies?.message}</span>
-              )}
             </div>
           </div>
         ))}
         <Button
           type="submit"
           className="col-span-2"
-          loading={updateInvitees.isPending}
+          loading={isPending}
+          disabled={!isDirty || !isValid}
         >
           {t('form.save')}
         </Button>

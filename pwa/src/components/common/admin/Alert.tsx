@@ -12,8 +12,9 @@ interface Props {
   type: 'success' | 'info' | 'warning' | 'error';
   title?: ReactNode;
   text?: ReactNode;
+  className?: string;
 }
-export default function Alert({ type, title, text }: Props) {
+export default function Alert({ type, title, text, className }: Props) {
   const icon = useMemo(() => {
     if (type === 'success') {
       return faCircleCheck;
@@ -32,7 +33,7 @@ export default function Alert({ type, title, text }: Props) {
 
   return (
     <div
-      className={clsx('rounded-md p-4', {
+      className={clsx('rounded-md p-4', className, {
         'bg-green-50': type === 'success',
         'bg-blue-50': type === 'info',
         'bg-yellow-50': type === 'warning',

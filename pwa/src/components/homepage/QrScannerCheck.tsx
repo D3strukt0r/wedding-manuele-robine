@@ -24,7 +24,7 @@ export interface CountdownHandle {
   showMessage: (type: MessageType, msg: string) => void;
 }
 interface Props {
-  onScan?: (result: QrScanner.ScanResult) => Promise<void>;
+  onScan?: (result: QrScanner.ScanResult) => Promise<void> | void;
 }
 
 const QrScannerCheck = forwardRef<CountdownHandle, Props>(({ onScan }, ref) => {

@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import { InputHTMLAttributes } from 'react';
+import { FieldError } from 'react-hook-form';
 
 interface Option extends InputHTMLAttributes<HTMLInputElement> {
   title: string;
@@ -13,15 +14,19 @@ interface Props {
   legend?: string;
   inline?: boolean;
   options: Option[];
+  error?: FieldError;
+  disabled?: boolean;
 }
 export default function RadioGroup({
   label,
   legend,
   inline = false,
   options,
+  error,
+  disabled,
 }: Props) {
   return (
-    <div>
+    <>
       {label && (
         <label className="text-base noto-sans-regular text-gray-900">
           {label}
@@ -41,12 +46,21 @@ export default function RadioGroup({
               <input
                 // defaultChecked={option.id === 'email'}
                 {...props}
+                type="radio"
                 id={`${props.name}.${props.value}`}
                 className={clsx(
                   props.className,
-                  'h-4 w-4 border-gray-300 text-app-red-dark focus:ring-app-red-dark',
+                  'h-4 w-4',
+                  {
+                    'text-app-red-dark': !disabled && !props.disabled,
+                    'text-gray-500': disabled || props.disabled,
+                    'border-gray-300 focus:ring-app-red-dark': !error,
+                    'focus:ring-red-500': error,
+                  }
                 )}
-                type="radio"
+                disabled={disabled}
+                aria-invalid={error ? 'true' : 'false'}
+                aria-describedby={error ? `${props.id ?? props.name}-error` : undefined}
               />
               <label
                 htmlFor={`${props.name}.${props.value}`}
@@ -57,7 +71,16 @@ export default function RadioGroup({
             </div>
           ))}
         </div>
+        {error && (
+          <div className="text-sm text-red-600" id={`${options?.[0].name}-error`}>
+            {error.types ? Object.entries(error.types).map(([type, message]) => (
+              <p key={type}>{message}</p>
+            )) : (
+              <p>{error.message}</p>
+            )}
+          </div>
+        )}
       </fieldset>
-    </div>
+    </>
   );
 }
