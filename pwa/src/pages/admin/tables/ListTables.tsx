@@ -126,7 +126,7 @@ function CreateTable() {
             <Select<Inputs>
               name="inviteeIds"
               control={control}
-              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              options={invitees.data?.records?.map((invitee) => ({label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id})) ?? []}
               multiple
               label={t('table.invitees')}
               disabled={isPending}
@@ -251,7 +251,7 @@ function UpdateTable({ record }: { record: TableModel }) {
             <Select<Inputs>
               name="inviteeIds"
               control={control}
-              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              options={invitees.data?.records?.map((invitee) => ({label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id})) ?? []}
               multiple
               label={t('table.invitees')}
               disabled={isPending}
@@ -329,11 +329,22 @@ export default function ListTables() {
 
   const tables = useTables();
   const users = useUsers();
+  const invitees = useInvitees();
 
   const columns = useMemo(() => [
     {
       key: 'seats',
       title: t('table.seats'),
+    },
+    {
+      key: 'inviteeIds',
+      title: t('table.invitees'),
+      render: (inviteeIds) => {
+        return invitees.data?.records
+          .filter((user) => inviteeIds.includes(user.id))
+          .map((invitee) => `${invitee.firstname} ${invitee.lastname}`)
+          .join(', ');
+      },
     },
     {
       key: 'actions',
@@ -351,7 +362,7 @@ export default function ListTables() {
     },
   ] satisfies TableProps['columns'], [t]);
 
-  if (tables.data && users.data) {
+  if (tables.data && users.data && invitees.data) {
     return (
       <>
         <div className="flex justify-end mb-2">
@@ -362,10 +373,11 @@ export default function ListTables() {
     );
   }
 
-  if (tables.isError || users.isError) {
+  if (tables.isError || users.isError || invitees.isError) {
     const error: string[] = [];
     if (users.error) error.push(users.error.message);
     if (tables.error) error.push(tables.error.message);
+    if (invitees.error) error.push(invitees.error.message);
     throw new Error(error.join('\n'));
   }
 

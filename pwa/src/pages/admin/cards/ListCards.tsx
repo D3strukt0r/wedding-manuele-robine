@@ -125,7 +125,7 @@ function CreateCard() {
             <Select<Inputs>
               name="inviteeIds"
               control={control}
-              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              options={invitees.data?.records?.map((invitee) => ({label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id})) ?? []}
               multiple
               label={t('card.invitees')}
               disabled={isPending}
@@ -249,7 +249,7 @@ function UpdateCard({ record }: { record: Card }) {
             <Select<Inputs>
               name="inviteeIds"
               control={control}
-              options={invitees.data?.records?.map((invitee) => ({label: `X (ID: ${invitee.id})`, value: invitee.id})) ?? []}
+              options={invitees.data?.records?.map((invitee) => ({label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id})) ?? []}
               multiple
               label={t('card.invitees')}
               disabled={isPending}
@@ -333,6 +333,16 @@ export default function ListInvitees() {
     {
       key: 'userLoginId',
       title: t('card.userLogin'),
+    },
+    {
+      key: 'inviteeIds',
+      title: t('table.invitees'),
+      render: (inviteeIds) => {
+        return invitees.data?.records
+        .filter((user) => inviteeIds.includes(user.id))
+        .map((invitee) => `${invitee.firstname} ${invitee.lastname}`)
+        .join(', ');
+      },
     },
     {
       key: 'actions',
