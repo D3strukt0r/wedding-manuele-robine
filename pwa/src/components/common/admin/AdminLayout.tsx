@@ -158,7 +158,7 @@ export default function AdminLayout({
       </Transition.Root>
 
       {/* Static sidebar for desktop */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-72 lg:flex-col">
+      <aside className="hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:w-72 lg:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
           <div className="flex h-16 shrink-0 items-center">
@@ -213,7 +213,7 @@ export default function AdminLayout({
             </ul>
           </nav>
         </div>
-      </div>
+      </aside>
 
       <div className="lg:pl-72">
         <div className="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
@@ -229,7 +229,7 @@ export default function AdminLayout({
           {/* Separator */}
           <div className="h-6 w-px bg-gray-200 lg:hidden" aria-hidden="true" />
 
-          <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
+          <header className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <span className="flex flex-1" />
             {/* <form className="relative flex flex-1" action="#" method="GET"> */}
             {/*  <label htmlFor="search-field" className="sr-only"> */}
@@ -323,11 +323,15 @@ export default function AdminLayout({
                 </Transition>
               </Menu>
             </div>
-          </div>
+          </header>
         </div>
 
-        <main className="py-10">
-          <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+        <main className="py-10 px-4 sm:px-6 lg:px-8 h-[calc(100dvh-4rem)] overflow-y-auto flex flex-col">
+          <div className="bg-gray-50 p-4 sm:p-6 lg:p-8 flex-auto">{children}</div>
+
+          <footer className="text-center pt-4">
+            {t('footer.copyright2')}
+          </footer>
         </main>
       </div>
     </>

@@ -120,5 +120,6 @@
   "card.actions.update.title": "Karte bearbeiten",
   "card.actions.delete.title": "Karte löschen",
   "card.actions.delete.text": "Möchten Sie die Karte von '{{name}}' wirklich löschen?",
-  "footer.copyright": "Images by Sacha Kocher and Pexels\n© 2024"
+  "footer.copyright": "Images by Sacha Kocher and Pexels\n© 2024",
+  "footer.copyright2": "© 2024. Erstellt durch Manuele Vaccari"
 }

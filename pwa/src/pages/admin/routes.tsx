@@ -14,7 +14,7 @@ export default function adminRoutes() {
   return {
     path: '/admin',
     element: (
-      <div className="h-full bg-white">
+      <div className="h-dvh overflow-y-auto bg-white">
         <Outlet />
       </div>
     ),
