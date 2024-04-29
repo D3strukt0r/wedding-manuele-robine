@@ -17,22 +17,31 @@ class Table
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(unique: true)]
+    private string $name;
+
     #[ORM\Column]
     private int $seats;
 
+    /** @var Collection<int, Invitee> */
     #[ORM\OneToMany(mappedBy: 'table', targetEntity: Invitee::class)]
     private Collection $invitees;
 
-    public function __construct(int $seats)
+    public function __construct(string $name, int $seats)
     {
-        $this->invitees = new ArrayCollection();
-
+        $this->name = $name;
         $this->seats = $seats;
+        $this->invitees = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     public function getSeats(): int
@@ -72,6 +81,7 @@ class Table
 
     public function update(UpdateTableDto $dto): void
     {
+        $this->name = $dto->name;
         $this->seats = $dto->seats;
     }
 }

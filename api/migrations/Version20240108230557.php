@@ -14,7 +14,7 @@ final class Version20240108230557 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Switch from login code to user login id in card';
     }
 
     public function up(Schema $schema): void

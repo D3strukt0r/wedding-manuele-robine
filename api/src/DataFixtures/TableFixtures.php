@@ -32,7 +32,8 @@ class TableFixtures extends Fixture
     private function getFakeTable(): Table
     {
         $table = new Table(
-          $this->faker->numberBetween(1, 10),
+            $this->faker->country(),
+            $this->faker->numberBetween(1, 10),
         );
         $table->addInvitee($this->getReference(InviteeFixtures::REFERENCE));
         return $table;

@@ -16,6 +16,7 @@ class Card
     #[ORM\Column]
     private ?int $id = null;
 
+    /** @var Collection<int, Invitee> */
     #[ORM\OneToMany(mappedBy: 'card', targetEntity: Invitee::class)]
     private Collection $invitees;
 

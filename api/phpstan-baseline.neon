@@ -61,16 +61,6 @@ parameters:
 			path: src/Controller/Admin/Api/Invitee/UpdateInviteeController.php
 
 		-
-			message: "#^Parameter \\#1 \\$invitee of method App\\\\Entity\\\\Table\\:\\:addInvitee\\(\\) expects App\\\\Entity\\\\Invitee, App\\\\Entity\\\\Invitee\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Table/CreateTableController.php
-
-		-
-			message: "#^Parameter \\#1 \\$invitee of method App\\\\Entity\\\\Table\\:\\:addInvitee\\(\\) expects App\\\\Entity\\\\Invitee, App\\\\Entity\\\\Invitee\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Table/UpdateTableController.php
-
-		-
 			message: "#^Only booleans are allowed in an if condition, App\\\\Entity\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Admin/Api/User/CreateUserController.php
@@ -91,106 +81,6 @@ parameters:
 			path: src/DataFixtures/TableFixtures.php
 
 		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\Card\\\\CardListDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/Card/CardListDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Card\\\\CardListDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/Card/CardListDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Card\\\\CardListDto\\:\\:\\$inviteeIds \\(array\\<int\\>\\) does not accept array\\<int, int\\|null\\>\\.$#"
-			count: 1
-			path: src/Dto/Admin/Card/CardListDto.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\Card\\\\CardShowDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/Card/CardShowDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Card\\\\CardShowDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/Card/CardShowDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Card\\\\CardShowDto\\:\\:\\$inviteeIds \\(array\\<int\\>\\) does not accept array\\<int, int\\|null\\>\\.$#"
-			count: 1
-			path: src/Dto/Admin/Card/CardShowDto.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\Invitee\\\\InviteeListDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/Invitee/InviteeListDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Invitee\\\\InviteeListDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/Invitee/InviteeListDto.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\Invitee\\\\InviteeShowDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/Invitee/InviteeShowDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Invitee\\\\InviteeShowDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/Invitee/InviteeShowDto.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\Table\\\\TableListDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/Table/TableListDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Table\\\\TableListDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/Table/TableListDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Table\\\\TableListDto\\:\\:\\$inviteeIds \\(array\\<int\\>\\) does not accept array\\<int, int\\|null\\>\\.$#"
-			count: 1
-			path: src/Dto/Admin/Table/TableListDto.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\Table\\\\TableShowDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/Table/TableShowDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Table\\\\TableShowDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/Table/TableShowDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\Table\\\\TableShowDto\\:\\:\\$inviteeIds \\(array\\<int\\>\\) does not accept array\\<int, int\\|null\\>\\.$#"
-			count: 1
-			path: src/Dto/Admin/Table/TableShowDto.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\User\\\\UserListDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/User/UserListDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\User\\\\UserListDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/User/UserListDto.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Admin\\\\User\\\\UserShowDto\\:\\:__construct\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Admin/User/UserShowDto.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Admin\\\\User\\\\UserShowDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Admin/User/UserShowDto.php
-
-		-
 			message: "#^Method App\\\\Dto\\\\Common\\\\SortDirectionEnum\\:\\:array\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Dto/Common/SortDirectionEnum.php
@@ -209,31 +99,6 @@ parameters:
 			message: "#^Property App\\\\Dto\\\\Invited\\\\InvitedInviteeListDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
 			count: 1
 			path: src/Dto/Invited/InvitedInviteeListDto.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Card\\:\\:\\$invitees with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/Card.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Table\\:\\:\\$invitees with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/Table.php
-
-		-
-			message: "#^Only booleans are allowed in &&, Symfony\\\\Component\\\\PasswordHasher\\\\Hasher\\\\UserPasswordHasherInterface\\|null given on the left side\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Only booleans are allowed in &&, string\\|null given on the right side\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$roles type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Entity/User.php
 
 		-
 			message: "#^Method App\\\\Migrations\\\\AbstractMigrationWithCommand\\:\\:execCommand\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"

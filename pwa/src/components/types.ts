@@ -18,6 +18,7 @@ export type Card = {
 
 export type Table = {
   id: number;
+  name: string;
   seats: number;
   inviteeIds: number[];
 };

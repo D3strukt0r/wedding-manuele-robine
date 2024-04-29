@@ -21,6 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true, nullable: false)]
     private string $username;
 
+    /** @var array<string> */
     #[ORM\Column]
     private array $roles = [];
 
@@ -128,7 +129,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function update(UpdateUserDto $dto, ?UserPasswordHasherInterface $passwordHasher = null): void
     {
         $this->username = $dto->username;
-        if ($passwordHasher && $dto->newPassword) {
+        if ($passwordHasher !== null && $dto->newPassword !== null) {
             $this->password = $passwordHasher->hashPassword($this, $dto->newPassword);
         }
         $this->setRoles($dto->roles);

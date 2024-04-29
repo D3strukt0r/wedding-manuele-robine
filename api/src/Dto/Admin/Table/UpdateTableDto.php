@@ -8,6 +8,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly class UpdateTableDto
 {
     public function __construct(
+        #[Assert\NotBlank]
+        #[OA\Property(example: 'Guatemala')]
+        public string $name,
+
         #[Assert\NotNull]
         #[OA\Property(example: 5)]
         public int $seats,

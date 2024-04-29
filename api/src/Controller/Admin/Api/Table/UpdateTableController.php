@@ -58,8 +58,9 @@ class UpdateTableController extends AbstractController
 
         $inviteesNotFound = array_filter($inviteesToBe, static fn (?Invitee $invitee) => $invitee === null);
         if (count($inviteesNotFound) > 0) {
-            throw new NotFoundHttpException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
+            throw $this->createNotFoundException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
         }
+        /** @var array<int, Invitee> $inviteesToBe */
 
         foreach ($inviteesToBe as $invitee) {
             if (!$inviteesIs->contains($invitee)) {

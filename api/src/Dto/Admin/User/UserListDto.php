@@ -6,7 +6,7 @@ use App\Entity\User;
 
 readonly class UserListDto
 {
-    public int $id;
+    public ?int $id;
 
     public string $username;
 
@@ -20,6 +20,9 @@ readonly class UserListDto
      */
     public array $actions;
 
+    /**
+     * @param array<string, bool>|null $actions
+     */
     public function __construct(User $user, ?array $actions = null)
     {
         $this->id = $user->getId();

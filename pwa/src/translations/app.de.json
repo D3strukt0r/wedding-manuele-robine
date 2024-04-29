@@ -96,6 +96,7 @@
   "user.actions.update.title": "Benutzer bearbeiten",
   "user.actions.delete.title": "Benutzer löschen",
   "user.actions.delete.text": "Möchten Sie den Benutzer '{{name}}' wirklich löschen?",
+  "table.name": "Name",
   "table.seats": "Sitzplätze",
   "table.invitees": "Eingeladene",
   "table.actions.create.title": "Tisch erstellen",

@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="DDEV" uuid="ff761a31-1495-458c-ab55-c9e4ef69982e">
-      <driver-ref>mariadb</driver-ref>
-      <synchronize>true</synchronize>
-      <configured-by-url>true</configured-by-url>
-      <remarks>DDEV generated data source</remarks>
-      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://127.0.0.1:59143/db?user=db&amp;password=db</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="db@weddingmanager.test" uuid="3dbb6613-7b20-4615-b281-c8e52639a7ee">
+    <data-source source="LOCAL" name="db@wedding-manuele-robine.test" uuid="3dbb6613-7b20-4615-b281-c8e52639a7ee">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://weddingmanager.test:3306/db</jdbc-url>
+      <jdbc-url>jdbc:mariadb://wedding-manuele-robine.test:3306/db</jdbc-url>
       <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>

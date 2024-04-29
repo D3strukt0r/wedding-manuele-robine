@@ -7,11 +7,11 @@ use App\Entity\Invitee;
 
 readonly class CardShowDto
 {
-    public int $id;
+    public ?int $id;
 
     public ?int $userLoginId;
 
-    /** @var array<int> */
+    /** @var array<?int> */
     public array $inviteeIds;
 
     /**
@@ -19,6 +19,9 @@ readonly class CardShowDto
      */
     public array $actions;
 
+    /**
+     * @param array<string, bool>|null $actions
+     */
     public function __construct(Card $card, ?array $actions = null)
     {
         $this->id = $card->getId();

@@ -7,7 +7,7 @@ use App\Entity\Invitee;
 
 readonly class InviteeShowDto
 {
-    public int $id;
+    public ?int $id;
 
     public string $firstname;
 
@@ -30,6 +30,9 @@ readonly class InviteeShowDto
      */
     public array $actions;
 
+    /**
+     * @param array<string, bool>|null $actions
+     */
     public function __construct(Invitee $invitee, ?array $actions = null)
     {
         $this->id = $invitee->getId();

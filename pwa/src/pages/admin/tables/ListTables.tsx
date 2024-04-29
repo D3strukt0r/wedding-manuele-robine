@@ -29,6 +29,9 @@ function CreateTable() {
 
   const schema = useMemo(() => {
     return z.object({
+      name: z
+        .string({ required_error: t('form.errors.required') })
+        .min(1, { message: t('form.errors.required') }),
       seats: z
         .number({ required_error: t('form.errors.required') })
         .min(0, { message: t('form.errors.required') }),
@@ -47,6 +50,7 @@ function CreateTable() {
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
+      name: null,
       seats: null,
       inviteeIds: [],
     },
@@ -114,6 +118,15 @@ function CreateTable() {
           ) : null}
           <div>
             <Input
+              {...register('name', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('table.name')}
+              disabled={isPending}
+              error={errors.name}
+              required
+            />
+          </div>
+          <div>
+            <Input
               {...register('seats', { valueAsNumber: true })}
               type="number"
               label={t('table.seats')}
@@ -126,7 +139,7 @@ function CreateTable() {
             <Select<Inputs>
               name="inviteeIds"
               control={control}
-              options={invitees.data?.records?.map((invitee) => ({label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id})) ?? []}
+              options={invitees.data?.records?.map((invitee) => ({ label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id })) ?? []}
               multiple
               label={t('table.invitees')}
               disabled={isPending}
@@ -151,6 +164,9 @@ function UpdateTable({ record }: { record: TableModel }) {
 
   const schema = useMemo(() => {
     return z.object({
+      name: z
+        .string({ required_error: t('form.errors.required') })
+        .min(1, { message: t('form.errors.required') }),
       seats: z
         .number({ required_error: t('form.errors.required') })
         .min(0, { message: t('form.errors.required') }),
@@ -169,6 +185,7 @@ function UpdateTable({ record }: { record: TableModel }) {
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
     defaultValues: {
+      name: record.name,
       seats: record.seats,
       inviteeIds: record.inviteeIds,
     },
@@ -238,6 +255,16 @@ function UpdateTable({ record }: { record: TableModel }) {
           ) : null}
           <div>
             <Input
+              {...register('name', { setValueAs: (value) => value === '' ? null : value })}
+              label={t('table.name')}
+              placeholder={record.name}
+              disabled={isPending}
+              error={errors.name}
+              required
+            />
+          </div>
+          <div>
+            <Input
               {...register('seats', { valueAsNumber: true })}
               type="number"
               label={t('table.seats')}
@@ -251,7 +278,7 @@ function UpdateTable({ record }: { record: TableModel }) {
             <Select<Inputs>
               name="inviteeIds"
               control={control}
-              options={invitees.data?.records?.map((invitee) => ({label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id})) ?? []}
+              options={invitees.data?.records?.map((invitee) => ({ label: `${invitee.firstname} ${invitee.lastname}`, value: invitee.id })) ?? []}
               multiple
               label={t('table.invitees')}
               disabled={isPending}
@@ -333,6 +360,10 @@ export default function ListTables() {
 
   const columns = useMemo(() => [
     {
+      key: 'name',
+      title: t('table.name'),
+    },
+    {
       key: 'seats',
       title: t('table.seats'),
     },
@@ -355,7 +386,7 @@ export default function ListTables() {
             <UpdateTable record={record} />
           )}
           {actions?.delete && (
-            <DeleteTable id={record.id} name={record.id} />
+            <DeleteTable id={record.id} name={record.name} />
           )}
         </div>
       ),
