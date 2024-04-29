@@ -19,6 +19,9 @@ abstract class AbstractMigrationWithCommand extends AbstractMigration
         $this->kernel = $kernel;
     }
 
+    /**
+     * @param array<string, string|bool|int|array<string>> $options
+     */
     protected function execCommand(string $command, array $options = []): void
     {
         $application = new Application($this->kernel);
@@ -32,6 +35,9 @@ abstract class AbstractMigrationWithCommand extends AbstractMigration
         $application->run(new ArrayInput($options));
     }
 
+    /**
+     * @param array<string> $group
+     */
     protected function loadFixture(array $group, bool $append = true): void
     {
         $this->execCommand('doctrine:fixtures:load', ['--group' => $group, '--append' => $append]);

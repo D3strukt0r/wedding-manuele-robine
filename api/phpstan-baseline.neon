@@ -11,36 +11,6 @@ parameters:
 			path: src/Command/CreateAdminUserCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$invitee of method App\\\\Entity\\\\Table\\:\\:addInvitee\\(\\) expects App\\\\Entity\\\\Invitee, object given\\.$#"
-			count: 1
-			path: src/DataFixtures/TableFixtures.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Common\\\\SortDirectionEnum\\:\\:array\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Common/SortDirectionEnum.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Common\\\\SortDirectionEnum\\:\\:names\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Common/SortDirectionEnum.php
-
-		-
-			message: "#^Method App\\\\Dto\\\\Common\\\\SortDirectionEnum\\:\\:values\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Dto/Common/SortDirectionEnum.php
-
-		-
-			message: "#^Method App\\\\Migrations\\\\AbstractMigrationWithCommand\\:\\:execCommand\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Migrations/AbstractMigrationWithCommand.php
-
-		-
-			message: "#^Method App\\\\Migrations\\\\AbstractMigrationWithCommand\\:\\:loadFixture\\(\\) has parameter \\$group with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Migrations/AbstractMigrationWithCommand.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\User\\:\\:setPassword\\(\\)\\.$#"
 			count: 1
 			path: src/Repository/UserRepository.php
@@ -59,26 +29,6 @@ parameters:
 			message: "#^Method App\\\\Resolver\\\\AppResolverMap\\:\\:map\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Resolver/AppResolverMap.php
-
-		-
-			message: "#^Argument of an invalid type array\\<string\\>\\|null supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Service/PermissionChecker.php
-
-		-
-			message: "#^Method App\\\\Service\\\\PermissionChecker\\:\\:__invoke\\(\\) has parameter \\$actions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Service/PermissionChecker.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Entity\\\\Card\\|null given\\.$#"
-			count: 1
-			path: src/Validator/Invited/HasOnlyUnchangedInviteesFromOwnCardValidator.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Validator/Invited/HasOnlyUnchangedInviteesFromOwnCardValidator.php
 
 		-
 			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, int\\|null given\\.$#"

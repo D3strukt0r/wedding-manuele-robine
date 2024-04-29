@@ -35,12 +35,12 @@ class HasOnlyUnchangedInviteesFromOwnCardValidator extends ConstraintValidator
         }
 
         $currentUser = $this->security->getUser();
-        if (!$currentUser) {
+        if ($currentUser === null) {
             return;
         }
 
         $card = $this->cardRepository->findOneBy(['userLogin' => $currentUser]);
-        if (!$card) {
+        if ($card === null) {
             return;
         }
 

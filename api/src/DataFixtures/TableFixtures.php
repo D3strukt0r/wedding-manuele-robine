@@ -35,7 +35,7 @@ class TableFixtures extends Fixture
             $this->faker->country(),
             $this->faker->numberBetween(1, 10),
         );
-        $table->addInvitee($this->getReference(InviteeFixtures::REFERENCE));
+        $table->addInvitee($this->getReference(InviteeFixtures::REFERENCE, Invitee::class));
         return $table;
     }
 }

@@ -14,7 +14,7 @@ readonly class PermissionChecker
     ) {}
 
     /**
-     * @param array $actions
+     * @param array<string, array{0: string, 1: array<string, null|string|int>}> $actions
      * @return array<string, bool>
      */
     public function __invoke(array $actions): array
@@ -24,6 +24,10 @@ readonly class PermissionChecker
         foreach ($actions as $action => $routeAndParameters) {
             $url = $this->router->generate($routeAndParameters[0], $routeAndParameters[1]);
             $roles = $this->pathRoles->getRoles($url);
+            if ($roles === null) {
+                $processedActions[$action] = false;
+                continue;
+            }
             foreach ($roles as $role) {
                 if (isset($processedActions[$action]) && $processedActions[$action]) {
                     continue;

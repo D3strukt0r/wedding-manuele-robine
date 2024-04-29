@@ -4,6 +4,7 @@ namespace App\Dto\Common;
 
 enum SortDirectionEnum: string
 {
+    /** @use EnumToArrayTrait<string> */
     use EnumToArrayTrait;
 
     case ASC = 'asc';
