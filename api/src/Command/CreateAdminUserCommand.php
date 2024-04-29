@@ -45,7 +45,7 @@ class CreateAdminUserCommand extends Command
 
         $password = $input->getOption('password');
         while ($password === null) {
-            $password = $io->ask('Password');
+            $password = $io->askHidden('Password');
         }
 
         try {

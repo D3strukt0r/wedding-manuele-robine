@@ -49,10 +49,10 @@ class UpdateInviteeController extends AbstractController
         #[MapEntity(id: 'invitee_id')] Invitee $invitee,
         #[MapRequestPayload] UpdateInviteeDto $dto
     ): JsonResponse {
-        $table = $dto->tableId ? $this->tableRepository->find($dto->tableId) : null;
-        $card = $dto->cardId ? $this->cardRepository->find($dto->cardId) : null;
+        $table = $dto->tableId !== null ? $this->tableRepository->find($dto->tableId) : null;
+        $card = $dto->cardId !== null ? $this->cardRepository->find($dto->cardId) : null;
 
-        if (($dto->cardId && !$card) || ($dto->tableId && !$table)) {
+        if (($dto->cardId !== null && $card === null) || ($dto->tableId !== null && $table === null)) {
             throw new UnprocessableEntityHttpException(sprintf('Card with ID %s or table with ID %s not found', $dto->cardId, $dto->tableId));
         }
 

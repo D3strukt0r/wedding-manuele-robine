@@ -7,7 +7,7 @@ use App\Entity\Invitee;
 
 readonly class InvitedInviteeListDto
 {
-    public int $id;
+    public ?int $id;
 
     public string $firstname;
 

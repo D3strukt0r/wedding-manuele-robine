@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -58,7 +58,7 @@ class UpdateTableController extends AbstractController
 
         $inviteesNotFound = array_filter($inviteesToBe, static fn (?Invitee $invitee) => $invitee === null);
         if (count($inviteesNotFound) > 0) {
-            throw $this->createNotFoundException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
+            throw new UnprocessableEntityHttpException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
         }
         /** @var array<int, Invitee> $inviteesToBe */
 

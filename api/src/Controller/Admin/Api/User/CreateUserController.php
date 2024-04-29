@@ -44,7 +44,7 @@ class CreateUserController extends AbstractController
     #[OA\Tag('Admin/User')]
     public function __invoke(#[MapRequestPayload] CreateUserDto $dto): JsonResponse
     {
-        if ($this->userRepository->findOneBy(['username' => $dto->username])) {
+        if ($this->userRepository->findOneBy(['username' => $dto->username]) !== null) {
             throw new UnprocessableEntityHttpException(sprintf('User with username %s already exists', $dto->username));
         }
 

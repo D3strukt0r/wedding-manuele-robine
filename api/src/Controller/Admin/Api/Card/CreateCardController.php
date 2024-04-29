@@ -2,9 +2,10 @@
 
 namespace App\Controller\Admin\Api\Card;
 
-use App\Dto\Admin\Card\CreateCardDto;
 use App\Dto\Admin\Card\CardShowDto;
+use App\Dto\Admin\Card\CreateCardDto;
 use App\Entity\Card;
+use App\Entity\Invitee;
 use App\Entity\Role;
 use App\Repository\CardRepository;
 use App\Repository\InviteeRepository;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -44,8 +46,20 @@ class CreateCardController extends AbstractController
     public function __invoke(#[MapRequestPayload] CreateCardDto $dto): JsonResponse
     {
         $card = new Card();
-        foreach ($dto->inviteeIds as $invitee) {
-            $card->addInvitee($this->inviteeRepository->find($invitee));
+
+        $inviteesToBe = [];
+        foreach ($dto->inviteeIds as $inviteeId) {
+            $inviteesToBe[$inviteeId] = $this->inviteeRepository->find($inviteeId);
+        }
+
+        $inviteesNotFound = array_filter($inviteesToBe, static fn (?Invitee $invitee) => $invitee === null);
+        if (count($inviteesNotFound) > 0) {
+            throw new UnprocessableEntityHttpException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
+        }
+        /** @var array<int, Invitee> $inviteesToBe */
+
+        foreach ($inviteesToBe as $invitee) {
+            $card->addInvitee($invitee);
         }
         if ($dto->userLoginId !== null) {
             $user = $this->userRepository->find($dto->userLoginId);

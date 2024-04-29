@@ -63,6 +63,7 @@ class UpdateCardController extends AbstractController
         if (count($inviteesNotFound) > 0) {
             throw new UnprocessableEntityHttpException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
         }
+        /** @var array<int, Invitee> $inviteesToBe */
 
         foreach ($inviteesToBe as $invitee) {
             if (!$inviteesIs->contains($invitee)) {

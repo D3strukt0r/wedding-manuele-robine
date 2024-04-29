@@ -2,8 +2,8 @@
 
 namespace App\Controller\Admin\Api\User;
 
-use App\Dto\Admin\User\UserShowDto;
 use App\Dto\Admin\User\UpdateUserDto;
+use App\Dto\Admin\User\UserShowDto;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -49,7 +49,7 @@ class UpdateUserController extends AbstractController
     ): JsonResponse {
         if (
             $user->getUsername() !== $dto->username
-            && $this->userRepository->findOneBy(['username' => $dto->username])
+            && $this->userRepository->findOneBy(['username' => $dto->username]) !== null
         ) {
             throw new UnprocessableEntityHttpException(sprintf('User with username %s already exists', $dto->username));
         }

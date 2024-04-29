@@ -132,6 +132,7 @@ function CreateUser() {
           <div>
             <Input
               {...register('password', { setValueAs: (value) => value === '' ? null : value })}
+              type="password"
               label={t('user.password')}
               disabled={isPending}
               error={errors.password}
@@ -273,6 +274,7 @@ function UpdateUser({ record }: { record: User }) {
           <div>
             <Input
               {...register('newPassword', { setValueAs: (value) => value === '' ? null : value })}
+              type="password"
               label={t('user.newPassword')}
               disabled={isPending}
               error={errors.newPassword}

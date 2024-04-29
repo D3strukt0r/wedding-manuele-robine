@@ -11,71 +11,6 @@ parameters:
 			path: src/Command/CreateAdminUserCommand.php
 
 		-
-			message: "#^Parameter \\#1 \\$invitee of method App\\\\Entity\\\\Card\\:\\:addInvitee\\(\\) expects App\\\\Entity\\\\Invitee, App\\\\Entity\\\\Invitee\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Card/CreateCardController.php
-
-		-
-			message: "#^Parameter \\#1 \\$invitee of method App\\\\Entity\\\\Card\\:\\:addInvitee\\(\\) expects App\\\\Entity\\\\Invitee, App\\\\Entity\\\\Invitee\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Card/UpdateCardController.php
-
-		-
-			message: "#^Only booleans are allowed in &&, int\\|null given on the left side\\.$#"
-			count: 2
-			path: src/Controller/Admin/Api/Invitee/CreateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Entity\\\\Card\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Invitee/CreateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Entity\\\\Table\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Invitee/CreateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in a ternary operator condition, int\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Admin/Api/Invitee/CreateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in &&, int\\|null given on the left side\\.$#"
-			count: 2
-			path: src/Controller/Admin/Api/Invitee/UpdateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Entity\\\\Card\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Invitee/UpdateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Entity\\\\Table\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/Invitee/UpdateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in a ternary operator condition, int\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Admin/Api/Invitee/UpdateInviteeController.php
-
-		-
-			message: "#^Only booleans are allowed in an if condition, App\\\\Entity\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/User/CreateUserController.php
-
-		-
-			message: "#^Only booleans are allowed in &&, App\\\\Entity\\\\User\\|null given on the right side\\.$#"
-			count: 1
-			path: src/Controller/Admin/Api/User/UpdateUserController.php
-
-		-
-			message: "#^Only booleans are allowed in a negated boolean, App\\\\Entity\\\\Invitee\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Invited/Api/UpdateInviteesOnCardController.php
-
-		-
 			message: "#^Parameter \\#1 \\$invitee of method App\\\\Entity\\\\Table\\:\\:addInvitee\\(\\) expects App\\\\Entity\\\\Invitee, object given\\.$#"
 			count: 1
 			path: src/DataFixtures/TableFixtures.php
@@ -94,11 +29,6 @@ parameters:
 			message: "#^Method App\\\\Dto\\\\Common\\\\SortDirectionEnum\\:\\:values\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Dto/Common/SortDirectionEnum.php
-
-		-
-			message: "#^Property App\\\\Dto\\\\Invited\\\\InvitedInviteeListDto\\:\\:\\$id \\(int\\) does not accept int\\|null\\.$#"
-			count: 1
-			path: src/Dto/Invited/InvitedInviteeListDto.php
 
 		-
 			message: "#^Method App\\\\Migrations\\\\AbstractMigrationWithCommand\\:\\:execCommand\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"

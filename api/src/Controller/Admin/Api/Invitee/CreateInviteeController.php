@@ -44,10 +44,10 @@ class CreateInviteeController extends AbstractController
     #[OA\Tag('Admin/Invitee')]
     public function __invoke(#[MapRequestPayload] CreateInviteeDto $dto): JsonResponse
     {
-        $table = $dto->tableId ? $this->tableRepository->find($dto->tableId) : null;
-        $card = $dto->cardId ? $this->cardRepository->find($dto->cardId) : null;
+        $table = $dto->tableId !== null ? $this->tableRepository->find($dto->tableId) : null;
+        $card = $dto->cardId !== null ? $this->cardRepository->find($dto->cardId) : null;
 
-        if (($dto->cardId && !$card) || ($dto->tableId && !$table)) {
+        if (($dto->cardId !== null && $card === null) || ($dto->tableId !== null && $table === null)) {
             throw new UnprocessableEntityHttpException(sprintf('Card with ID %s or table with ID %s not found', $dto->cardId, $dto->tableId));
         }
 

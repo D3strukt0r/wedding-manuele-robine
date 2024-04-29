@@ -201,7 +201,7 @@ function CreateInvitee() {
             <Select<Inputs>
               name="tableId"
               control={control}
-              options={tables.data?.records?.map((table) => ({ label: `X (ID: ${table.id})`, value: table.id })) ?? []}
+              options={tables.data?.records?.map((table) => ({ label: table.name, value: table.id })) ?? []}
               nullable
               label={t('invitee.table')}
               disabled={isPending}
@@ -413,7 +413,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
             <Select<Inputs>
               name="tableId"
               control={control}
-              options={tables.data?.records?.map((table) => ({label: `X (ID: ${table.id})`, value: table.id})) ?? []}
+              options={tables.data?.records?.map((table) => ({ label: table.name, value: table.id })) ?? []}
               nullable
               label={t('invitee.table')}
               disabled={isPending}
@@ -517,6 +517,7 @@ export default function ListInvitees() {
     {
       key: 'tableId',
       title: t('invitee.table'),
+      render: (tableId) => tables.data?.records?.find((table) => table.id === tableId)?.name,
     },
     {
       key: 'cardId',
@@ -536,7 +537,7 @@ export default function ListInvitees() {
         </div>
       ),
     },
-  ] satisfies TableProps['columns'], [t]);
+  ] satisfies TableProps['columns'], [t, tables.data?.records]);
 
   if (invitees.data && tables.data && cards.data && food.data) {
     return (

@@ -55,7 +55,7 @@ class UpdateInviteesOnCardController extends AbstractController
     ): JsonResponse {
         foreach ($dto->invitees as $inviteeId => $inviteeDto) {
             $invitee = $this->inviteeRepository->find($inviteeId);
-            if (!$invitee) {
+            if ($invitee === null) {
                 throw $this->createNotFoundException(sprintf('Invitee with ID %s not found', $inviteeId));
             }
             $invitee->update($inviteeDto);
