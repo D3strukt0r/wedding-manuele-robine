@@ -21,7 +21,7 @@ network:
     - 'phpmyadmin.wedding-manuele-robine.test'
 
 folder:
-  # Enter "nfs" or "rsync" here. Both work on Mac. NFS folders do not work on
+  # Enter "nfs", "rsync" or "smb" here. Both work on Mac. NFS folders do not work on
   # Windows hosts. Vagrant will ignore your request for NFS synced folders on
   # Windows.
   # To avoid having to enter sudo password every time you run vagrant up,
@@ -41,3 +41,8 @@ folder:
       - 'api/vendor/*'
       - 'pwa/node_modules/*'
       - 'pwa/build/*'
+  # If you want to use SMB, set the type to "smb" and uncomment the following
+  # lines and fill in your Windows User credentials.
+  #smb:
+  #  username:
+  #  password:
