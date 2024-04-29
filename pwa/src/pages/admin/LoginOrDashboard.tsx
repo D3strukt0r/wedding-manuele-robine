@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import AuthenticationContext from '#/context/AuthenticationContext';
+import { useAuthenticationContext } from '#/utils/authentication';
 import Login from '#/components/admin/Login';
 import Dashboard from '#/components/admin/Dashboard';
 
 export default function LoginOrDashboard() {
-  const [authentication] = useContext(AuthenticationContext);
+  const [authentication] = useAuthenticationContext();
 
   if (authentication) {
     return <Dashboard />;

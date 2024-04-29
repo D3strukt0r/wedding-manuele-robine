@@ -4,12 +4,12 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import Table, { TableProps } from '#/components/common/admin/Table';
+import Table, { TableProps } from '#/components/common/Table';
 import BigSpinner from '#/layout/BigSpinner';
-import Modal from '#/components/common/admin/Modal';
-import Alert from '#/components/common/admin/Alert';
-import Input from '#/form/admin/Input';
-import Button from '#/form/admin/Button';
+import Modal from '#/components/common/Modal';
+import Alert from '#/components/common/Alert';
+import Input from '#/components/common/Input';
+import Button from '#/components/common/Button';
 import { Table as TableModel } from '#/components/types';
 import useUsers from '#/api/admin/user/useUsers';
 import useTables from '#/api/admin/table/useTables';
@@ -18,7 +18,7 @@ import useUpdateTable from '#/api/admin/table/useUpdateTable';
 import useCreateTable from '#/api/admin/table/useCreateTable';
 import { setErrorFromSymfonyViolations } from '#/utils/form';
 import useInvitees from '#/api/admin/invitee/useInvitees';
-import Select from '#/form/admin/Select.tsx';
+import Select from '#/components/common/Select';
 
 function CreateTable() {
   const { t } = useTranslation('app');
@@ -360,7 +360,7 @@ export default function ListTables() {
         </div>
       ),
     },
-  ] satisfies TableProps['columns'], [t]);
+  ] satisfies TableProps['columns'], [t, invitees.data?.records]);
 
   if (tables.data && users.data && invitees.data) {
     return (

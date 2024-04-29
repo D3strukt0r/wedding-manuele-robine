@@ -4,17 +4,17 @@ import {
   faHouse,
   faPerson,
 } from '@fortawesome/free-solid-svg-icons';
-import { Suspense, useContext, useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router-dom';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import BigSpinner from '#/layout/BigSpinner';
-import AuthenticationContext from '#/context/AuthenticationContext';
-import AdminLayout, { AdminLayoutProps } from '#/components/common/admin/AdminLayout';
+import { useAuthenticationContext } from '#/utils/authentication';
+import AdminLayout, { AdminLayoutProps } from '#/layout/AdminLayout';
 
 export default function Dashboard() {
   const { t } = useTranslation('app');
-  const [authentication, updateAuthentication] = useContext(AuthenticationContext);
+  const [authentication, updateAuthentication] = useAuthenticationContext();
 
   const navigation = useMemo(() => ([
     {

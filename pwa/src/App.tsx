@@ -7,7 +7,7 @@ import { RootErrorBoundary } from './layout/RootErrorBoundary';
 import BigSpinner from './layout/BigSpinner';
 import ErrorBoundary from './layout/ErrorBoundary';
 import NotFound from './layout/NotFound';
-import { AuthenticationContextLoader } from './context/AuthenticationContext';
+import { AuthenticationProvider } from './utils/authentication';
 import adminRoutes from './pages/admin/routes';
 
 const Homepage = lazy(() => import('./pages/Homepage'));
@@ -48,14 +48,14 @@ function App() {
     <RootErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <APIProvider apiKey="AIzaSyAOah4ZHl4nysZftsXrqefJ54LUDLPdIr0">
-          <AuthenticationContextLoader>
+          <AuthenticationProvider>
             <Suspense>
               <RouterProvider
                 router={router}
                 fallbackElement={<BigSpinner />}
               />
             </Suspense>
-          </AuthenticationContextLoader>
+          </AuthenticationProvider>
         </APIProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

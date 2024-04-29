@@ -4,11 +4,13 @@ import { FieldError } from 'react-hook-form';
 
 interface Props extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: ReactNode;
+  layout?: 'primary' | 'app-primary';
   description?: ReactNode;
   error?: FieldError;
 }
 const Input = forwardRef<HTMLInputElement, Props>(({
   label,
+  layout = 'primary',
   description,
   error,
   ...props
@@ -24,9 +26,12 @@ const Input = forwardRef<HTMLInputElement, Props>(({
           props.className,
           'h-4 w-4 rounded',
           {
-            'text-app-red-dark': !props.disabled,
+            'text-blue-600': !props.disabled && layout === 'primary',
+            'text-app-red-dark': !props.disabled && layout === 'app-primary',
             'text-gray-500': props.disabled,
-            'border-gray-300 focus:ring-app-red-dark': !error,
+            'border-gray-300': !error,
+            'focus:ring-blue-600': !error && layout === 'primary',
+            'focus:ring-app-red-dark': !error && layout === 'app-primary',
             'focus:ring-red-500': error,
           }
         )}
@@ -38,7 +43,10 @@ const Input = forwardRef<HTMLInputElement, Props>(({
       {label && (
         <label
           htmlFor={props.id ?? props.name}
-          className="noto-sans-regular text-gray-900"
+          className={clsx('text-gray-900', {
+            'font-medium': layout === 'primary',
+            'noto-sans-regular': layout === 'app-primary',
+          })}
         >
           {label}
         </label>

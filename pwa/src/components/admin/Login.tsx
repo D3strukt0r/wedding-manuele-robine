@@ -1,18 +1,18 @@
 import { useTranslation } from 'react-i18next';
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import AuthenticationContext from '#/context/AuthenticationContext';
-import Input from '#/form/admin/Input';
-import Button from '#/form/admin/Button';
-import Alert from '#/components/common/admin/Alert';
+import { useAuthenticationContext } from '#/utils/authentication';
+import Input from '#/components/common/Input';
+import Button from '#/components/common/Button';
 import useLogin from '#/api/common/authentication/useLogin';
+import Alert from '#/components/common/Alert';
 
 export default function Login() {
   const { t } = useTranslation('app');
-  const [, updateAuthentication] = useContext(AuthenticationContext);
+  const [, updateAuthentication] = useAuthenticationContext();
 
   const schema = useMemo(() => {
     return z.object({

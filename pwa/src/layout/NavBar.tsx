@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, useContext } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,7 @@ import { faBars, faX } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { Link, LinkProps } from 'react-router-dom';
-import AuthenticationContext from '#/context/AuthenticationContext';
+import { useAuthenticationContext } from '#/utils/authentication';
 
 const DisclosureLink = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => (
   <Link ref={ref} {...props} />
@@ -27,7 +27,7 @@ export default function NavBar({
 }: Props) {
   const { t } = useTranslation('app');
   const current = null; // TODO: get current route
-  const [authentication, updateAuthentication] = useContext(AuthenticationContext);
+  const [authentication, updateAuthentication] = useAuthenticationContext();
 
   return (
     <Disclosure as="nav" className="sticky top-0 bg-black/75 shadow z-10">

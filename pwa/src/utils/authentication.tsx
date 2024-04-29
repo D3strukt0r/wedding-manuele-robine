@@ -1,15 +1,15 @@
 import {
   createContext,
   ReactNode,
-  useCallback,
+  useCallback, useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 import axios from 'axios';
-import useLogin from '#/api/common/authentication/useLogin.ts';
-import BigSpinner from '#/layout/BigSpinner.tsx';
+import useLogin from '#/api/common/authentication/useLogin';
+import BigSpinner from '#/layout/BigSpinner';
 
 interface DecodedJwtPayload extends JwtPayload {
   roles: string[];
@@ -24,12 +24,14 @@ interface MyJwtPayload extends Omit<DecodedJwtPayload, 'exp' | 'iat'> {
 
 const AuthenticationContext = createContext<[MyJwtPayload | null, (token: string | null) => void]>([null, () => null]);
 
-export default AuthenticationContext;
+export function useAuthenticationContext() {
+  return useContext(AuthenticationContext);
+}
 
 interface Props {
   children: ReactNode;
 }
-export function AuthenticationContextLoader({
+export function AuthenticationProvider({
   children,
 }: Props) {
   const [loading, setLoading] = useState(true);

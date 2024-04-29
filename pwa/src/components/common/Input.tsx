@@ -6,11 +6,13 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
   label?: ReactNode;
+  layout?: 'primary' | 'app-primary';
   extra?: ReactNode;
   error?: FieldError;
 }
 const Input = forwardRef<HTMLInputElement, Props>(({
   label,
+  layout = 'primary',
   extra,
   error,
   ...props
@@ -19,7 +21,10 @@ const Input = forwardRef<HTMLInputElement, Props>(({
     return label && (
       <label
         htmlFor={props.id ?? props.name}
-        className="block text-sm font-medium leading-6 text-gray-900"
+        className={clsx('block text-sm leading-6 text-gray-900', {
+          'font-medium': layout !== 'primary',
+          'noto-sans-regular': layout === 'app-primary',
+        })}
       >
         {label}
       </label>
@@ -43,7 +48,12 @@ const Input = forwardRef<HTMLInputElement, Props>(({
   return (
     <>
       {labelBar}
-      <div className={clsx('relative rounded-md shadow-sm', { 'mt-2': labelBar })}>
+      <div
+        className={clsx('relative shadow-sm', {
+          'mt-2': labelBar,
+          'rounded-md': layout === 'primary',
+        })}
+      >
         <input
           type="text"
           {...props}
@@ -51,8 +61,10 @@ const Input = forwardRef<HTMLInputElement, Props>(({
           id={props.id ?? props.name}
           className={clsx(
             props.className,
-            'block w-full rounded-md border-0 py-1.5 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+            'block w-full border-0 py-1.5 sm:text-sm sm:leading-6',
             {
+              'rounded-md ring-1 ring-inset focus:ring-2 focus:ring-inset': layout === 'primary',
+              'peer focus:ring-0': layout === 'app-primary',
               'text-gray-900 placeholder:text-gray-400': !props.disabled,
               'bg-gray-300 text-gray-600 placeholder:text-gray-500': props.disabled,
               'ring-gray-300 focus:ring-blue-600': !error,
@@ -62,6 +74,15 @@ const Input = forwardRef<HTMLInputElement, Props>(({
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${props.id ?? props.name}-error` : undefined}
         />
+        {layout === 'app-primary' && (
+          <div
+            className={clsx('absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2', {
+              'peer-focus:border-app-red-dark': !error,
+              'peer-focus:border-red-500': error,
+            })}
+            aria-hidden="true"
+          />
+        )}
         {error && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <FontAwesomeIcon

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  layout?: 'primary' | 'secondary' | 'danger';
+  layout?: 'app-primary' | 'primary' | 'secondary' | 'danger';
   loading?: boolean;
 }
 const Button = forwardRef<HTMLButtonElement, Props>(({
@@ -19,9 +19,12 @@ const Button = forwardRef<HTMLButtonElement, Props>(({
       {...props}
       ref={ref}
       className={clsx(
-        'inline-flex justify-center items-center text-sm font-semibold leading-6 rounded-md px-3 py-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
+        'inline-flex justify-center items-center text-sm leading-6 px-3 py-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2',
         props.className,
         {
+          'noto-sans-regular': layout === 'app-primary',
+          'font-semibold rounded-md': layout !== 'app-primary',
+          'bg-app-red-dark text-white hover:bg-app-gray-dark focus-visible:outline-app-red-dark': !disabled && layout === 'app-primary',
           'bg-blue-600 hover:bg-blue-500 text-white focus-visible:outline-blue-600': !disabled && layout === 'primary',
           'bg-white hover:bg-gray-50 text-gray-900 ring-1 ring-inset ring-gray-300 ': !disabled && layout === 'secondary',
           'bg-red-600 hover:bg-red-500 text-white focus-visible:outline-red-600': !disabled && layout === 'danger',

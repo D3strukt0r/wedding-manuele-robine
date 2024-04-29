@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import Button from '#/form/admin/Button';
+import Button from './Button';
 
 interface ActionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;

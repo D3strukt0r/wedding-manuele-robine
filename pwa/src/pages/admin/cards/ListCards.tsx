@@ -4,20 +4,20 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import Table, { TableProps } from '#/components/common/admin/Table';
+import Table, { TableProps } from '#/components/common/Table';
 import BigSpinner from '#/layout/BigSpinner';
-import Modal from '#/components/common/admin/Modal';
-import Alert from '#/components/common/admin/Alert';
+import Modal from '#/components/common/Modal';
+import Alert from '#/components/common/Alert';
 import { Card } from '#/components/types';
 import useCards from '#/api/admin/cards/useCards';
 import useDeleteCard from '#/api/admin/cards/useDeleteCard';
 import useUpdateCard from '#/api/admin/cards/useUpdateCard';
 import useInvitees from '#/api/admin/invitee/useInvitees';
 import useUsers from '#/api/admin/user/useUsers';
-import Button from '#/form/admin/Button';
+import Button from '#/components/common/Button';
 import useCreateCard from '#/api/admin/cards/useCreateCard';
 import { setErrorFromSymfonyViolations } from '#/utils/form';
-import Select from '#/form/admin/Select';
+import Select from '#/components/common/Select';
 
 function CreateCard() {
   const { t } = useTranslation('app');
@@ -363,7 +363,7 @@ export default function ListInvitees() {
         </div>
       ),
     },
-  ] satisfies TableProps['columns'], [t]);
+  ] satisfies TableProps['columns'], [t, users.data?.records, invitees.data?.records]);
 
   if (cards.data && invitees.data && users.data) {
     return (

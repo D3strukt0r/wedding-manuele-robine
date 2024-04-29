@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useCallback, useContext, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import QrScanner from 'qr-scanner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,20 +8,20 @@ import { DevTool } from '@hookform/devtools';
 import menu from '/menu.png';
 import AlignedCard from '#/layout/AlignedCard';
 import Collapsible from '#/layout/Collapsible';
-import AuthenticationContext from '#/context/AuthenticationContext';
+import { useAuthenticationContext } from '#/utils/authentication';
 import { Invitee } from '#/components/types';
-import Input from '#/form/Input';
-import Checkbox from '#/form/Checkbox';
-import RadioGroup from '#/form/RadioGroup';
-import Button from '#/form/Button';
+import Input from '#/components/common/Input';
+import Checkbox from '#/components/common/Checkbox';
+import RadioGroup from '#/components/common/RadioGroup';
+import Button from '#/components/common/Button';
 import QrScannerCheck, { CountdownHandle } from './QrScannerCheck';
 import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
 import useInviteesOnCard from '#/api/invited/useInviteesOnCard';
 import useUpdateInviteesOnCard from '#/api/invited/useUpdateInviteesOnCard';
-import useLogin from '#/api/common/authentication/useLogin.ts';
-import BigSpinner from '#/layout/BigSpinner.tsx';
-import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
-import Alert from '#/components/common/admin/Alert.tsx';
+import useLogin from '#/api/common/authentication/useLogin';
+import BigSpinner from '#/layout/BigSpinner';
+import { setErrorFromSymfonyViolations } from '#/utils/form';
+import Alert from '#/components/common/Alert';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -42,7 +42,7 @@ interface Props {
 export default function ManuAndSelection({ id }: Props) {
   const { t } = useTranslation('app');
   const qrRef = useRef<CountdownHandle>(null);
-  const [authentication, updateAuthentication] = useContext(AuthenticationContext);
+  const [authentication, updateAuthentication] = useAuthenticationContext();
 
   const { mutate } = useLogin({
     onSuccess: (response) => {
@@ -256,6 +256,7 @@ function InviteesListOnMyCardForm({
                 <Input
                   {...register(`invitees.${invitee.id}.firstname`, { setValueAs: (value) => value === '' ? null : value })}
                   label={t('homepage.manageCard.properties.firstname')}
+                  layout="app-primary"
                   placeholder={invitee.firstname}
                   disabled={isPending}
                   error={errors.invitees?.[invitee.id]?.firstname}
@@ -266,6 +267,7 @@ function InviteesListOnMyCardForm({
                 <Input
                   {...register(`invitees.${invitee.id}.lastname`, { setValueAs: (value) => value === '' ? null : value })}
                   label={t('homepage.manageCard.properties.lastname')}
+                  layout="app-primary"
                   placeholder={invitee.lastname}
                   disabled={isPending}
                   error={errors.invitees?.[invitee.id]?.lastname}
@@ -277,6 +279,7 @@ function InviteesListOnMyCardForm({
               <Input
                 {...register(`invitees.${invitee.id}.email`, { setValueAs: (value) => value === '' ? null : value })}
                 label={t('homepage.manageCard.properties.email')}
+                layout="app-primary"
                 placeholder={invitee.email || undefined}
                 disabled={isPending}
                 error={errors.invitees?.[invitee.id]?.email}
@@ -286,6 +289,7 @@ function InviteesListOnMyCardForm({
               <Checkbox
                 {...register(`invitees.${invitee.id}.willCome`)}
                 label={t('homepage.manageCard.properties.willCome')}
+                layout="app-primary"
                 disabled={isPending}
                 error={errors.invitees?.[invitee.id]?.willCome}
               />
@@ -307,6 +311,7 @@ function InviteesListOnMyCardForm({
               <Input
                 {...register(`invitees.${invitee.id}.allergies`, { setValueAs: (value) => value === '' ? null : value })}
                 label={t('homepage.manageCard.properties.allergies')}
+                layout="app-primary"
                 placeholder={invitee.allergies || undefined}
                 disabled={isPending}
                 error={errors.invitees?.[invitee.id]?.allergies}
@@ -316,6 +321,7 @@ function InviteesListOnMyCardForm({
         ))}
         <Button
           type="submit"
+          layout="app-primary"
           className="col-span-2"
           loading={isPending}
           disabled={!isDirty/* || !isValid*/}

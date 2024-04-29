@@ -4,12 +4,12 @@ import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { DevTool } from '@hookform/devtools';
-import Table, { TableProps } from '#/components/common/admin/Table';
+import Table, { TableProps } from '#/components/common/Table';
 import BigSpinner from '#/layout/BigSpinner';
-import Modal from '#/components/common/admin/Modal';
-import Alert from '#/components/common/admin/Alert';
-import Input from '#/form/admin/Input';
-import Button from '#/form/admin/Button';
+import Modal from '#/components/common/Modal';
+import Alert from '#/components/common/Alert';
+import Input from '#/components/common/Input';
+import Button from '#/components/common/Button';
 import { User } from '#/components/types';
 import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType';
 import useUsers from '#/api/admin/user/useUsers';
@@ -17,7 +17,7 @@ import useDeleteUser from '#/api/admin/user/useDeleteUser';
 import useUpdateUser from '#/api/admin/user/useUpdateUser';
 import useCreateUser from '#/api/admin/user/useCreateUser';
 import { setErrorFromSymfonyViolations } from '#/utils/form';
-import Select from '#/form/admin/Select.tsx';
+import Select from '#/components/common/Select';
 
 function CreateUser() {
   const { t } = useTranslation('app');
