@@ -1,2 +1,46 @@
+# Add 'repo' label to any root file changes
 repo:
   - ./*
+
+# Add 'docker' label to any change to files within the docker dir and docker relevant files
+docker:
+  - .docker/**/*
+  - api/.docker/**/*
+  - pwa/.docker/**/*
+  - .dockerignore
+  - api.Dockerfile
+  - pwa.Dockerfile
+  - compose.build.yml
+  - compose.vm.yml.dist
+
+# Add 'source' label to any change to files within the source dir EXCEPT for the test files
+source:
+  - api/bin/**/*
+  - api/config/**/*
+  - api/migrations/**/*
+  - api/public/**/*
+  - api/src/**/*
+  - api/templates/**/*
+  - api/translations/**/*
+  - api/.env
+  - api/composer.json
+  - api/composer.lock
+  - api/symfony.lock
+  - pwa/public/**/*
+  - pwa/src/**/*
+  - "!pwa/src/**/*.test.tsx"
+  - pwa/.browserslistrc
+  - pwa/index.html
+  - pwa/package.json
+  - pwa/pnpm-lock.yaml
+  - pwa/postcss.config.js
+  - pwa/tailwind.config.js
+  - pwa/tsconfig.json
+  - pwa/tsconfig.node.json
+  - pwa/vite.config.ts
+
+# Add 'test' label to any change to files within the source dir that are tests
+test:
+  - api/tests/**/*
+  - pwa/src/**/*.test.tsx
+  - pwa/tests/**/*
