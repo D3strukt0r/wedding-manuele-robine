@@ -38,6 +38,37 @@ Start the project
 vagrant up
 ```
 
+* Initial VM Setup & Docker build & pull: ~6m 42s
+* Initial Composer install: ~1m 18s ?
+* Initial pNpm install: ~5m 38s ?
+* Initial App startup: ~20s ?
+* Subsequent startups: ~1m 7s (VM) + 26s (Docker) ?
+
+Common commands
+
+```shell
+phpstan
+phpstan analyse --generate-baseline
+
+PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run -v --allow-risky=yes --diff --show-progress=dots
+PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix -v --allow-risky=yes --show-progress=dots
+
+phpcs -p
+phpcbf
+
+rector process --dry-run
+rector process
+
+yarn run eslint --ext .js,.ts,.jsx,.tsx assets/
+yarn run eslint --fix --ext .js,.ts,.jsx,.tsx assets/
+
+yarn run prettier --check 'assets/**/*.{js,jsx,ts,tsx,less}'
+yarn run prettier --write 'assets/**/*.{js,jsx,ts,tsx,less}'
+
+yarn run stylelint assets/styles/
+yarn run stylelint --fix assets/styles/
+```
+
 TODO
 
 ### Building

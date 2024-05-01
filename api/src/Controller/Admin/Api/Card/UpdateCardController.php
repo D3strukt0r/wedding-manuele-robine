@@ -50,7 +50,7 @@ class UpdateCardController extends AbstractController
         #[MapEntity(id: 'card_id')] Card $card,
         #[MapRequestPayload] UpdateCardDto $dto
     ): JsonResponse {
-        $user = $this->userRepository->find($dto->userLoginId);
+        $user = $dto->userLoginId !== null ? $this->userRepository->find($dto->userLoginId) : null;
         $card->setUserLogin($user);
 
         $inviteesIs = $card->getInvitees();

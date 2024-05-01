@@ -7,7 +7,7 @@ use App\Entity\Invitee;
 
 readonly class InviteeShowDto
 {
-    public ?int $id;
+    public int $id;
 
     public string $firstname;
 
@@ -32,10 +32,17 @@ readonly class InviteeShowDto
 
     /**
      * @param array<string, bool>|null $actions
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(Invitee $invitee, ?array $actions = null)
     {
-        $this->id = $invitee->getId();
+        $id = $invitee->getId();
+        if ($id === null) {
+            throw new \InvalidArgumentException('Invitee ID cannot be null, entity was not persisted yet.');
+        }
+
+        $this->id = $id;
         $this->firstname = $invitee->getFirstname();
         $this->lastname = $invitee->getLastname();
         $this->email = $invitee->getEmail();

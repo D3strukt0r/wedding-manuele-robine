@@ -6,7 +6,7 @@ use App\Entity\User;
 
 readonly class UserShowDto
 {
-    public ?int $id;
+    public int $id;
 
     public string $username;
 
@@ -24,10 +24,17 @@ readonly class UserShowDto
 
     /**
      * @param array<string, bool>|null $actions
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(User $user, ?string $plainPassword = null, ?array $actions = null)
     {
-        $this->id = $user->getId();
+        $id = $user->getId();
+        if ($id === null) {
+            throw new \InvalidArgumentException('User ID cannot be null, entity was not persisted yet.');
+        }
+
+        $this->id = $id;
         $this->username = $user->getUsername();
         $this->plainPassword = $plainPassword;
         $this->roles = $user->getRoles();
