@@ -1,2 +1,3 @@
 invited:
+  noCardFound: 'Keine Einladung gefunden.'
   hasChangedInviteesList: 'Die Einladungsliste wurde geändert. Es dürfen nur Daten angepasst werden, nicht hinzugefügt oder entfernt.'

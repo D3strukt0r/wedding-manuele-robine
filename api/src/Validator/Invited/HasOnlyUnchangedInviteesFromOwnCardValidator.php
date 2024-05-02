@@ -41,6 +41,7 @@ class HasOnlyUnchangedInviteesFromOwnCardValidator extends ConstraintValidator
 
         $card = $this->cardRepository->findOneBy(['userLogin' => $currentUser]);
         if ($card === null) {
+            $this->context->buildViolation('invited.noCardFound')->addViolation();
             return;
         }
 

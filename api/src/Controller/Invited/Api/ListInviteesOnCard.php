@@ -53,9 +53,13 @@ class ListInviteesOnCard extends AbstractController
         #[MapQueryString] InvitedInviteeQueryDto $query = new InvitedInviteeQueryDto(),
     ): JsonResponse {
         $card = $this->cardRepository->findOneBy(['userLogin' => $currentUser]);
-        $invitees = $this->inviteeRepository->findBy(['card' => $card], [], $query->limit, $query->offset);
+        if ($card !== null) {
+            $invitees = $this->inviteeRepository->findBy(['card' => $card], [], $query->limit, $query->offset);
+        } else {
+            $invitees = [];
+        }
         return $this->json([
-            'total' => $this->inviteeRepository->count(['card' => $card]),
+            'total' => $card !== null ? $this->inviteeRepository->count(['card' => $card]) : 0,
             'offset' => $query->offset,
             'limit' => $query->limit,
             'records' => array_map(static fn (Invitee $invitee) => new InvitedInviteeListDto($invitee), $invitees),
