@@ -515,6 +515,16 @@ export default function ListInvitees() {
       title: t('invitee.lastname'),
     },
     {
+      key: 'willCome',
+      title: t('invitee.willCome'),
+      render: (willCome) => willCome ? t('common.yes') : t('common.no'),
+    },
+    {
+      key: 'food',
+      title: t('invitee.food'),
+      render: (food) => food && t(`enum.food.${food}`),
+    },
+    {
       key: 'tableId',
       title: t('invitee.table'),
       render: (tableId) => tables.data?.records?.find((table) => table.id === tableId)?.name,

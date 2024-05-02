@@ -6,6 +6,8 @@
   "enum.food.child": "Kindermenü",
   "enum.role.ROLE_USER": "Benutzer",
   "enum.role.ROLE_ADMIN": "Admin",
+  "common.yes": "Ja",
+  "common.no": "Nein",
   "notFound.title": "Seite nicht gefunden",
   "notFound.goBack": "Zurück zur Startseite",
   "form.save": "Speichern",
