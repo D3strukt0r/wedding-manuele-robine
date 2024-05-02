@@ -21,6 +21,7 @@ Vagrant.configure('2') do |config|
     if File.exist?('.vagrant.config.yml.dist')
         settingsDist = YAML.load(File.read('.vagrant.config.yml.dist'))
     end
+    # TODO: Handle empty file "in `merge': no implicit conversion of nil into Hash (TypeError)"
     if File.exist?('.vagrant.config.yml')
         settingsCustom = YAML.load(File.read('.vagrant.config.yml'))
     end

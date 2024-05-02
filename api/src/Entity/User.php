@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: false)]
     private string $password;
 
-    #[ORM\OneToOne(mappedBy: 'userLogin', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'userLogin', cascade: ['persist'])]
     private ?Card $card = null;
 
     public function __construct(string $username, UserPasswordHasherInterface $passwordHasher, string $password)

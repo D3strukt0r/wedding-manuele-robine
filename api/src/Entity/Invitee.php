@@ -35,10 +35,11 @@ class Invitee
     private ?string $allergies = null;
 
     #[ORM\ManyToOne(inversedBy: 'invitees')]
-    #[ORM\JoinColumn(name: 'table_to_sit_id')]
+    #[ORM\JoinColumn(name: 'table_to_sit_id', onDelete: 'SET NULL')]
     private ?Table $table = null;
 
     #[ORM\ManyToOne(inversedBy: 'invitees')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Card $card = null;
 
     public function __construct(string $firstname, string $lastname)

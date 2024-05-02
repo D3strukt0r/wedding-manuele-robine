@@ -20,8 +20,8 @@ class Card
     #[ORM\OneToMany(mappedBy: 'card', targetEntity: Invitee::class)]
     private Collection $invitees;
 
-    #[ORM\OneToOne(inversedBy: 'card', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\OneToOne(inversedBy: 'card', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?User $userLogin = null;
 
     public function __construct()
