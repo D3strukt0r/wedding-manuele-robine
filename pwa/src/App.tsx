@@ -49,7 +49,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <APIProvider apiKey="AIzaSyAOah4ZHl4nysZftsXrqefJ54LUDLPdIr0">
           <AuthenticationProvider>
-            <Suspense>
+            <Suspense fallback={<BigSpinner />}>
               <RouterProvider
                 router={router}
                 fallbackElement={<BigSpinner />}

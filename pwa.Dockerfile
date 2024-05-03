@@ -103,6 +103,8 @@ WORKDIR /usr/local/src/app
 
 EXPOSE 80
 
+#HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD curl --fail http://127.0.0.1 || exit 1
+
 # Start supervisor (http://supervisord.org) as root
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
