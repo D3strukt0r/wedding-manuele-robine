@@ -97,7 +97,7 @@ export default function Login() {
             {t('admin.login.login')}
           </Button>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </div>

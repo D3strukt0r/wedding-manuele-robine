@@ -23,7 +23,7 @@ services:
       #- ./pwa/.docker/rootfs-local/docker-entrypoint.d/20_build.sh:/docker-entrypoint.d/20_build.sh
     environment:
       API_URL: http://api
-      PUBLIC_API_URL: https://api.wedding-manuele-robine.test
+      VITE_PUBLIC_API_URL: https://api.wedding-manuele-robine.test
     depends_on:
       - api
       - traefik

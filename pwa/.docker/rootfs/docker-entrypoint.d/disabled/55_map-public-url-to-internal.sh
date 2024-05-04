@@ -2,8 +2,8 @@
 set -e -u -o pipefail
 
 # Check if API_URL is set
-if [[ -z "${API_URL:-}" ]] || [[ -z "${PUBLIC_API_URL:-}" ]]; then
-  entrypoint_error 'API_URL or PUBLIC_API_URL are not set'
+if [[ -z "${API_URL:-}" ]] || [[ -z "${VITE_PUBLIC_API_URL:-}" ]]; then
+  entrypoint_error 'API_URL or VITE_PUBLIC_API_URL are not set'
   exit 1
 fi
 
@@ -19,8 +19,8 @@ else
     host=$hostport
 fi
 
-public_proto="$(echo "$PUBLIC_API_URL" | { grep '://' || test $? = 1; } | sed -e's,^\(.*\)://.*,\1,g')"
-public_url=$(echo "$PUBLIC_API_URL" | sed -e "s,$public_proto://,,g")
+public_proto="$(echo "$VITE_PUBLIC_API_URL" | { grep '://' || test $? = 1; } | sed -e's,^\(.*\)://.*,\1,g')"
+public_url=$(echo "$VITE_PUBLIC_API_URL" | sed -e "s,$public_proto://,,g")
 public_hostport=$(echo "$public_url" | cut -d/ -f1)
 public_port=$(echo "$public_hostport" | { grep : || test $? = 1; } | cut -d: -f2)
 if [ -n "$public_port" ]; then

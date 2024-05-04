@@ -6,10 +6,7 @@ import axios from 'axios';
 
 (async () => {
   // Set different base URLs for client and server
-  axios.defaults.baseURL =
-    import.meta.env.MODE === 'development'
-      ? 'https://api.wedding-manuele-robine.test'
-      : 'https://api-wedding-manuele-robine.d3strukt0r.dev';
+  axios.defaults.baseURL = document.documentElement.dataset.apiUrl;
 
   await initI18n(currentLanguage());
 

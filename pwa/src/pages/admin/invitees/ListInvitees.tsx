@@ -220,7 +220,7 @@ function CreateInvitee() {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>
@@ -432,7 +432,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>

@@ -150,7 +150,7 @@ function CreateUser() {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>
@@ -292,7 +292,7 @@ function UpdateUser({ record }: { record: User }) {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>

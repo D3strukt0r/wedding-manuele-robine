@@ -133,7 +133,7 @@ function CreateCard() {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>
@@ -257,7 +257,7 @@ function UpdateCard({ record }: { record: Card }) {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>

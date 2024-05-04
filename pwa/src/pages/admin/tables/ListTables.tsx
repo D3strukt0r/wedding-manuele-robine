@@ -147,7 +147,7 @@ function CreateTable() {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>
@@ -286,7 +286,7 @@ function UpdateTable({ record }: { record: TableModel }) {
             />
           </div>
         </form>
-        {import.meta.env.MODE === 'development' && (
+        {import.meta.env.DEV && (
           <DevTool control={control} />
         )}
       </Modal>
