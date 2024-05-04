@@ -28,23 +28,15 @@ file_env() {
 
 entrypoint_info 'Load various environment variables'
 manualEnvs=(
-  API_URL
-  PUBLIC_API_URL
+  #API_URL
+  #PUBLIC_API_URL
 )
 envs=(
   ENV
   "${manualEnvs[@]}"
   NGINX_CLIENT_MAX_BODY_SIZE
-  # For Svelte Kit (https://kit.svelte.dev/docs/adapter-node)
   HOST
   PORT
-  #SOCKET_PATH
-  #ORIGIN
-  #PROTOCOL_HEADER
-  #HOST_HEADER
-  #ADDRESS_HEADER
-  #XFF_DEPTH
-  #BODY_SIZE_LIMIT
 )
 
 # Set empty environment variable or get content from "/run/secrets/<something>"
@@ -63,14 +55,14 @@ for e in "${manualEnvs[@]}"; do
   if [ -z "${!e}" ]; then
     missing_manual_settings=1
     case $e in
-      API_URL)
-        : "${!e:=https://api.wedding-manuele-robine.test}"
-        entrypoint_error "$e=${!e}"
-        ;;
-      PUBLIC_API_URL)
-        : "${!e:=http://api}"
-        entrypoint_error "$e=${!e}"
-        ;;
+      #API_URL)
+      #  : "${!e:=http://api}"
+      #  entrypoint_error "$e=${!e}"
+      #  ;;
+      #PUBLIC_API_URL)
+      #  : "${!e:=https://api.wedding-manuele-robine.test}"
+      #  entrypoint_error "$e=${!e}"
+      #  ;;
       *)
         ;;
     esac

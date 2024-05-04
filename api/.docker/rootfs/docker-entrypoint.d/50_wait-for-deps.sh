@@ -36,7 +36,7 @@ database="$(echo "$url" | { grep / || test $? = 1; } | cut -d/ -f2- | cut -d? -f
 
 DEPS_TIMEOUT=${DEPS_TIMEOUT:=60}
 
-entrypoint_info "Waiting up to $DEPS_TIMEOUT seconds for remote db \"$driver://$user:$password@$host:$port/$database\" ..."
+entrypoint_info "Waiting up to $DEPS_TIMEOUT seconds for remote db \"$driver://$user:<password>@$host:$port/$database\" ..."
 
 # https://stackoverflow.com/a/70362046/4156752 Elapsed time
 start_time="$(date -u +%s)"

@@ -27,13 +27,10 @@ file_env() {
 }
 
 entrypoint_info 'Load various environment variables'
-#manualEnvs=(
-#  API_URL
-#)
+manualEnvs=()
 envs=(
-  #APP_ENV
   NGINX_CLIENT_MAX_BODY_SIZE
-  #"${manualEnvs[@]}"
+  "${manualEnvs[@]}"
 )
 
 # Set empty environment variable or get content from "/run/secrets/<something>"
@@ -42,28 +39,23 @@ for e in "${envs[@]}"; do
 done
 
 # Set default values
-#: "${APP_ENV:=prod}"
 : "${NGINX_CLIENT_MAX_BODY_SIZE:=100M}"
 
-#missing_manual_settings=
-#for e in "${manualEnvs[@]}"; do
-#  if [ -z "${!e}" ]; then
-#    missing_manual_settings=1
-#    case $e in
-#      API_URL)
-#        : "${!e:=https://example.test/api}"
-#        entrypoint_error "$e=${!e}"
-#        ;;
-#      *)
-#        ;;
-#    esac
-#  fi
-#done
-#if [ "$missing_manual_settings" = 1 ]; then
-#    entrypoint_error "You haven't set all the important values. Above you can copy-paste the generated ones, but make sure to use them."
-#    exit 1
-#fi
-#unset missing_manual_settings
+missing_manual_settings=
+for e in "${manualEnvs[@]}"; do
+  if [ -z "${!e}" ]; then
+    missing_manual_settings=1
+    case $e in
+      *)
+        ;;
+    esac
+  fi
+done
+if [ "$missing_manual_settings" = 1 ]; then
+    entrypoint_error "You haven't set all the important values. Above you can copy-paste the generated ones, but make sure to use them."
+    exit 1
+fi
+unset missing_manual_settings
 
 entrypoint_info 'Dump environment variables into /etc/environment'
 printenv | sed -r "s/'/\\\'/gm" | sed -r "s/^([^=]+=)(.*)\$/\1'\2'/gm" > /etc/environment
