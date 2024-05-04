@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import header from '/header.png';
+import header from '/img/header.png';
 
 interface Props {
   id?: string;
