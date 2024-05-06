@@ -715,8 +715,7 @@ ij_continuation_indent_size = 4
 # ij_markdown_wrap_text_if_long = true
 # ij_markdown_wrap_text_inside_blockquotes = true
 
-[{*.yaml,*.yml,*.yml.dist}]
-indent_size = 4
+#[{*.yaml,*.yml,*.yml.dist}]
 # ij_visual_guides =
 # ij_yaml_align_values_properties = do_not_align
 # ij_yaml_autoinsert_sequence_marker = true
@@ -729,8 +728,8 @@ indent_size = 4
 # ij_yaml_spaces_within_braces = true
 # ij_yaml_spaces_within_brackets = true
 
-[{compose.yml,compose.yml.dist}]
-indent_size = 2
+#[{compose.yml,compose.yml.dist}]
+#indent_size = 2
 
 [api/config/**/*.yaml]
 indent_size = 4
