@@ -26,6 +26,14 @@ updates:
       - "D3strukt0r"
     schedule:
       interval: "daily"
+    groups:
+      api-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   # PWA pnpm
   - package-ecosystem: "npm"
@@ -37,3 +45,11 @@ updates:
       - "D3strukt0r"
     schedule:
       interval: "daily"
+    groups:
+      pwa-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
