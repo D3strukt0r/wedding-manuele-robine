@@ -45,8 +45,8 @@ export default function AlignedCard({
       {/* Container */}
       <div
         className={clsx('mx-auto max-w-7xl md:px-6 lg:px-8', {
-          'md:pr-20 lg:pr-32': align === 'left',
-          'md:pl-20 lg:pl-32': align === 'right',
+          'md:pr-20 lg:pr-20': align === 'left',
+          'md:pl-20 lg:pl-20': align === 'right',
         })}
       >
         {/* Container background color */}
