@@ -81,7 +81,7 @@ export default function ManuAndSelection({ id }: Props) {
       image={menu}
       topContent={
         <>
-          <h2 className="uppercase text-3xl mb-6 philosopher-regular">
+          <h2 className="uppercase text-4xl md:text-7xl mb-6 philosopher-regular">
             {t('homepage.menu.title')}
           </h2>
           <div className="md:hidden">
@@ -89,28 +89,28 @@ export default function ManuAndSelection({ id }: Props) {
               menuOptions={[
                 {
                   key: 'meat',
-                  title: t('homepage.menu.meat.title'),
+                  title: <span className="text-xl">{t('homepage.menu.meat.title')}</span>,
                   text: t('homepage.menu.meat.text'),
                 },
                 {
                   key: 'vegetarian',
-                  title: t('homepage.menu.vegetarian.title'),
+                  title: <span className="text-xl">{t('homepage.menu.vegetarian.title')}</span>,
                   text: t('homepage.menu.vegetarian.text'),
                 },
               ]}
             />
           </div>
           <div className="hidden md:block">
-            <h3 className="text-2xl mb-4 philosopher-regular">
+            <h3 className="text-4xl mb-4 philosopher-regular">
               {t('homepage.menu.meat.title')}
             </h3>
-            <p className="whitespace-pre-line noto-sans-regular">
+            <p className="whitespace-pre-line text-2xl noto-sans-regular">
               {t('homepage.menu.meat.text')}
             </p>
-            <h3 className="text-2xl mb-4 philosopher-regular">
+            <h3 className="text-4xl mb-4 philosopher-regular">
               {t('homepage.menu.vegetarian.title')}
             </h3>
-            <p className="whitespace-pre-line noto-sans-regular">
+            <p className="whitespace-pre-line text-2xl noto-sans-regular">
               {t('homepage.menu.vegetarian.text')}
             </p>
           </div>

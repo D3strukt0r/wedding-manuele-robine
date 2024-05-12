@@ -51,7 +51,7 @@ export default function NavBar({
                         item.route === current
                           ? 'border-indigo-500 text-gray-900'
                           : 'border-transparent text-gray-50 hover:border-gray-100 hover:text-gray-200',
-                        'inline-flex items-center border-b-2 pt-1 text-sm font-medium uppercase philosopher-regular',
+                        'inline-flex items-center border-b-2 pt-1 text-xl font-medium uppercase philosopher-regular',
                       )}
                     >
                       <span
@@ -160,7 +160,7 @@ export default function NavBar({
                     item.route === current
                       ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                       : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
-                    'block border-l-4 pl-3 pr-4 text-base font-medium uppercase philosopher-regular',
+                    'block border-l-4 pl-3 pr-4 text-xl font-medium uppercase philosopher-regular',
                   )}
                 >
                   <span
@@ -177,7 +177,7 @@ export default function NavBar({
             {authentication && (
               <div className="border-t border-gray-600 pb-3 pt-4">
                 <div className="flex items-center px-4">
-                  <div className="text-base font-medium text-gray-50 philosopher-regular">
+                  <div className="text-xl font-medium text-gray-50 philosopher-regular">
                     {authentication.username}
                   </div>
                 </div>
@@ -187,14 +187,14 @@ export default function NavBar({
                     <Disclosure.Button
                       as={DisclosureLink}
                       to="/admin"
-                      className="block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
+                      className="block px-4 py-2 text-xl font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
                     >
                       {t('menu.admin')}
                     </Disclosure.Button>
                   )}
                   <Disclosure.Button
                     as="button"
-                    className="w-full text-left block px-4 py-2 text-base font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
+                    className="w-full text-left block px-4 py-2 text-xl font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
                     onClick={() => {
                       updateAuthentication(null);
                     }}
