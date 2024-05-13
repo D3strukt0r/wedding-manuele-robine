@@ -3,8 +3,7 @@
 namespace App\Controller\Common\Api\Lookup;
 
 use App\Dto\Common\ListableType;
-use App\Entity\Food;
-use App\Entity\Role;
+use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,6 +22,7 @@ class ListTypeController extends AbstractController
         methods: [Request::METHOD_GET],
     )]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    #[Security(name: 'Bearer')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Type not found')]
     #[OA\Tag('Common/Lookup')]
