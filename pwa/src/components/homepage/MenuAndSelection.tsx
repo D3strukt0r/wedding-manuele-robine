@@ -228,7 +228,7 @@ function InviteesListOnMyCardForm({
 
   const { mutate, isPending, isError, error } = useUpdateInviteesOnCard({
     onSuccess: () => {
-      reset();
+      // reset(); // TODO: Figure out how to manage the form state after a successful submit
     },
     onError: (error) => {
       setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
@@ -324,7 +324,7 @@ function InviteesListOnMyCardForm({
           layout="app-primary"
           className="col-span-2"
           loading={isPending}
-          disabled={!isDirty/* || !isValid*/}
+          // disabled={!isDirty || !isValid} // TODO: Figure out how to manage the form state after a successful submit
         >
           {t('form.save')}
         </Button>
