@@ -235,7 +235,7 @@ function InviteesListOnMyCardForm({
     }
   });
 
-  return (
+  return invitees.length > 0 ? (
     <>
       {isError ? (
         <Alert
@@ -333,5 +333,7 @@ function InviteesListOnMyCardForm({
         <DevTool control={control} />
       )}
     </>
+  ) : (
+    <Alert type="error" title={t('homepage.manageCard.noInvitees')} />
   );
 }
