@@ -34,15 +34,15 @@ export default function NavBar({
       {({ open }) => (
         <>
           {/* Desktop Menu */}
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-4 lg:px-8">
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
                   <div className="h-8 w-auto">{logo}</div>
                 </div>
               </div>
-              <div className="hidden sm:ml-6 sm:flex">
-                <div className="hidden sm:mr-6 sm:flex">
+              <div className="hidden sm:ml-6 lg:flex">
+                <div className={clsx('hidden lg:flex', {'sm:mr-6': authentication})}>
                   {menuItems.map((item, index) => (
                     <a
                       key={item.label}
@@ -67,7 +67,7 @@ export default function NavBar({
                 </div>
                 {/* Profile dropdown */}
                 {authentication && (
-                  <div className="sm:flex sm:items-center">
+                  <div className="lg:flex lg:items-center">
                     <Menu as="div" className="relative ml-3">
                       <div>
                         <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -131,7 +131,7 @@ export default function NavBar({
                   </div>
                 )}
               </div>
-              <div className="-mr-2 flex items-center sm:hidden">
+              <div className="-mr-2 flex items-center lg:hidden">
                 {/* Mobile menu button */}
                 <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-50 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                   <span className="absolute -inset-0.5" />
@@ -149,7 +149,7 @@ export default function NavBar({
           </div>
 
           {/* Mobile Menu */}
-          <Disclosure.Panel className="sm:hidden">
+          <Disclosure.Panel className="lg:hidden">
             <div className="pb-3 pt-2">
               {menuItems.map((item, index) => (
                 <Disclosure.Button
