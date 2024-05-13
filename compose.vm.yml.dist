@@ -24,6 +24,7 @@ services:
     environment:
       API_URL: http://api
       VITE_PUBLIC_API_URL: https://api.wedding-manuele-robine.test
+      VITE_GOOGLE_MAPS_API_KEY:
     depends_on:
       - api
       - traefik

@@ -47,7 +47,7 @@ function App() {
   return (
     <RootErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <APIProvider apiKey="AIzaSyAOah4ZHl4nysZftsXrqefJ54LUDLPdIr0">
+        <APIProvider apiKey={document.documentElement.dataset.googleMapsApiKey ?? ''}>
           <AuthenticationProvider>
             <Suspense fallback={<BigSpinner />}>
               <RouterProvider
