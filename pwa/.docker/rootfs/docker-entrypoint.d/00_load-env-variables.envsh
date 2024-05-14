@@ -30,6 +30,7 @@ entrypoint_info 'Load various environment variables'
 manualEnvs=(
   API_URL
   VITE_PUBLIC_API_URL
+  VITE_GOOGLE_MAPS_API_KEY
 )
 envs=(
   "${manualEnvs[@]}"
@@ -55,6 +56,10 @@ for e in "${manualEnvs[@]}"; do
         ;;
       VITE_PUBLIC_API_URL)
         : "${!e:=https://api.wedding-manuele-robine.test}"
+        entrypoint_error "$e=${!e}"
+        ;;
+      VITE_GOOGLE_MAPS_API_KEY)
+        : "${!e:=not-a-real-key}"
         entrypoint_error "$e=${!e}"
         ;;
       *)

@@ -25,6 +25,7 @@ class ListTypeController extends AbstractController
     #[Security(name: 'Bearer')]
     #[OA\Response(response: Response::HTTP_OK, description: 'Success case')]
     #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Type not found')]
+    #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Common/Lookup')]
     public function __invoke(ListableType $type): JsonResponse
     {
