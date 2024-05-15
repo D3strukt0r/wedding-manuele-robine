@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { DevTool } from '@hookform/devtools';
-import menu from '/img/menu.png';
+import menu from '/img/Essen.jpg';
 import AlignedCard from '#/layout/AlignedCard';
 import Collapsible from '#/layout/Collapsible';
 import { useAuthenticationContext } from '#/utils/authentication';

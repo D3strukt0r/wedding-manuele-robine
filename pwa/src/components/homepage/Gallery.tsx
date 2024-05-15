@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import gallery from '/img/gallery.jpeg';
+import gallery from '/img/Fotos.jpg';
 import AlignedCard from '#/layout/AlignedCard';
 
 interface Props {
