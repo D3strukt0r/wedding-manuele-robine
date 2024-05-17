@@ -163,7 +163,7 @@ RUN \
     && sed -i '/^;fastcgi\.logging/s/^;//' "$PHP_DIR/php.ini" \
     \
     # Enable php fpm status page (https://github.com/renatomefi/php-fpm-healthcheck/blob/master/test/Dockerfile-buster)
-    && echo 'pm.status_path = /status' >>"$PHP_DIR/php-fpm.conf" \
+    && sed -i '/^;pm.status_path/s/^;//' "$PHP_DIR/pool.d/www.conf" \
     \
     # Other settings
     # Use new default user app for everything
