@@ -134,8 +134,8 @@ export default function MapAndPlan({ id }: Props) {
         </>
       }
       align="right"
-      backgroundColor="app-gray-dark"
-      imageShadowColor="app-red-light"
+      backgroundColor="app-green-dark"
+      imageShadowColor="app-gray-light"
     />
   );
 }

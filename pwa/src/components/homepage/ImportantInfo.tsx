@@ -76,8 +76,8 @@ export default function ImportantInfo({ id }: Props) {
         </>
       }
       align="left"
-      backgroundColor="white"
-      imageShadowColor="app-gray-dark"
+      backgroundColor="app-gray-light"
+      imageShadowColor="app-yellow-dark"
     />
   );
 }

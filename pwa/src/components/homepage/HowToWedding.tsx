@@ -16,7 +16,7 @@ export default function HowToWedding({ id }: Props) {
         <img
           src={header}
           alt="Bild von Manuele & Robine"
-          className="w-full md:shadow-[-1rem_1rem_0_0_#dab4a7]"
+          className="w-full md:shadow-[-1rem_1rem_0_0_#faffe4]"
         />
         <h2 className="absolute bottom-0 text-gray-50 uppercase text-4xl mx-8 mb-6 md:hidden philosopher-regular">
           {t('homepage.howToWedding.title1')}

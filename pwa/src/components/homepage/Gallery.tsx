@@ -24,8 +24,8 @@ export default function Gallery({ id }: Props) {
       }
       bottomContent={<></>}
       align="right"
-      backgroundColor="app-red-light"
-      imageShadowColor="white"
+      backgroundColor="app-yellow-dark"
+      imageShadowColor="app-green-dark"
     />
   );
 }

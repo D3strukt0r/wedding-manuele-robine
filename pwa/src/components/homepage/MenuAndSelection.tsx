@@ -124,8 +124,8 @@ export default function ManuAndSelection({ id }: Props) {
         )
       }
       align="left"
-      backgroundColor="app-red-light"
-      imageShadowColor="app-gray-dark"
+      backgroundColor="app-yellow"
+      imageShadowColor="app-green-dark"
     />
   );
 }
