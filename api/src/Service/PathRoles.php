@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Service;
 
@@ -12,11 +12,11 @@ readonly class PathRoles
     ) {}
 
     /**
-     * https://stackoverflow.com/a/25046487/4156752
+     * https://stackoverflow.com/a/25046487/4156752.
      *
      * @param string $uri is the path you want to check access to
-     * @param string $method
-     * @return array<string>|null is the roles that have access to the path
+     *
+     * @return null|array<string> is the roles that have access to the path
      */
     public function getRoles(string $uri, string $method = 'GET'): ?array
     {

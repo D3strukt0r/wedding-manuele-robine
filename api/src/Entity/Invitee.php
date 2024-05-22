@@ -121,7 +121,7 @@ class Invitee
         return $entity;
     }
 
-    public function update(UpdateInviteeDto|MyInviteeUpdateDto $dto): void
+    public function update(MyInviteeUpdateDto|UpdateInviteeDto $dto): void
     {
         $this->firstname = $dto->firstname;
         $this->lastname = $dto->lastname;

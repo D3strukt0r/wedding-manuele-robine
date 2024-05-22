@@ -67,6 +67,7 @@ class UpdateInviteesOnCardController extends AbstractController
         $offset = 0;
         $card = $this->cardRepository->findOneBy(['userLogin' => $currentUser]);
         $invitees = $this->inviteeRepository->findBy(['card' => $card], [], $limit, $offset);
+
         return $this->json([
             'total' => $this->inviteeRepository->count(['card' => $card]),
             'offset' => $offset,

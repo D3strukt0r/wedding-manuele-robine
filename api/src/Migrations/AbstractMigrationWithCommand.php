@@ -20,7 +20,7 @@ abstract class AbstractMigrationWithCommand extends AbstractMigration
     }
 
     /**
-     * @param array<string, string|bool|int|array<string>> $options
+     * @param array<string, array<string>|bool|int|string> $options
      */
     protected function execCommand(string $command, array $options = []): void
     {

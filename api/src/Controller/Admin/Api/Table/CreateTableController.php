@@ -51,11 +51,11 @@ class CreateTableController extends AbstractController
         }
 
         $inviteesNotFound = array_filter($inviteesToBe, static fn (?Invitee $invitee) => $invitee === null);
-        if (count($inviteesNotFound) > 0) {
+        if (\count($inviteesNotFound) > 0) {
             throw new UnprocessableEntityHttpException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
         }
-        /** @var array<int, Invitee> $inviteesToBe */
 
+        /** @var array<int, Invitee> $inviteesToBe */
         foreach ($inviteesToBe as $invitee) {
             $table->addInvitee($invitee);
         }

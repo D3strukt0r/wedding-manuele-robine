@@ -58,6 +58,7 @@ class ListInviteesOnCard extends AbstractController
         } else {
             $invitees = [];
         }
+
         return $this->json([
             'total' => $card !== null ? $this->inviteeRepository->count(['card' => $card]) : 0,
             'offset' => $query->offset,

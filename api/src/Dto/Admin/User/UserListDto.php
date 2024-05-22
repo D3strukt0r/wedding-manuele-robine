@@ -21,7 +21,7 @@ readonly class UserListDto
     public array $actions;
 
     /**
-     * @param array<string, bool>|null $actions
+     * @param null|array<string, bool> $actions
      *
      * @throws \InvalidArgumentException
      */

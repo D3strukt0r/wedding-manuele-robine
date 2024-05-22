@@ -22,7 +22,7 @@ readonly class TableListDto
     public array $actions;
 
     /**
-     * @param array<string, bool>|null $actions
+     * @param null|array<string, bool> $actions
      *
      * @throws \InvalidArgumentException
      */
@@ -36,11 +36,12 @@ readonly class TableListDto
         $this->id = $id;
         $this->name = $table->getName();
         $this->seats = $table->getSeats();
-        $this->inviteeIds = $table->getInvitees()->map(function (Invitee $invitee) {
+        $this->inviteeIds = $table->getInvitees()->map(static function (Invitee $invitee) {
             $id = $invitee->getId();
             if ($id === null) {
                 throw new \InvalidArgumentException('Invitee ID cannot be null, entity was not persisted yet.');
             }
+
             return $id;
         })->toArray();
         $this->actions = $actions ?? [];

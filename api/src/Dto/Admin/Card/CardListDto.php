@@ -20,7 +20,7 @@ readonly class CardListDto
     public array $actions;
 
     /**
-     * @param array<string, bool>|null $actions
+     * @param null|array<string, bool> $actions
      *
      * @throws \InvalidArgumentException
      */
@@ -33,11 +33,12 @@ readonly class CardListDto
 
         $this->id = $id;
         $this->userLoginId = $card->getUserLogin()?->getId();
-        $this->inviteeIds = $card->getInvitees()->map(function (Invitee $invitee) {
+        $this->inviteeIds = $card->getInvitees()->map(static function (Invitee $invitee) {
             $id = $invitee->getId();
             if ($id === null) {
                 throw new \InvalidArgumentException('Invitee ID cannot be null, entity was not persisted yet.');
             }
+
             return $id;
         })->toArray();
         $this->actions = $actions ?? [];

@@ -10,9 +10,9 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Inject container to migration
+ * Inject container to migration.
  *
- * @link https://symfony.com/bundles/DoctrineMigrationsBundle/current/index.html#migration-dependencies
+ * @see https://symfony.com/bundles/DoctrineMigrationsBundle/current/index.html#migration-dependencies
  */
 #[AsDecorator('doctrine.migrations.migrations_factory')]
 readonly class MigrationFactoryDecorator implements MigrationFactory

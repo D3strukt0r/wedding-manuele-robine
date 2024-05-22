@@ -49,6 +49,7 @@ class ListInviteesController extends AbstractController
     public function __invoke(#[MapQueryString] InviteesQueryDto $query = new InviteesQueryDto()): JsonResponse
     {
         $invitees = $this->inviteeRepository->findBy([], [], $query->limit, $query->offset);
+
         return $this->json([
             'total' => $this->inviteeRepository->count([]),
             'offset' => $query->offset,

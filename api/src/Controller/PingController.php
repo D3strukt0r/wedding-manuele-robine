@@ -10,12 +10,12 @@ use Symfony\Component\Routing\Attribute\Route;
 final class PingController extends AbstractController
 {
     #[Route(
-      path: '/ping.{_format}',
-      name: 'ping',
-      requirements: ['_format' => 'json'],
-      options: ['expose' => true],
-      methods: [Request::METHOD_GET],
-      format: 'json',
+        path: '/ping.{_format}',
+        name: 'ping',
+        requirements: ['_format' => 'json'],
+        options: ['expose' => true],
+        methods: [Request::METHOD_GET],
+        format: 'json',
     )]
     public function __invoke(): Response
     {

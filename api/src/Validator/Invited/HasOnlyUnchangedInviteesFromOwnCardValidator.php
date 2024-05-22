@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Validator\Invited;
 
@@ -26,11 +26,11 @@ class HasOnlyUnchangedInviteesFromOwnCardValidator extends ConstraintValidator
 
         // custom constraints should ignore null and empty values to allow
         // other constraints (NotBlank, NotNull, etc.) to take care of that
-        if (null === $value || '' === $value) {
+        if ($value === null || $value === '') {
             return;
         }
 
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             throw new UnexpectedValueException($value, 'array');
         }
 
@@ -42,24 +42,27 @@ class HasOnlyUnchangedInviteesFromOwnCardValidator extends ConstraintValidator
         $card = $this->cardRepository->findOneBy(['userLogin' => $currentUser]);
         if ($card === null) {
             $this->context->buildViolation('invited.noCardFound')->addViolation();
+
             return;
         }
 
         $invitees = $this->inviteeRepository->findBy(['card' => $card]);
-        $inviteeIds = array_map(static fn($invitee) => $invitee->getId(), $invitees);
+        $inviteeIds = array_map(static fn ($invitee) => $invitee->getId(), $invitees);
 
         // Check if we added any new invitees using array functions
         foreach (array_keys($value) as $inviteeId) {
-            if (!in_array($inviteeId, $inviteeIds, true)) {
+            if (!\in_array($inviteeId, $inviteeIds, true)) {
                 $this->context->buildViolation('invited.hasChangedInviteesList')->addViolation();
+
                 return;
             }
         }
 
         // Check if we removed any invitees using array functions
         foreach ($inviteeIds as $inviteeId) {
-            if (!array_key_exists($inviteeId, $value)) {
+            if (!\array_key_exists($inviteeId, $value)) {
                 $this->context->buildViolation('invited.hasChangedInviteesList')->addViolation();
+
                 return;
             }
         }

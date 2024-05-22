@@ -11,7 +11,7 @@ readonly class ListFiltersDto
         public string $property,
 
         #[Assert\NotNull]
-        public string|int|bool $value,
+        public bool|int|string $value,
 
         public ?string $operator = null,
     ) {}

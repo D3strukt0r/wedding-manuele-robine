@@ -31,7 +31,8 @@ class CreateAdminUserCommand extends Command
         $this
             ->setHelp('This command allows you to create a admin user')
             ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'Username of the new user')
-            ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'Password of the new user');
+            ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'Password of the new user')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -54,9 +55,11 @@ class CreateAdminUserCommand extends Command
             $this->userRepository->save($user, true);
 
             $io->success('User created successfully');
+
             return Command::SUCCESS;
         } catch (\Exception $e) {
             $io->error($e->getMessage());
+
             return Command::FAILURE;
         }
     }

@@ -49,6 +49,7 @@ class ListTablesController extends AbstractController
     public function __invoke(#[MapQueryString] TablesQueryDto $query = new TablesQueryDto()): JsonResponse
     {
         $tables = $this->tableRepository->findBy([], [], $query->limit, $query->offset);
+
         return $this->json([
             'total' => $this->tableRepository->count([]),
             'offset' => $query->offset,

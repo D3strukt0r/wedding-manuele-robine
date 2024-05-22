@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Service;
 
@@ -14,7 +14,8 @@ readonly class PermissionChecker
     ) {}
 
     /**
-     * @param array<string, array{0: string, 1: array<string, null|string|int>}> $actions
+     * @param array<string, array{0: string, 1: array<string, null|int|string>}> $actions
+     *
      * @return array<string, bool>
      */
     public function __invoke(array $actions): array
@@ -26,6 +27,7 @@ readonly class PermissionChecker
             $roles = $this->pathRoles->getRoles($url);
             if ($roles === null) {
                 $processedActions[$action] = false;
+
                 continue;
             }
             foreach ($roles as $role) {

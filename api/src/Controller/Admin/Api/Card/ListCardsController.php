@@ -49,6 +49,7 @@ class ListCardsController extends AbstractController
     public function __invoke(#[MapQueryString] CardsQueryDto $query = new CardsQueryDto()): JsonResponse
     {
         $cards = $this->cardRepository->findBy([], [], $query->limit, $query->offset);
+
         return $this->json([
             'total' => $this->cardRepository->count([]),
             'offset' => $query->offset,

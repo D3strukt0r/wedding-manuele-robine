@@ -3,7 +3,6 @@
 namespace App\Dto\Admin\Card;
 
 use OpenApi\Attributes as OA;
-use Symfony\Component\Validator\Constraints as Assert;
 
 readonly class CreateCardDto
 {

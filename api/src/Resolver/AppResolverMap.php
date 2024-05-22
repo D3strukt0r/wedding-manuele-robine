@@ -37,7 +37,7 @@ class AppResolverMap extends ResolverMap
                     default => null
                 };
             }],
-            'Mutation' => [self::RESOLVE_FIELD => function (mixed $value, ArgumentInterface $args, \ArrayObject $context, ResolveInfo $info) {
+            'Mutation' => [self::RESOLVE_FIELD => static function (mixed $value, ArgumentInterface $args, \ArrayObject $context, ResolveInfo $info) {
                 return match ($info->fieldName) {
                     // 'createCard' => Run command with $args['card'],
                     // 'updateCard' => Run command with (int)$args['id'], $args['card'],
@@ -89,7 +89,7 @@ class AppResolverMap extends ResolverMap
             //     },
             // ],
             // or reuse an existing scalar (note: description and name will be override by decorator)
-            //'Baz' => [self::SCALAR_TYPE => function () { return new FooScalarType(); }],
+            // 'Baz' => [self::SCALAR_TYPE => function () { return new FooScalarType(); }],
         ];
     }
 }

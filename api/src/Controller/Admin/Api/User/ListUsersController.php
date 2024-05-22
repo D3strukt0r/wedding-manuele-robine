@@ -49,6 +49,7 @@ class ListUsersController extends AbstractController
     public function __invoke(#[MapQueryString] UsersQueryDto $query = new UsersQueryDto()): JsonResponse
     {
         $users = $this->userRepository->findBy([], [], $query->limit, $query->offset);
+
         return $this->json([
             'total' => $this->userRepository->count([]),
             'offset' => $query->offset,
