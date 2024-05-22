@@ -52,6 +52,7 @@ security:
         - { path: ^/common/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/common/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin/api, roles: ROLE_ADMIN }
+        - { path: ^/invited/api/gallery, roles: PUBLIC_ACCESS }
         - { path: ^/invited/api, roles: ROLE_USER }
         - { path: ^/, roles: PUBLIC_ACCESS }
 

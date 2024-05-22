@@ -19,6 +19,7 @@ network:
     - 'traefik.wedding-manuele-robine.test'
     - 'phpmyadmin.wedding-manuele-robine.test'
     - 'mailpit.wedding-manuele-robine.test'
+    - 'minio.wedding-manuele-robine.test'
 
 folder:
   # Enter "nfs", "rsync" or "smb" here. Both work on Mac. NFS folders do not work on

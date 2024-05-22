@@ -145,6 +145,13 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/api/public/bundles" />
       <excludeFolder url="file://$MODULE_DIR$/pwa/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/flysystem" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/flysystem-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/flysystem-local" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/mime-type-detection" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/behat/transliterator" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/gedmo/doctrine-extensions" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/stof/doctrine-extensions-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -9,5 +9,5 @@ set -e -u -o pipefail
 APP_CACHE_DIR=${APP_CACHE_DIR:-var/cache}
 APP_LOG_DIR=${APP_LOG_DIR:-var/log}
 
-mkdir --parents "$APP_CACHE_DIR" "$APP_LOG_DIR" /var/cache/sessions
-chown --recursive app:app "$APP_CACHE_DIR" "$APP_LOG_DIR" /var/cache/sessions || true
+mkdir --parents "$APP_CACHE_DIR" "$APP_LOG_DIR" /var/cache/sessions /var/lib/app/storage/default
+chown --recursive app:app "$APP_CACHE_DIR" "$APP_LOG_DIR" /var/cache/sessions /var/lib/app/storage/default || true

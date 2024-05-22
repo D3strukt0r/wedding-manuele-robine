@@ -92,9 +92,13 @@ services:
       TRUSTED_PROXIES: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
       CORS_ALLOW_ORIGIN: ^https?://(wedding-manuele-robine\.test|localhost|127\.0\.0\.1)(:[0-9]+)?$
       JWT_PASSPHRASE: b67fb4e4ee2322b294c1d52804cc5eff2486d37f25465c3811773e322d75f3c2
+      DEFAULT_STORAGE_SOURCE: default.storage.aws
+      S3_STORAGE_KEY: minio
+      S3_STORAGE_SECRET: minio123
     depends_on:
       - db
       - mailpit
+      - minio
     labels:
       traefik.enable: true
       traefik.http.routers.api.entrypoints: websecure
@@ -173,3 +177,44 @@ services:
       traefik.http.routers.mailpit.entrypoints: websecure
       traefik.http.routers.mailpit.rule: Host(`mailpit.wedding-manuele-robine.test`)
       traefik.http.routers.mailpit.tls: true
+
+  minio:
+    image: quay.io/minio/minio
+    init: true
+    # TODO: Doesn't work yet
+    #command:
+    #  - sh
+    #  - -c
+    #  - |
+    #    mc config host rm local
+    #    mc config host add local http://localhost:9000 minio minio123
+    #    minio server /data --console-address ':9001'
+    command: minio server /data --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    volumes:
+      - ~/data/minio:/data
+    labels:
+      traefik.enable: true
+      traefik.http.services.minio.loadbalancer.server.port: 9001
+      traefik.http.routers.minio.entrypoints: websecure
+      traefik.http.routers.minio.rule: Host(`minio.wedding-manuele-robine.test`)
+      traefik.http.routers.minio.tls: true
+  # https://stackoverflow.com/questions/76401435/why-i-cant-get-access-to-minio-console-from-docker-container
+  minio-setup:
+    image: minio/mc:latest
+    init: true
+    environment:
+      MC_HOST_minio: http://minio:minio123@minio:9000
+    entrypoint:
+      - sh
+      - -c
+      - |
+        until mc ls minio > /dev/null 2>&1; do
+          sleep 0.5
+        done
+
+        mc mb minio/default
+        #mc anonymous set download minio/default/public
+        #mc anonymous links minio/default --recursive

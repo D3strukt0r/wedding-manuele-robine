@@ -1,0 +1,35 @@
+# Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+flysystem:
+    storages:
+        default.storage.local:
+            adapter: 'local'
+            options:
+                #directory: '%kernel.project_dir%/var/storage/default'
+                directory: '/var/lib/app/storage/default'
+        default.storage.aws:
+            adapter: 'aws'
+            # visibility: public # Make the uploaded file publicly accessible in S3
+            options:
+                client: 'app.aws_s3.client' # The service ID of the Aws\S3\S3Client instance
+                bucket: '%env(S3_STORAGE_BUCKET)%'
+                prefix: '%env(S3_STORAGE_PREFIX)%'
+                #streamReads: true
+        # https://github.com/thephpleague/flysystem-bundle/blob/3.x/docs/4-using-lazy-adapter-to-switch-at-runtime.md
+        default.storage:
+            adapter: 'lazy'
+            options:
+                source: '%env(DEFAULT_STORAGE_SOURCE)%'
+
+services:
+    app.aws_s3.client:
+        class: Aws\S3\S3Client
+        factory: [Aws\S3\S3Client, 'factory']
+        arguments:
+            -
+                version: latest
+                region: eu-west-1
+                endpoint: '%env(S3_STORAGE_ENDPOINT)%'
+                use_path_style_endpoint: true
+                credentials:
+                    key: '%env(S3_STORAGE_KEY)%'
+                    secret: '%env(S3_STORAGE_SECRET)%'

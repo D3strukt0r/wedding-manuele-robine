@@ -18,7 +18,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true, nullable: false)]
+    #[ORM\Column(length: 180, unique: true)]
     private string $username;
 
     /** @var array<string> */
@@ -28,11 +28,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(nullable: false)]
+    #[ORM\Column]
     private string $password;
 
     #[ORM\OneToOne(mappedBy: 'userLogin', cascade: ['persist'])]
     private ?Card $card = null;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Gallery $gallery = null;
 
     public function __construct(string $username, UserPasswordHasherInterface $passwordHasher, string $password)
     {
@@ -133,5 +136,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->password = $passwordHasher->hashPassword($this, $dto->newPassword);
         }
         $this->setRoles($dto->roles);
+    }
+
+    public function getGallery(): ?Gallery
+    {
+        return $this->gallery;
+    }
+
+    public function setGallery(Gallery $gallery): static
+    {
+        // set the owning side of the relation if necessary
+        // if ($gallery->getUser() !== $this) {
+        //     $gallery->setUser($this);
+        // }
+
+        $this->gallery = $gallery;
+
+        return $this;
     }
 }
