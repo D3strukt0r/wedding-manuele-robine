@@ -28,9 +28,9 @@ export default function Collapsible({
                 { 'rotate-180': open },
               )}
             />
-            <span className="text-lg philosopher-regular">{item.title}</span>
+            <span className="text-lg font-philosopher">{item.title}</span>
           </Disclosure.Button>
-          <Disclosure.Panel className="whitespace-pre-line ml-8 noto-sans-regular">
+          <Disclosure.Panel className="whitespace-pre-line ml-8 font-noto-sans">
             {item.text}
           </Disclosure.Panel>
         </>

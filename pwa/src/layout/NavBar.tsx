@@ -51,7 +51,7 @@ export default function NavBar({
                         item.route === current
                           ? 'border-indigo-500 text-gray-900'
                           : 'border-transparent text-gray-50 hover:border-gray-100 hover:text-gray-200',
-                        'inline-flex items-center border-b-2 pt-1 text-xl font-medium uppercase philosopher-regular',
+                        'inline-flex items-center border-b-2 pt-1 text-menu font-medium uppercase font-philosopher',
                       )}
                     >
                       <span
@@ -89,7 +89,7 @@ export default function NavBar({
                       >
                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <Menu.Item disabled>
-                            <span className="block px-4 py-2 text-sm text-gray-700 noto-sans-regular opacity-75">
+                            <span className="block px-4 py-2 text-sm text-gray-700 font-noto-sans opacity-75">
                               {authentication.username}
                             </span>
                           </Menu.Item>
@@ -100,7 +100,7 @@ export default function NavBar({
                                 <Link
                                   to="/admin"
                                   className={clsx(
-                                    'block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
+                                    'block px-4 py-2 text-sm text-gray-700 font-noto-sans',
                                     { 'bg-gray-100': active },
                                   )}
                                 >
@@ -114,7 +114,7 @@ export default function NavBar({
                               <button
                                 type="button"
                                 className={clsx(
-                                  'w-full text-left block px-4 py-2 text-sm text-gray-700 noto-sans-regular',
+                                  'w-full text-left block px-4 py-2 text-sm text-gray-700 font-noto-sans',
                                   { 'bg-gray-100': active },
                                 )}
                                 onClick={() => {
@@ -160,7 +160,7 @@ export default function NavBar({
                     item.route === current
                       ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
                       : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
-                    'block border-l-4 pl-3 pr-4 text-xl font-medium uppercase philosopher-regular',
+                    'block border-l-4 pl-3 pr-4 text-menu font-medium uppercase font-philosopher',
                   )}
                 >
                   <span
@@ -177,7 +177,7 @@ export default function NavBar({
             {authentication && (
               <div className="border-t border-gray-600 pb-3 pt-4">
                 <div className="flex items-center px-4">
-                  <div className="text-xl font-medium text-gray-50 philosopher-regular">
+                  <div className="text-menu font-medium text-gray-50 font-philosopher">
                     {authentication.username}
                   </div>
                 </div>
@@ -187,14 +187,14 @@ export default function NavBar({
                     <Disclosure.Button
                       as={DisclosureLink}
                       to="/admin"
-                      className="block px-4 py-2 text-xl font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
+                      className="block px-4 py-2 text-menu font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase font-philosopher"
                     >
                       {t('menu.admin')}
                     </Disclosure.Button>
                   )}
                   <Disclosure.Button
                     as="button"
-                    className="w-full text-left block px-4 py-2 text-xl font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase philosopher-regular"
+                    className="w-full text-left block px-4 py-2 text-menu font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase font-philosopher"
                     onClick={() => {
                       updateAuthentication(null);
                     }}

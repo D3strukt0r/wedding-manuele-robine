@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet';
 import NavBar from '#/layout/NavBar';
 import Logo from '#/assets/Logo';
 import HowToWedding from '#/components/homepage/HowToWedding';
@@ -12,6 +13,9 @@ export default function Homepage() {
 
   return (
     <>
+      <Helmet>
+        <body className="bg-app-green app" />
+      </Helmet>
       <NavBar
         logo={<Logo mode="dark" />}
         menuItems={[

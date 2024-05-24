@@ -16,10 +16,10 @@ export default function ImportantInfo({ id }: Props) {
       image={infos}
       topContent={
         <>
-          <h2 className="uppercase text-4xl md:text-7xl mb-6 philosopher-regular">
+          <h2 className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.info.title')}
           </h2>
-          <p className="whitespace-pre-line noto-sans-regular md:text-2xl">
+          <p className="whitespace-pre-line font-noto-sans text-normal">
             {t('homepage.info.date')}
           </p>
         </>
@@ -31,17 +31,17 @@ export default function ImportantInfo({ id }: Props) {
               menuOptions={[
                 {
                   key: 'dresscode',
-                  title: <span className="text-xl">{t('homepage.info.dresscode.title')}</span>,
+                  title: <span className="text-subtitle">{t('homepage.info.dresscode.title')}</span>,
                   text: t('homepage.info.dresscode.text'),
                 },
                 {
                   key: 'gifts',
-                  title: <span className="text-xl">{t('homepage.info.gifts.title')}</span>,
+                  title: <span className="text-subtitle">{t('homepage.info.gifts.title')}</span>,
                   text: t('homepage.info.gifts.text'),
                 },
                 {
                   key: 'games',
-                  title: <span className="text-xl">{t('homepage.info.games.title')}</span>,
+                  title: <span className="text-subtitle">{t('homepage.info.games.title')}</span>,
                   text: <Markup content={t('homepage.info.games.text')} />,
                 },
               ]}
@@ -49,26 +49,26 @@ export default function ImportantInfo({ id }: Props) {
           </div>
           <div className="hidden md:grid grid-rows-2 grid-flow-col gap-8">
             <div>
-              <h3 className="text-xl md:text-4xl mb-4 philosopher-regular">
+              <h3 className="text-subtitle mb-4 font-philosopher">
                 {t('homepage.info.dresscode.title')}
               </h3>
-              <p className="whitespace-pre-line md:text-2xl noto-sans-regular">
+              <p className="whitespace-pre-line text-normal font-noto-sans">
                 {t('homepage.info.dresscode.text')}
               </p>
             </div>
             <div>
-              <h3 className="text-xl md:text-4xl mb-4 philosopher-regular">
+              <h3 className="text-subtitle mb-4 font-philosopher">
                 {t('homepage.info.gifts.title')}
               </h3>
-              <p className="whitespace-pre-line md:text-2xl noto-sans-regular">
+              <p className="whitespace-pre-line text-normal font-noto-sans">
                 {t('homepage.info.gifts.text')}
               </p>
             </div>
             <div>
-              <h3 className="text-xl md:text-4xl mb-4 philosopher-regular">
+              <h3 className="text-subtitle mb-4 font-philosopher">
                 {t('homepage.info.games.title')}
               </h3>
-              <p className="whitespace-pre-line md:text-2xl noto-sans-regular">
+              <p className="whitespace-pre-line text-normal font-noto-sans">
                 <Markup content={t('homepage.info.games.text')} />
               </p>
             </div>

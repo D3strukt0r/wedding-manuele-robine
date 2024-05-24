@@ -28,7 +28,7 @@ export default function RadioGroup({
   return (
     <>
       {label && (
-        <label className="text-base noto-sans-regular text-gray-900">
+        <label className="text-base font-noto-sans text-gray-900">
           {label}
         </label>
       )}
@@ -52,9 +52,9 @@ export default function RadioGroup({
                   props.className,
                   'h-4 w-4',
                   {
-                    'text-app-red-dark': !disabled && !props.disabled,
+                    'text-app-green-dark': !disabled && !props.disabled,
                     'text-gray-500': disabled || props.disabled,
-                    'border-gray-300 focus:ring-app-red-dark': !error,
+                    'border-gray-300 focus:ring-app-green-dark': !error,
                     'focus:ring-red-500': error,
                   }
                 )}
@@ -64,7 +64,7 @@ export default function RadioGroup({
               />
               <label
                 htmlFor={`${props.name}.${props.value}`}
-                className="ml-3 block text-sm noto-sans-regular leading-6 text-gray-900"
+                className="ml-3 block text-sm font-noto-sans leading-6 text-gray-900"
               >
                 {title}
               </label>

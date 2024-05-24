@@ -27,11 +27,11 @@ const Input = forwardRef<HTMLInputElement, Props>(({
           'h-4 w-4 rounded',
           {
             'text-blue-600': !props.disabled && layout === 'primary',
-            'text-app-red-dark': !props.disabled && layout === 'app-primary',
+            'text-app-green-dark': !props.disabled && layout === 'app-primary',
             'text-gray-500': props.disabled,
             'border-gray-300': !error,
             'focus:ring-blue-600': !error && layout === 'primary',
-            'focus:ring-app-red-dark': !error && layout === 'app-primary',
+            'focus:ring-app-green-dark': !error && layout === 'app-primary',
             'focus:ring-red-500': error,
           }
         )}
@@ -45,7 +45,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({
           htmlFor={props.id ?? props.name}
           className={clsx('text-gray-900', {
             'font-medium': layout === 'primary',
-            'noto-sans-regular': layout === 'app-primary',
+            'font-noto-sans': layout === 'app-primary',
           })}
         >
           {label}

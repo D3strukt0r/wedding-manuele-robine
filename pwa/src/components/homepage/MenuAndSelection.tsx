@@ -81,7 +81,7 @@ export default function ManuAndSelection({ id }: Props) {
       image={menu}
       topContent={
         <>
-          <h2 className="uppercase text-4xl md:text-7xl mb-6 philosopher-regular">
+          <h2 className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.menu.title')}
           </h2>
           <div className="md:hidden">
@@ -89,28 +89,28 @@ export default function ManuAndSelection({ id }: Props) {
               menuOptions={[
                 {
                   key: 'meat',
-                  title: <span className="text-xl">{t('homepage.menu.meat.title')}</span>,
+                  title: <span className="text-subtitle">{t('homepage.menu.meat.title')}</span>,
                   text: t('homepage.menu.meat.text'),
                 },
                 {
                   key: 'vegetarian',
-                  title: <span className="text-xl">{t('homepage.menu.vegetarian.title')}</span>,
+                  title: <span className="text-subtitle">{t('homepage.menu.vegetarian.title')}</span>,
                   text: t('homepage.menu.vegetarian.text'),
                 },
               ]}
             />
           </div>
           <div className="hidden md:block">
-            <h3 className="text-4xl mb-4 philosopher-regular">
+            <h3 className="text-subtitle mb-4 font-philosopher">
               {t('homepage.menu.meat.title')}
             </h3>
-            <p className="whitespace-pre-line text-2xl noto-sans-regular">
+            <p className="whitespace-pre-line text-normal font-noto-sans">
               {t('homepage.menu.meat.text')}
             </p>
-            <h3 className="text-4xl mb-4 philosopher-regular">
+            <h3 className="text-subtitle mb-4 font-philosopher">
               {t('homepage.menu.vegetarian.title')}
             </h3>
-            <p className="whitespace-pre-line text-2xl noto-sans-regular">
+            <p className="whitespace-pre-line text-normal font-noto-sans">
               {t('homepage.menu.vegetarian.text')}
             </p>
           </div>
@@ -248,7 +248,7 @@ function InviteesListOnMyCardForm({
       <form onSubmit={handleSubmit(mutate)} className="grid grid-cols-2 gap-4">
         {invitees.map((invitee) => (
           <div key={invitee.id}>
-            <h3 className="text-xl philosopher-regular">
+            <h3 className="text-xl font-philosopher">
               {invitee.firstname} {invitee.lastname}
             </h3>
             <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

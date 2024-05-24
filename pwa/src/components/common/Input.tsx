@@ -23,7 +23,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({
         htmlFor={props.id ?? props.name}
         className={clsx('block text-sm leading-6 text-gray-900', {
           'font-medium': layout !== 'primary',
-          'noto-sans-regular': layout === 'app-primary',
+          'font-noto-sans': layout === 'app-primary',
         })}
       >
         {label}
@@ -77,7 +77,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({
         {layout === 'app-primary' && (
           <div
             className={clsx('absolute inset-x-0 bottom-0 border-t border-gray-300 peer-focus:border-t-2', {
-              'peer-focus:border-app-red-dark': !error,
+              'peer-focus:border-app-green-dark': !error,
               'peer-focus:border-red-500': error,
             })}
             aria-hidden="true"

@@ -14,10 +14,10 @@ export default function Gallery({ id }: Props) {
       image={gallery}
       topContent={
         <>
-          <h2 className="uppercase text-4xl md:text-7xl mb-6 philosopher-regular">
+          <h2 className="uppercase text-4xl md:text-7xl mb-6 font-philosopher">
             {t('homepage.gallery.title')}
           </h2>
-          <p className="whitespace-pre-line md:text-2xl noto-sans-regular">
+          <p className="whitespace-pre-line md:text-2xl font-noto-sans">
             {t('homepage.gallery.text')}
           </p>
         </>

@@ -18,18 +18,18 @@ export default function HowToWedding({ id }: Props) {
           alt="Bild von Manuele & Robine"
           className="w-full md:shadow-[-1rem_1rem_0_0_#faffe4]"
         />
-        <h2 className="absolute bottom-0 text-gray-50 uppercase text-4xl mx-8 mb-6 md:hidden philosopher-regular">
+        <h2 className="absolute bottom-0 text-gray-50 uppercase text-title mx-8 mb-6 md:hidden font-philosopher">
           {t('homepage.howToWedding.title1')}
         </h2>
       </div>
       <div className="flex-1 px-8 md:pl-0 py-8 md:mr-16 md:mt-12">
-        <h2 className="text-gray-50 uppercase text-7xl mb-6 hidden md:block philosopher-regular">
+        <h2 className="text-gray-50 uppercase text-title mb-6 hidden md:block font-philosopher">
           {t('homepage.howToWedding.title1')}
         </h2>
-        <h2 className="text-gray-50 uppercase text-4xl mb-6 md:hidden philosopher-regular">
+        <h2 className="text-gray-50 uppercase text-title mb-6 md:hidden font-philosopher">
           {t('homepage.howToWedding.title2')}
         </h2>
-        <p className="whitespace-pre-line md:text-2xl text-gray-50 noto-sans-regular">
+        <p className="whitespace-pre-line text-normal text-gray-50 font-noto-sans">
           {t('homepage.howToWedding.text')}
         </p>
       </div>
