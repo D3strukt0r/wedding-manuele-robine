@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import gallery from '/img/Fotos.jpg';
 import AlignedCard from '#/layout/AlignedCard';
 import useGalleryIds from '#/api/invited/gallery/useGalleryIds.ts';
 import BigSpinner from '#/layout/BigSpinner.tsx';
+import ImageLazyLoad from '#/components/common/ImageLazyLoad.tsx';
+import blurHashMap from '#/img/blurhash-map.json';
+import image from '#/img/Fotos.jpg';
 
 interface Props {
   id?: string;
@@ -49,7 +51,19 @@ export default function Gallery({ id }: Props) {
   return (
     <AlignedCard
       id={id}
-      image={gallery}
+      image={
+        <ImageLazyLoad
+          src={image}
+          alt="Fotos"
+          blurHash={blurHashMap.fotosJpg}
+          className="w-full"
+          imgSources={(
+            <>
+              {/*<source srcSet={imageWebp} type="image/webp" />*/}
+              <source srcSet={image} type="image/jpeg" />
+            </>
+          )}
+        />}
       topContent={
         <>
           <h2 className="uppercase text-4xl md:text-7xl mb-6 font-philosopher">

@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { Markup } from 'interweave';
-import infos from '/img/Infos.jpg';
 import AlignedCard from '#/layout/AlignedCard';
 import Collapsible from '#/layout/Collapsible';
+import ImageLazyLoad from '#/components/common/ImageLazyLoad.tsx';
+import image from '#/img/Infos.jpg';
+import blurHashMap from '#/img/blurhash-map.json';
 
 interface Props {
   id?: string;
@@ -13,7 +15,20 @@ export default function ImportantInfo({ id }: Props) {
   return (
     <AlignedCard
       id={id}
-      image={infos}
+      image={
+        <ImageLazyLoad
+          src={image}
+          alt="Infos"
+          blurHash={blurHashMap.infosJpg}
+          className="w-full"
+          imgSources={(
+            <>
+              {/*<source srcSet={imageWebp} type="image/webp" />*/}
+              <source srcSet={image} type="image/jpeg" />
+            </>
+          )}
+        />
+      }
       topContent={
         <>
           <h2 className="uppercase text-title mb-6 font-philosopher">

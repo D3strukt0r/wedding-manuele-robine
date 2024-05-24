@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import header from '/img/Portrait.jpg';
+import ImageLazyLoad from '#/components/common/ImageLazyLoad.tsx';
+import image from '#/img/Portrait.jpg';
+import blurHashMap from '#/img/blurhash-map.json';
 
 interface Props {
   id?: string;
@@ -13,10 +15,17 @@ export default function HowToWedding({ id }: Props) {
       className="mx-auto max-w-7xl md:px-6 lg:px-8 flex flex-col md:flex-row-reverse"
     >
       <div className="flex-1 relative">
-        <img
-          src={header}
-          alt="Bild von Manuele & Robine"
+        <ImageLazyLoad
+          src={image}
+          alt="Portrait von Manuele & Robine"
+          blurHash={blurHashMap.portraitJpg}
           className="w-full md:shadow-[-1rem_1rem_0_0_#faffe4]"
+          imgSources={(
+            <>
+              {/*<source srcSet={imageWebp} type="image/webp" />*/}
+              <source srcSet={image} type="image/jpeg" />
+            </>
+          )}
         />
         <h2 className="absolute bottom-0 text-gray-50 uppercase text-title mx-8 mb-6 md:hidden font-philosopher">
           {t('homepage.howToWedding.title1')}

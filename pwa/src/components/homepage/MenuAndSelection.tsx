@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { DevTool } from '@hookform/devtools';
-import menu from '/img/Essen.jpg';
 import AlignedCard from '#/layout/AlignedCard';
 import Collapsible from '#/layout/Collapsible';
 import { useAuthenticationContext } from '#/utils/authentication';
@@ -22,6 +21,9 @@ import useLogin from '#/api/common/authentication/useLogin';
 import BigSpinner from '#/layout/BigSpinner';
 import { setErrorFromSymfonyViolations } from '#/utils/form';
 import Alert from '#/components/common/Alert';
+import image from '#/img/Essen.jpg';
+import blurHashMap from '#/img/blurhash-map.json';
+import ImageLazyLoad from '#/components/common/ImageLazyLoad.tsx';
 
 // https://stackoverflow.com/a/43467144/4156752
 function isValidHttpUrl(string: string) {
@@ -78,7 +80,20 @@ export default function ManuAndSelection({ id }: Props) {
   return (
     <AlignedCard
       id={id}
-      image={menu}
+      image={
+        <ImageLazyLoad
+          src={image}
+          alt="Essen"
+          blurHash={blurHashMap.essenJpg}
+          className="w-full"
+          imgSources={(
+            <>
+              {/*<source srcSet={imageWebp} type="image/webp" />*/}
+              <source srcSet={image} type="image/jpeg" />
+            </>
+          )}
+        />
+      }
       topContent={
         <>
           <h2 className="uppercase text-title mb-6 font-philosopher">
