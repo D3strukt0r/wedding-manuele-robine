@@ -74,8 +74,10 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         php${PHP_VERSION}-curl \
         php${PHP_VERSION}-dom \
         php${PHP_VERSION}-mbstring \
-        # User for Symfony validators
-        php${PHP_VERSION}-intl >/dev/null
+        # Used for Symfony validators
+        php${PHP_VERSION}-intl \
+        # Used for BlurHash encoding
+        php${PHP_VERSION}-gd >/dev/null
 
 ENV PHP_DIR=/etc/php/$PHP_VERSION/fpm
 RUN \
@@ -268,7 +270,7 @@ RUN \
     && chmod +x phive.phar \
     && mv phive.phar /usr/local/bin/phive \
     && mkdir --parents /var/cache/phive \
-    && phive --home /var/cache/phive --no-progress install --trust-gpg-keys 5E6DDE998AB73B8E,31C7E470E2138192,E82B2FB314E9906E,C5095986493B4AA0 --target /usr/local/bin \
+    && phive --home /var/cache/phive --no-progress install --trust-gpg-keys A978220305CD5C32,31C7E470E2138192,E82B2FB314E9906E,C5095986493B4AA0 --target /usr/local/bin \
         phpcs \
         phpcbf \
         php-cs-fixer \
