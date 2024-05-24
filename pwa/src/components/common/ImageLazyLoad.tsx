@@ -5,14 +5,14 @@ import clsx from 'clsx';
 export interface ImageLazyLoadProps {
   src?: HTMLImageElement['src'];
   alt?: HTMLImageElement['alt'];
-  blurHash?: ComponentProps<typeof BlurhashCanvas>['hash'];
+  blurhash?: ComponentProps<typeof BlurhashCanvas>['hash'];
   className?: HTMLImageElement['className'];
   loadLazy?: boolean;
   imgSources?: JSX.Element;
 }
 
 // https://codesandbox.io/s/unsplash-image-search-bn3rn?file=/src/modules/main/components/ImageLazyLoad/index.tsx
-export default function ImageLazyLoad({src, alt, blurHash, className, loadLazy = false, imgSources}: ImageLazyLoadProps) {
+export default function ImageLazyLoad({src, alt, blurhash, className, loadLazy = false, imgSources}: ImageLazyLoadProps) {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [hideBlur, setHideBlur] = useState(false);
 
@@ -21,10 +21,10 @@ export default function ImageLazyLoad({src, alt, blurHash, className, loadLazy =
   }, [setIsImageLoaded]);
 
   const placeholder = useMemo(() => {
-    if (!blurHash) return <></>;
+    if (!blurhash) return <></>;
     return (
       <BlurhashCanvas
-        hash={blurHash ? blurHash.replace(/^"+|"+$/g, '') : ''}
+        hash={blurhash ? blurhash.replace(/^"+|"+$/g, '') : ''}
         width={32}
         height={32}
         className={clsx('blurhash', className)}
@@ -40,7 +40,7 @@ export default function ImageLazyLoad({src, alt, blurHash, className, loadLazy =
         }}
       />
     );
-  }, [isImageLoaded, blurHash, hideBlur, className, setHideBlur]);
+  }, [isImageLoaded, blurhash, hideBlur, className, setHideBlur]);
 
   return (
     <div className="img-lazy">

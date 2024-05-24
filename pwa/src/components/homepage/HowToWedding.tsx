@@ -18,7 +18,7 @@ export default function HowToWedding({ id }: Props) {
         <ImageLazyLoad
           src={image}
           alt="Portrait von Manuele & Robine"
-          blurHash={blurHashMap.portraitJpg}
+          blurhash={blurHashMap.portraitJpg}
           className="w-full md:shadow-[-1rem_1rem_0_0_#faffe4]"
           imgSources={(
             <>

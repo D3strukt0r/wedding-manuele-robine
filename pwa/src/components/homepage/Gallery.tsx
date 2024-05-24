@@ -55,7 +55,7 @@ export default function Gallery({ id }: Props) {
         <ImageLazyLoad
           src={image}
           alt="Fotos"
-          blurHash={blurHashMap.fotosJpg}
+          blurhash={blurHashMap.fotosJpg}
           className="w-full"
           imgSources={(
             <>

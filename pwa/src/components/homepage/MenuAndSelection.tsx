@@ -84,7 +84,7 @@ export default function ManuAndSelection({ id }: Props) {
         <ImageLazyLoad
           src={image}
           alt="Essen"
-          blurHash={blurHashMap.essenJpg}
+          blurhash={blurHashMap.essenJpg}
           className="w-full"
           imgSources={(
             <>

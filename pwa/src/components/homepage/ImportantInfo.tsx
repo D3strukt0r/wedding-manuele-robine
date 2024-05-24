@@ -19,7 +19,7 @@ export default function ImportantInfo({ id }: Props) {
         <ImageLazyLoad
           src={image}
           alt="Infos"
-          blurHash={blurHashMap.infosJpg}
+          blurhash={blurHashMap.infosJpg}
           className="w-full"
           imgSources={(
             <>
