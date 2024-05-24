@@ -4,12 +4,10 @@ namespace App\Controller\Invited\Api\Gallery;
 
 use App\Dto\Invited\ShowGalleryDto;
 use App\Entity\Gallery;
-use App\Entity\Role;
 use App\Repository\FileRepository;
 use App\Repository\GalleryRepository;
 use League\Flysystem\FilesystemOperator;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

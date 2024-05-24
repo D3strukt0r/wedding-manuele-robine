@@ -1,12 +1,50 @@
 import { useTranslation } from 'react-i18next';
 import gallery from '/img/Fotos.jpg';
 import AlignedCard from '#/layout/AlignedCard';
+import useGalleryIds from '#/api/invited/gallery/useGalleryIds.ts';
+import BigSpinner from '#/layout/BigSpinner.tsx';
 
 interface Props {
   id?: string;
 }
 export default function Gallery({ id }: Props) {
   const { t } = useTranslation('app');
+
+  const galleryFileIds = useGalleryIds();
+
+  let galleryView = <BigSpinner />;
+
+  if (galleryFileIds.data) {
+    if (galleryFileIds.data.files.length === 0) {
+      galleryView = (
+        <p className="text-xl font-noto-sans">
+          {t('homepage.gallery.noImages')}
+        </p>
+      );
+    } else {
+      galleryView = (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {galleryFileIds.data.files.map((file) => (
+            <img
+              key={file.id}
+              // TODO: eventually use `file.publicUrl`
+              src={`${document.documentElement.dataset.apiUrl}/invited/api/gallery/${file.id}`}
+              alt=""
+              className="w-full h-full object-cover"
+            />
+          ))}
+        </div>
+      );
+    }
+  }
+
+  if (galleryFileIds.error) {
+    galleryView = (
+      <p className="text-xl font-noto-sans">
+        {t('homepage.gallery.error')}
+      </p>
+    );
+  }
 
   return (
     <AlignedCard
@@ -22,7 +60,7 @@ export default function Gallery({ id }: Props) {
           </p>
         </>
       }
-      bottomContent={<></>}
+      bottomContent={galleryView}
       align="right"
       backgroundColor="app-yellow-dark"
       imageShadowColor="app-green-dark"
