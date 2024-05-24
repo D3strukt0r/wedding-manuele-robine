@@ -4,17 +4,11 @@
 
 @layer base {
   .app {
-    a {
-      @apply text-app-green;
-      &:hover {
-        @apply text-app-green-dark underline;
-      }
-    }
-    nav {
+    section {
       a {
-        @apply text-white;
+        @apply text-app-green;
         &:hover {
-          @apply text-white no-underline;
+          @apply text-app-green-dark underline;
         }
       }
     }

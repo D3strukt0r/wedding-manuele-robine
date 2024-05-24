@@ -45,21 +45,23 @@ export default function Homepage() {
           },
         ]}
       />
-      <div className="md:pb-16">
-        <HowToWedding id="how-to" />
-      </div>
-      <div className="md:pb-16">
-        <MenuAndSelection id="menu" />
-      </div>
-      <div className="md:pb-16">
-        <MapAndPlan id="address" />
-      </div>
-      <div className="md:pb-16">
-        <ImportantInfo id="important-info" />
-      </div>
-      <div className="md:pb-16">
-        <Gallery id="gallery" />
-      </div>
+      <article>
+        <section className="md:pb-16 md:mt-16">
+          <HowToWedding id="how-to" />
+        </section>
+        <section className="md:pb-16">
+          <MenuAndSelection id="menu" />
+        </section>
+        <section className="md:pb-16">
+          <MapAndPlan id="address" />
+        </section>
+        <section className="md:pb-16">
+          <ImportantInfo id="important-info" />
+        </section>
+        <section className="md:pb-16">
+          <Gallery id="gallery" />
+        </section>
+      </article>
       <footer className="bg-app-gray-dark text-white">
         <p className="text-center whitespace-pre-line py-4 text-sm">
           {t('footer.copyright')}

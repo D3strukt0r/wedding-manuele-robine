@@ -30,7 +30,7 @@ export default function NavBar({
   const [authentication, updateAuthentication] = useAuthenticationContext();
 
   return (
-    <Disclosure as="nav" className="sticky top-0 bg-black/75 shadow z-10">
+    <Disclosure as="header" className="absolute top-0 left-0 right-0 bg-black/75 shadow z-20">
       {({ open }) => (
         <>
           {/* Desktop Menu */}
@@ -42,14 +42,14 @@ export default function NavBar({
                 </div>
               </div>
               <div className="hidden sm:ml-6 lg:flex">
-                <div className={clsx('hidden lg:flex', {'sm:mr-6': authentication})}>
+                <nav className={clsx('hidden lg:flex', {'sm:mr-6': authentication})}>
                   {menuItems.map((item, index) => (
                     <a
                       key={item.label}
                       href={item.route}
                       className={clsx(
                         item.route === current
-                          ? 'border-indigo-500 text-gray-900'
+                          ? 'border-app-green-dark text-gray-900'
                           : 'border-transparent text-gray-50 hover:border-gray-100 hover:text-gray-200',
                         'inline-flex items-center border-b-2 pt-1 text-menu font-medium uppercase font-philosopher',
                       )}
@@ -64,13 +64,13 @@ export default function NavBar({
                       </span>
                     </a>
                   ))}
-                </div>
+                </nav>
                 {/* Profile dropdown */}
                 {authentication && (
                   <div className="lg:flex lg:items-center">
                     <Menu as="div" className="relative ml-3">
                       <div>
-                        <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <Menu.Button className="relative flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-app-green focus:ring-offset-2">
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">{t('menu.user.open')}</span>
                           <div className="h-8 w-8 rounded-full flex justify-center items-center">
@@ -133,7 +133,7 @@ export default function NavBar({
               </div>
               <div className="-mr-2 flex items-center lg:hidden">
                 {/* Mobile menu button */}
-                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-50 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-50 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-app-green">
                   <span className="absolute -inset-0.5" />
                   <span className="sr-only">
                     {t('accessibility.menu.open')}
@@ -150,7 +150,7 @@ export default function NavBar({
 
           {/* Mobile Menu */}
           <Disclosure.Panel className="lg:hidden">
-            <div className="pb-3 pt-2">
+            <nav className="pb-3 pt-2">
               {menuItems.map((item, index) => (
                 <Disclosure.Button
                   key={item.label}
@@ -158,7 +158,7 @@ export default function NavBar({
                   href={item.route}
                   className={clsx(
                     item.route === current
-                      ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                      ? 'border-app-green-dark bg-gray-50 text-app-green-dark'
                       : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
                     'block border-l-4 pl-3 pr-4 text-menu font-medium uppercase font-philosopher',
                   )}
@@ -173,7 +173,7 @@ export default function NavBar({
                   </span>
                 </Disclosure.Button>
               ))}
-            </div>
+            </nav>
             {authentication && (
               <div className="border-t border-gray-600 pb-3 pt-4">
                 <div className="flex items-center px-4">
