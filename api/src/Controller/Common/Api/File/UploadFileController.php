@@ -131,6 +131,7 @@ class UploadFileController extends AbstractController
                 $fileToCheck['entity']->getChecksum(),
             ])) {
                 $checksumMismatched = true;
+
                 break;
             }
         }
@@ -139,6 +140,7 @@ class UploadFileController extends AbstractController
                 $this->defaultStorage->delete($fileToCheck['defaultStoragePath']);
                 // $this->em->remove($fileToCheck['entity']); // TODO: Check if this is needed
             }
+
             throw new \RuntimeException('Checksum mismatch');
         }
 
