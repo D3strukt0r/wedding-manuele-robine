@@ -77,7 +77,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         # Used for Symfony validators
         php${PHP_VERSION}-intl \
         # Used for BlurHash encoding
-        php${PHP_VERSION}-gd >/dev/null
+        php${PHP_VERSION}-gd \
+        php${PHP_VERSION}-imagick >/dev/null
 
 ENV PHP_DIR=/etc/php/$PHP_VERSION/fpm
 RUN \

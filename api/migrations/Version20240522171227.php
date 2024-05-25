@@ -14,7 +14,7 @@ final class Version20240522171227 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Add file table and file mappings (WIP)';
     }
 
     public function up(Schema $schema): void

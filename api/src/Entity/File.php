@@ -32,6 +32,10 @@ class File
     #[ORM\Column]
     private int $size;
 
+    /** @var array<mixed> */
+    #[ORM\Column(nullable: true)]
+    private ?array $metadata = null;
+
     #[ORM\Column]
     #[Gedmo\Blameable(on: 'create')]
     private string $createdBy;
@@ -46,7 +50,19 @@ class File
     #[ORM\OneToMany(mappedBy: 'file', targetEntity: FileMapping::class, orphanRemoval: true)]
     private Collection $fileMappings;
 
-    public function __construct(UploadedFile $file, string $path, int $size)
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
+    private ?self $parent = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    private Collection $children;
+
+    /**
+     * @param array<mixed> $metadata
+     */
+    public function __construct(UploadedFile $file, string $path, int $size, ?self $parent = null, ?array $metadata = null)
     {
         $this->fileMappings = new ArrayCollection();
         $this->path = $path;
@@ -58,6 +74,9 @@ class File
         }
         $this->checksum = $checksum;
         $this->size = $size;
+        $this->metadata = \is_array($metadata) && \count($metadata) === 0 ? null : $metadata;
+        $this->parent = $parent;
+        $this->children = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,6 +109,14 @@ class File
         return $this->size;
     }
 
+    /**
+     * @return null|array<mixed>
+     */
+    public function getMetadata(): ?array
+    {
+        return $this->metadata;
+    }
+
     public function getCreatedBy(): string
     {
         return $this->createdBy;
@@ -108,26 +135,16 @@ class File
         return $this->fileMappings;
     }
 
-    public function addFileMapping(FileMapping $fileMapping): static
+    public function getParent(): ?self
     {
-        if (!$this->fileMappings->contains($fileMapping)) {
-            $this->fileMappings->add($fileMapping);
-            $fileMapping->setFile($this);
-        }
-
-        return $this;
+        return $this->parent;
     }
 
-    public function removeFileMapping(FileMapping $fileMapping): static
+    /**
+     * @return Collection<int, self>
+     */
+    public function getChildren(): Collection
     {
-        if ($this->fileMappings->removeElement($fileMapping)) {
-            // set the owning side to null (unless already changed)
-            // if ($fileMapping->getFile() === $this) {
-            //     $fileMapping->setFile(null);
-            // }
-            // use $em->remove($fileMapping) instead
-        }
-
-        return $this;
+        return $this->children;
     }
 }

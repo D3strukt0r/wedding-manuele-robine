@@ -153,6 +153,7 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/gedmo/doctrine-extensions" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/stof/doctrine-extensions-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/kornrunner/blurhash" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/imagine/imagine" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
