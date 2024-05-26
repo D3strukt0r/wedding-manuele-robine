@@ -67,40 +67,39 @@ class UploadFileController extends AbstractController
 
         $childFiles = [];
 
-        // Check if file (image) requires compression (>500kb)
-        $requiresOptimization = $file->getSize() > (500 * 1024);
-        $isImage = self::mimeTypeIsImage($file->getMimeType());
-        if ($isImage && $requiresOptimization) {
-            $imagine = new Imagine();
-
-            // And to an optimized JPEG
-            $filename = $safeFilename.'-optimized-'.$uniqueId.'.jpeg';
-            $optimizedFile = self::createTempFile($file->getClientOriginalName(), 'image/jpeg');
-            $imagine
-                ->open($file->getPathname())
-                ->resize($imagine->open($file->getPathname())->getSize()->widen(500))
-                ->save($optimizedFile->getPathname(), ['format' => Format::ID_JPEG, 'jpeg_quality' => 50])
-            ;
-            $this->defaultStorage->write($pathPrefix.$filename, $optimizedFile->getContent());
-            $childFiles[$filename] = $optimizedFile;
-            // Convert to WebP and resize to 500px width with same aspect ratio
-            $filename = $safeFilename.'-optimized-'.$uniqueId.'.webp';
-            $optimizedFile = self::createTempFile($file->getClientOriginalName(), 'image/webp');
-            $imagine
-                ->open($file->getPathname())
-                ->resize($imagine->open($file->getPathname())->getSize()->widen(500))
-                ->save($optimizedFile->getPathname(), ['format' => Format::ID_WEBP, 'webp_quality' => 50])
-            ;
-            $this->defaultStorage->write($pathPrefix.$filename, $optimizedFile->getContent());
-            $childFiles[$filename] = $optimizedFile;
-        }
-
-        // Add blurhash to metadata if upload was an image
         $metadata = [];
-        if ($isImage) {
-            $content = $requiresOptimization && isset($optimizedFile)
-                ? $optimizedFile->getContent()
-                : $file->getContent();
+        if (self::mimeTypeIsImage($file->getMimeType())) {
+            $imagine = new Imagine();
+            $originalImage = $imagine->open($file->getPathname());
+            $metadata['width'] = $originalImage->getSize()->getWidth();
+            $metadata['height'] = $originalImage->getSize()->getHeight();
+
+            // Check if file (image) requires compression (>500kb)
+            $requiresOptimization = $file->getSize() > (500 * 1024);
+            if ($requiresOptimization) {
+                // And to an optimized JPEG
+                $filename = $safeFilename.'-optimized-'.$uniqueId.'.jpeg';
+                $optimizedImage = self::createTempFile($file->getClientOriginalName(), 'image/jpeg');
+                $imagine
+                    ->open($file->getPathname())
+                    ->resize($imagine->open($file->getPathname())->getSize()->widen(500))
+                    ->save($optimizedImage->getPathname(), ['format' => Format::ID_JPEG, 'jpeg_quality' => 50])
+                ;
+                $this->defaultStorage->write($pathPrefix.$filename, $optimizedImage->getContent());
+                $childFiles[$filename] = $optimizedImage;
+                // Convert to WebP and resize to 500px width with same aspect ratio
+                $filename = $safeFilename.'-optimized-'.$uniqueId.'.webp';
+                $optimizedImage = self::createTempFile($file->getClientOriginalName(), 'image/webp');
+                $originalImage
+                    ->resize($originalImage->getSize()->widen(500))
+                    ->save($optimizedImage->getPathname(), ['format' => Format::ID_WEBP, 'webp_quality' => 50])
+                ;
+                $this->defaultStorage->write($pathPrefix.$filename, $optimizedImage->getContent());
+                $childFiles[$filename] = $optimizedImage;
+            }
+
+            // Add blurhash to metadata if upload was an image
+            $content = $requiresOptimization ? $optimizedImage->getContent() : $file->getContent();
             $metadata['blurhash'] = BlurhashHelper::encodeFromContent($content);
         }
 
