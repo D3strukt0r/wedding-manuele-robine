@@ -65,3 +65,17 @@ export type SymfonyValidationFailedResponse = {
     type: string;
   }[];
 }
+
+export type GalleryImage = {
+  id: number;
+  publicUrl: string;
+  mimeType: string;
+  blurhash: string;
+  height: number;
+  width: number;
+  children: GalleryImage[];
+}
+
+export type GalleryImages = {
+  files: GalleryImage[];
+}

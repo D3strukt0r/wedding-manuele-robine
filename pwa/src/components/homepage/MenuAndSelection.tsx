@@ -85,13 +85,7 @@ export default function ManuAndSelection({ id }: Props) {
           src={image}
           alt="Essen"
           blurhash={blurHashMap.essenJpg}
-          className="w-full"
-          imgSources={(
-            <>
-              {/*<source srcSet={imageWebp} type="image/webp" />*/}
-              <source srcSet={image} type="image/jpeg" />
-            </>
-          )}
+          imgSources={<source srcSet={image} type="image/jpeg" />}
         />
       }
       topContent={

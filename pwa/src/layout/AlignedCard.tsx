@@ -88,7 +88,6 @@ export default function AlignedCard({
               {typeof image === 'string' ? (
                 <img
                   src={image}
-                  alt=""
                   className={clsx('w-full md:mt-12', {
                     'md:translate-x-12': align === 'left',
                     'md:-translate-x-12': align === 'right',

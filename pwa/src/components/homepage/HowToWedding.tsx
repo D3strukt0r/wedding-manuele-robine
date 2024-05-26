@@ -19,13 +19,8 @@ export default function HowToWedding({ id }: Props) {
           src={image}
           alt="Portrait von Manuele & Robine"
           blurhash={blurHashMap.portraitJpg}
-          className="w-full md:shadow-[-1rem_1rem_0_0_#faffe4]"
-          imgSources={(
-            <>
-              {/*<source srcSet={imageWebp} type="image/webp" />*/}
-              <source srcSet={image} type="image/jpeg" />
-            </>
-          )}
+          className="md:shadow-[-1rem_1rem_0_0_#faffe4]"
+          imgSources={<source srcSet={image} type="image/jpeg" />}
         />
         <h2 className="absolute bottom-0 text-gray-50 uppercase text-title mx-8 mb-6 md:hidden font-philosopher">
           {t('homepage.howToWedding.title1')}

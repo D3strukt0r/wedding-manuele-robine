@@ -1,16 +1,10 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
-
-interface GalleryResponse {
-  files: {
-    id: number;
-    publicUrl: string;
-  }[];
-}
+import { GalleryImages } from '#/components/types.ts';
 
 export default function useGalleryIds(
   queryOptions?: Omit<
-    UseQueryOptions<GalleryResponse>,
+    UseQueryOptions<GalleryImages>,
     'queryKey' | 'queryFn'
   >,
 ) {
@@ -18,7 +12,7 @@ export default function useGalleryIds(
     ...(queryOptions ?? {}),
     queryKey: ['galleryIds'],
     queryFn: async () => {
-      const { data: response } = await axios.get<GalleryResponse>('/invited/api/gallery');
+      const { data: response } = await axios.get<GalleryImages>('/invited/api/gallery');
       return response;
     },
   });

@@ -20,13 +20,7 @@ export default function ImportantInfo({ id }: Props) {
           src={image}
           alt="Infos"
           blurhash={blurHashMap.infosJpg}
-          className="w-full"
-          imgSources={(
-            <>
-              {/*<source srcSet={imageWebp} type="image/webp" />*/}
-              <source srcSet={image} type="image/jpeg" />
-            </>
-          )}
+          imgSources={<source srcSet={image} type="image/jpeg" />}
         />
       }
       topContent={
