@@ -74,8 +74,8 @@ class UploadFileController extends AbstractController
             $metadata['width'] = $originalImage->getSize()->getWidth();
             $metadata['height'] = $originalImage->getSize()->getHeight();
 
-            // Check if file (image) requires compression (>500kb)
-            $requiresOptimization = $file->getSize() > (500 * 1024);
+            // Check if file (image) requires compression (>100kb)
+            $requiresOptimization = $file->getSize() > (100 * 1024);
             if ($requiresOptimization) {
                 // And to an optimized JPEG
                 $filename = $safeFilename.'-optimized-'.$uniqueId.'.jpeg';

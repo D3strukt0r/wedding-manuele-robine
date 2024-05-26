@@ -5,9 +5,9 @@ namespace App\Dto\Invited;
 use App\Entity\File;
 use League\Flysystem\FilesystemOperator;
 
-readonly class ShowGalleryDto
+readonly class ListGalleryImagesDto
 {
-    /** @var array<ShowGalleryImageDto> */
+    /** @var array<ListGalleryImageDto> */
     public array $files;
 
     /**
@@ -16,7 +16,7 @@ readonly class ShowGalleryDto
     public function __construct(array $files, FilesystemOperator $defaultStorage)
     {
         $this->files = array_map(
-            static fn (File $file) => new ShowGalleryImageDto($file, $defaultStorage),
+            static fn (File $file) => new ListGalleryImageDto($file, $defaultStorage),
             $files,
         );
     }

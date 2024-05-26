@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class ShowImageController extends AbstractController
+class ShowGalleryImageController extends AbstractController
 {
     public function __construct(
         private readonly FilesystemOperator $defaultStorage,

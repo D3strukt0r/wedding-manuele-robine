@@ -114,7 +114,7 @@ function CreateInvitee() {
         }}
         actions={[
           {
-            text: t('actions.update'),
+            text: t('actions.create'),
             layout: 'primary',
             loading: isPending,
             disabled: !isDirty || !isValid,

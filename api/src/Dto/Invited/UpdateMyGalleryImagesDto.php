@@ -4,7 +4,7 @@ namespace App\Dto\Invited;
 
 use OpenApi\Attributes as OA;
 
-readonly class UpdateMyImagesDto
+readonly class UpdateMyGalleryImagesDto
 {
     public function __construct(
         /** @var array<int> */
