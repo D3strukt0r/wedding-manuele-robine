@@ -30,7 +30,7 @@ export default function Collapsible({
             />
             <span className="text-lg font-philosopher">{item.title}</span>
           </Disclosure.Button>
-          <Disclosure.Panel className="whitespace-pre-line ml-8 font-noto-sans">
+          <Disclosure.Panel className="whitespace-pre-line ml-8 mb-2 font-noto-sans">
             {item.text}
           </Disclosure.Panel>
         </>
