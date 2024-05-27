@@ -102,7 +102,7 @@ export default function AlignedCard({
                 />
               ) : (
                 <div
-                  className={clsx('h-80 md:mt-12', {
+                  className={clsx('h-96 md:mt-12', {
                     'md:translate-x-12': align === 'left',
                     'md:-translate-x-12': align === 'right',
                     'md:shadow-[-1rem_1rem_0_0_#dab4a7]': imageShadowColor === 'app-red-light',
