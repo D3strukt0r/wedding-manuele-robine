@@ -10,8 +10,9 @@ import AlignedCard from '#/layout/AlignedCard';
 
 interface Props {
   id?: string;
+  id2?: string;
 }
-export default function MapAndPlan({ id }: Props) {
+export default function MapAndPlan({ id, id2 }: Props) {
   const { t } = useTranslation('app');
 
   const position = { lat: 47.5867275, lng: 7.696703 };
@@ -38,7 +39,7 @@ export default function MapAndPlan({ id }: Props) {
       }
       bottomContent={
         <>
-          <h2 className="uppercase text-title mb-6 font-philosopher">
+          <h2 id={id2} className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.map.title2')}
           </h2>
           <p className="font-noto-sans text-normal mb-8 md:max-w-prose">{t('homepage.map.plan')}</p>

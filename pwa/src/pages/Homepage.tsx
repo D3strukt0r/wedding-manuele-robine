@@ -33,7 +33,7 @@ export default function Homepage() {
           },
           {
             label: t('menu.process'),
-            route: '#address',
+            route: '#process',
           },
           {
             label: t('menu.importantInfo'),
@@ -53,7 +53,7 @@ export default function Homepage() {
           <MenuAndSelection id="menu" />
         </section>
         <section className="md:pb-16">
-          <MapAndPlan id="address" />
+          <MapAndPlan id="address" id2="process" />
         </section>
         <section className="md:pb-16">
           <ImportantInfo id="important-info" />
