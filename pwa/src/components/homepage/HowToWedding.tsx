@@ -20,6 +20,7 @@ export default function HowToWedding({ id }: Props) {
           alt="Portrait von Manuele & Robine"
           blurhash={blurHashMap.portraitJpg}
           className="md:shadow-[-1rem_1rem_0_0_#faffe4]"
+          wrapperClassName="h-screen md:h-full"
           imgSources={<source srcSet={image} type="image/jpeg" />}
         />
         <h2 className="absolute bottom-0 text-gray-50 uppercase text-title mx-8 mb-6 md:hidden font-philosopher">

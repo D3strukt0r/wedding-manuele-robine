@@ -254,7 +254,7 @@ function InviteesListOnMyCardForm({
           className="mb-4"
         />
       ) : null}
-      <form onSubmit={handleSubmit(mutate)} className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit(mutate)} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {invitees.map((invitee) => (
           <div key={invitee.id}>
             <h3 className="text-xl font-philosopher">
