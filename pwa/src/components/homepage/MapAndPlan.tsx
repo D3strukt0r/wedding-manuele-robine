@@ -41,7 +41,7 @@ export default function MapAndPlan({ id }: Props) {
           <h2 className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.map.title2')}
           </h2>
-          <p className="font-noto-sans text-normal mb-8">{t('homepage.map.plan')}</p>
+          <p className="font-noto-sans text-normal mb-8 md:max-w-prose">{t('homepage.map.plan')}</p>
           <Timeline
             points={[
               {
