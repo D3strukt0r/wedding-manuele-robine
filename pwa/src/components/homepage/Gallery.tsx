@@ -25,7 +25,7 @@ export default function Gallery({ id }: Props) {
       );
     } else {
       galleryView = (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {galleryFileIds.data.files.map((file) => {
             const isOptimized = file.children.length > 0;
             // extract the main image possibly a jpg mimetype from the optimized images

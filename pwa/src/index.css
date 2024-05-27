@@ -6,7 +6,7 @@
   .app {
     section {
       a {
-        @apply text-app-green;
+        @apply text-app-green italic;
         &:hover {
           @apply text-app-green-dark underline;
         }
