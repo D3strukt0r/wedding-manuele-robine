@@ -56,12 +56,12 @@ export default function ImportantInfo({ id }: Props) {
               ]}
             />
           </div>
-          <div className="hidden md:grid grid-rows-2 grid-flow-col gap-8">
+          <div className="hidden md:grid grid-cols-1 gap-8">
             <div>
               <h3 className="text-subtitle mb-4 font-philosopher">
                 {t('homepage.info.dresscode.title')}
               </h3>
-              <p className="whitespace-pre-line text-normal font-noto-sans">
+              <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose">
                 {t('homepage.info.dresscode.text')}
               </p>
             </div>
@@ -69,7 +69,7 @@ export default function ImportantInfo({ id }: Props) {
               <h3 className="text-subtitle mb-4 font-philosopher">
                 {t('homepage.info.gifts.title')}
               </h3>
-              <p className="whitespace-pre-line text-normal font-noto-sans">
+              <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose">
                 {t('homepage.info.gifts.text')}
               </p>
             </div>
@@ -77,7 +77,7 @@ export default function ImportantInfo({ id }: Props) {
               <h3 className="text-subtitle mb-4 font-philosopher">
                 {t('homepage.info.games.title')}
               </h3>
-              <p className="whitespace-pre-line text-normal font-noto-sans">
+              <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose">
                 <Markup noWrap content={t('homepage.info.games.text')} />
               </p>
             </div>
