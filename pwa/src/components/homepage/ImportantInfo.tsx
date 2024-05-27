@@ -28,7 +28,7 @@ export default function ImportantInfo({ id }: Props) {
           <h2 className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.info.title')}
           </h2>
-          <p className="whitespace-pre-line font-noto-sans text-normal">
+          <p className="whitespace-pre-line font-philosopher text-subtitle">
             {t('homepage.info.date')}
           </p>
         </>
