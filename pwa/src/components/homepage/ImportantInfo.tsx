@@ -51,7 +51,7 @@ export default function ImportantInfo({ id }: Props) {
                 {
                   key: 'games',
                   title: <span className="text-subtitle">{t('homepage.info.games.title')}</span>,
-                  text: <Markup content={t('homepage.info.games.text')} />,
+                  text: <Markup noWrap content={t('homepage.info.games.text')} />,
                 },
               ]}
             />
@@ -78,7 +78,7 @@ export default function ImportantInfo({ id }: Props) {
                 {t('homepage.info.games.title')}
               </h3>
               <p className="whitespace-pre-line text-normal font-noto-sans">
-                <Markup content={t('homepage.info.games.text')} />
+                <Markup noWrap content={t('homepage.info.games.text')} />
               </p>
             </div>
           </div>

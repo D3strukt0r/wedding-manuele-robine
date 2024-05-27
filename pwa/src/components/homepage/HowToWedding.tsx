@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import ImageLazyLoad from '#/components/common/ImageLazyLoad.tsx';
 import image from '#/img/Portrait.jpg';
 import blurHashMap from '#/img/blurhash-map.json';
+import { Markup } from 'interweave';
 
 interface Props {
   id?: string;
@@ -35,7 +36,7 @@ export default function HowToWedding({ id }: Props) {
           {t('homepage.howToWedding.title2')}
         </h2>
         <p className="whitespace-pre-line text-normal text-gray-50 font-noto-sans">
-          {t('homepage.howToWedding.text')}
+          <Markup noWrap content={t('homepage.howToWedding.text')} />
         </p>
       </div>
     </div>
