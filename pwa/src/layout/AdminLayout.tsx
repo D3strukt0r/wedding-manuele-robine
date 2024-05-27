@@ -330,7 +330,7 @@ export default function AdminLayout({
           <div className="bg-gray-50 p-4 sm:p-6 lg:p-8 flex-auto">{children}</div>
 
           <footer className="text-center pt-4">
-            {t('footer.copyright2')}
+            {t('footer.copyright2', {year: new Date().getFullYear()})}
           </footer>
         </main>
       </div>

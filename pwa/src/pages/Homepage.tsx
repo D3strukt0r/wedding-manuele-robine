@@ -64,7 +64,7 @@ export default function Homepage() {
       </article>
       <footer className="bg-app-gray-dark text-white">
         <p className="text-center whitespace-pre-line py-4 text-sm">
-          {t('footer.copyright')}
+          {t('footer.copyright', {year: new Date().getFullYear()})}
         </p>
       </footer>
     </>
