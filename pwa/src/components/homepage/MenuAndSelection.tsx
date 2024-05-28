@@ -90,10 +90,14 @@ export default function ManuAndSelection({ id }: Props) {
       }
       topContent={
         <>
-          <h2 className="uppercase text-title mb-6 font-philosopher">
+          <h2 className="uppercase text-title font-philosopher">
             {t('homepage.menu.title')}
           </h2>
-          <div className="md:hidden">
+        </>
+      }
+      bottomContent={
+        <>
+          <div className="md:hidden mb-8 md:mb-0">
             <Collapsible
               menuOptions={[
                 {
@@ -109,28 +113,30 @@ export default function ManuAndSelection({ id }: Props) {
               ]}
             />
           </div>
-          <div className="hidden md:block">
-            <h3 className="text-subtitle mb-4 font-philosopher">
-              {t('homepage.menu.meat.title')}
-            </h3>
-            <p className="whitespace-pre-line text-normal font-noto-sans">
-              {t('homepage.menu.meat.text')}
-            </p>
-            <h3 className="text-subtitle mb-4 font-philosopher">
-              {t('homepage.menu.vegetarian.title')}
-            </h3>
-            <p className="whitespace-pre-line text-normal font-noto-sans">
-              {t('homepage.menu.vegetarian.text')}
-            </p>
+          <div className="hidden md:grid grid-cols-2 gap-8 md:mb-8">
+            <div>
+              <h3 className="text-subtitle mb-4 font-philosopher">
+                {t('homepage.menu.meat.title')}
+              </h3>
+              <p className="whitespace-pre-line text-normal font-noto-sans">
+                {t('homepage.menu.meat.text')}
+              </p>
+            </div>
+            <div>
+              <h3 className="text-subtitle mb-4 font-philosopher">
+                {t('homepage.menu.vegetarian.title')}
+              </h3>
+              <p className="whitespace-pre-line text-normal font-noto-sans">
+                {t('homepage.menu.vegetarian.text')}
+              </p>
+            </div>
           </div>
+          {authentication ? (
+            <InviteesListOnMyCardLoader />
+          ) : (
+            <QrScannerCheck ref={qrRef} onScan={handleScan} />
+          )}
         </>
-      }
-      bottomContent={
-        authentication ? (
-          <InviteesListOnMyCardLoader />
-        ) : (
-          <QrScannerCheck ref={qrRef} onScan={handleScan} />
-        )
       }
       align="left"
       backgroundColor="app-yellow"
@@ -162,7 +168,7 @@ function InviteesListOnMyCardLoader() {
     );
   }
 
-  return <BigSpinner />
+  return <BigSpinner />;
 }
 
 function InviteesListOnMyCardForm({
