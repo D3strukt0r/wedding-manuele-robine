@@ -22,7 +22,7 @@ export default function MapAndPlan({ id, id2 }: Props) {
     <AlignedCard
       id={id}
       image={
-        <Map defaultCenter={position} defaultZoom={17} mapId="7035e553f3676d1e">
+        <Map defaultCenter={position} defaultZoom={17} mapId="7035e553f3676d1e" gestureHandling="cooperative">
           <AdvancedMarker position={position} />
         </Map>
       }
