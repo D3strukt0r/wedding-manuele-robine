@@ -127,7 +127,7 @@ export default function AlignedCard({
             </div>
           </div>
           <div
-            className={clsx('md:pt-8', {
+            className={clsx('md:pt-10', {
               'bg-app-red-light': backgroundColor === 'app-red-light',
               'bg-app-gray-dark': backgroundColor === 'app-gray-dark',
               'bg-app-green-dark': backgroundColor === 'app-green-dark',
