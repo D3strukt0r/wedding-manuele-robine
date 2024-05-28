@@ -13,7 +13,7 @@ export default function HowToWedding({ id }: Props) {
   return (
     <div
       id={id}
-      className="mx-auto max-w-7xl md:px-6 lg:px-8 flex flex-col md:flex-row-reverse"
+      className="mx-auto max-w-7xl md:px-6 lg:px-8 flex flex-col md:flex-row-reverse scroll-mt-16"
     >
       <div className="flex-1 relative">
         <ImageLazyLoad

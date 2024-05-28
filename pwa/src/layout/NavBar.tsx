@@ -38,7 +38,15 @@ export default function NavBar({
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
-                  <div className="h-8 w-auto">{logo}</div>
+                  <div
+                    className="h-8 w-auto cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document.querySelector('#root')!.scrollTo({top: 0});
+                    }}
+                  >
+                    {logo}
+                  </div>
                 </div>
               </div>
               <div className="hidden sm:ml-6 lg:flex">

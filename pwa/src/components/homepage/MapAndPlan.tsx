@@ -39,7 +39,7 @@ export default function MapAndPlan({ id, id2 }: Props) {
       }
       bottomContent={
         <>
-          <h2 id={id2} className="uppercase text-title mb-6 font-philosopher">
+          <h2 id={id2} className="uppercase text-title mb-6 font-philosopher scroll-mt-20">
             {t('homepage.map.title2')}
           </h2>
           <p className="font-noto-sans text-normal mb-8 md:max-w-prose">{t('homepage.map.plan')}</p>
