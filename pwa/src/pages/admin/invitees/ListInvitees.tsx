@@ -278,7 +278,7 @@ function UpdateInvitee({ record }: { record: Invitee }) {
     formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: useMemo(() => ({
       firstname: record.firstname,
       lastname: record.lastname,
       email: record.email,
@@ -287,13 +287,22 @@ function UpdateInvitee({ record }: { record: Invitee }) {
       allergies: record.allergies,
       tableId: record.tableId,
       cardId: record.cardId,
-    },
+    }), []),
   });
 
   const { mutate, isPending, isError, error } = useUpdateInvitee(record.id, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       setOpen(false);
-      reset();
+      reset({
+        firstname: data.firstname,
+        lastname: data.lastname,
+        email: data.email,
+        willCome: data.willCome,
+        food: data.food,
+        allergies: data.allergies,
+        tableId: data.tableId,
+        cardId: data.cardId,
+      });
     },
     onError: (error) => {
       setErrorFromSymfonyViolations(setError, error.response?.data?.violations)

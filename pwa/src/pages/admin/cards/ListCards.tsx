@@ -166,16 +166,19 @@ function UpdateCard({ record }: { record: Card }) {
     formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: useMemo(() => ({
       userLoginId: record.userLoginId,
       inviteeIds: record.inviteeIds,
-    },
+    }), []),
   });
 
   const { mutate, isPending, isError, error } = useUpdateCard(record.id, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       setOpen(false);
-      reset();
+      reset({
+        userLoginId: data.userLoginId,
+        inviteeIds: data.inviteeIds,
+      });
     },
     onError: (error) => {
       setErrorFromSymfonyViolations(setError, error.response?.data?.violations)

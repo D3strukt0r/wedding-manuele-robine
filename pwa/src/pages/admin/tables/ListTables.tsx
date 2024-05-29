@@ -184,17 +184,21 @@ function UpdateTable({ record }: { record: TableModel }) {
     formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: useMemo(() => ({
       name: record.name,
       seats: record.seats,
       inviteeIds: record.inviteeIds,
-    },
+    }), []),
   });
 
   const { mutate, isPending, isError, error } = useUpdateTable(record.id, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       setOpen(false);
-      reset();
+      reset({
+        name: data.name,
+        seats: data.seats,
+        inviteeIds: data.inviteeIds,
+      });
     },
     onError: (error) => {
       setErrorFromSymfonyViolations(setError, error.response?.data?.violations)

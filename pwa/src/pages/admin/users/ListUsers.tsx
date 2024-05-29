@@ -191,17 +191,21 @@ function UpdateUser({ record }: { record: User }) {
     formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: {
+    defaultValues: useMemo(() => ({
       username: record.username,
       newPassword: null,
       roles: record.roles,
-    },
+    }), []),
   });
 
   const { mutate, isPending, isError, error } = useUpdateUser(record.id, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       setOpen(false);
-      reset();
+      reset({
+        username: data.username,
+        newPassword: null,
+        roles: data.roles,
+      });
       // TODO: Notification about possibly new generated password
     },
     onError: (error) => {

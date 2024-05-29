@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import QrScanner from 'qr-scanner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -215,7 +215,7 @@ function InviteesListOnMyCardForm({
   }, [t]);
 
   // map the id to the key of the object
-  const mappedInvitees = useMemo(() => {
+  const mapRecordsToForm = useCallback((invitees: Omit<Invitee, 'cardId'>[]) => {
     const mappedObject: Record<Invitee['id'], Omit<Invitee, 'id' | 'cardId'>> = {};
     invitees.forEach((invitee) => {
       // omit the id as well
@@ -223,8 +223,10 @@ function InviteesListOnMyCardForm({
       const { id, ...rest } = invitee;
       mappedObject[invitee.id] = rest;
     });
-    return mappedObject;
-  }, [invitees]);
+    return {
+      invitees: mappedObject,
+    };
+  }, []);
 
   type Inputs = z.infer<typeof schema>;
   const {
@@ -236,14 +238,12 @@ function InviteesListOnMyCardForm({
     formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      invitees: mappedInvitees,
-    },
+    defaultValues: useMemo(() => mapRecordsToForm(invitees), []),
   });
 
   const { mutate, isPending, isError, error } = useUpdateInviteesOnCard({
-    onSuccess: () => {
-      // reset(); // TODO: Figure out how to manage the form state after a successful submit
+    onSuccess: (data) => {
+      reset(mapRecordsToForm(data.records));
     },
     onError: (error) => {
       setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
@@ -339,7 +339,7 @@ function InviteesListOnMyCardForm({
           layout="app-primary"
           className="col-span-2"
           loading={isPending}
-          // disabled={!isDirty || !isValid} // TODO: Figure out how to manage the form state after a successful submit
+          disabled={!isDirty || !isValid}
         >
           {t('form.save')}
         </Button>
