@@ -10,7 +10,7 @@ readonly class ListQueryDto
     public function __construct(
         #[Assert\LessThanOrEqual(500)]
         #[OA\Property(description: 'The field used to limit the number of records returned', example: 10)]
-        public int $limit = 25,
+        public int $limit = 500, // TODO: Reset to 25
 
         #[Assert\LessThanOrEqual(10_000)]
         #[OA\Property(description: 'The field used to offset the records returned', example: 20)]
