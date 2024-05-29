@@ -19,7 +19,7 @@ export default function Gallery({ id }: Props) {
   if (galleryFileIds.data) {
     if (galleryFileIds.data.files.length === 0) {
       galleryView = (
-        <p className="text-xl font-noto-sans">
+        <p className="text-normal font-noto-sans">
           {t('homepage.gallery.noImages')}
         </p>
       );
@@ -74,7 +74,7 @@ export default function Gallery({ id }: Props) {
 
   if (galleryFileIds.error) {
     galleryView = (
-      <p className="text-xl font-noto-sans">
+      <p className="text-normal font-noto-sans">
         {t('homepage.gallery.error')}
       </p>
     );
@@ -97,10 +97,10 @@ export default function Gallery({ id }: Props) {
         />}
       topContent={
         <>
-          <h2 className="uppercase text-4xl md:text-7xl mb-6 font-philosopher">
+          <h2 className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.gallery.title')}
           </h2>
-          <p className="whitespace-pre-line md:text-2xl font-noto-sans">
+          <p className="whitespace-pre-line text-normal font-noto-sans">
             {t('homepage.gallery.text')}
           </p>
         </>
