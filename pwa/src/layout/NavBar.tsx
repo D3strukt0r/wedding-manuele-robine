@@ -157,62 +157,71 @@ export default function NavBar({
           </div>
 
           {/* Mobile Menu */}
-          <Disclosure.Panel className="lg:hidden">
-            <nav className="pb-3 pt-2">
-              {menuItems.map((item, index) => (
-                <Disclosure.Button
-                  key={item.label}
-                  as="a"
-                  href={item.route}
-                  className={clsx(
-                    item.route === current
-                      ? 'border-app-green-dark bg-gray-50 text-app-green-dark'
-                      : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
-                    'block border-l-4 pl-3 pr-4 text-menu font-medium uppercase font-philosopher',
-                  )}
-                >
-                  <span
+          <Transition
+            enter="transition ease duration-200 transform"
+            enterFrom="opacity-0 -translate-y-12"
+            enterTo="opacity-100 translate-y-0"
+            leave="transition ease duration-200 transform"
+            leaveFrom="opacity-100 translate-y-0"
+            leaveTo="opacity-0 -translate-y-12"
+          >
+            <Disclosure.Panel className="lg:hidden">
+              <nav className="pb-3 pt-2">
+                {menuItems.map((item, index) => (
+                  <Disclosure.Button
+                    key={item.label}
+                    as="a"
+                    href={item.route}
                     className={clsx(
-                      'flex items-center border-b-[1px] border-gray-50 py-3',
-                      index === 0 ? 'border-t-[1px]' : null,
+                      item.route === current
+                        ? 'border-app-green-dark bg-gray-50 text-app-green-dark'
+                        : 'border-transparent text-gray-50 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700',
+                      'block border-l-4 pl-3 pr-4 text-menu font-medium uppercase font-philosopher',
                     )}
                   >
-                    {item.label}
-                  </span>
-                </Disclosure.Button>
-              ))}
-            </nav>
-            {authentication && (
-              <div className="border-t border-gray-600 pb-3 pt-4">
-                <div className="flex items-center px-4">
-                  <div className="text-menu font-medium text-gray-50 font-philosopher">
-                    {authentication.username}
+                    <span
+                      className={clsx(
+                        'flex items-center border-b-[1px] border-gray-50 py-3',
+                        index === 0 ? 'border-t-[1px]' : null,
+                      )}
+                    >
+                      {item.label}
+                    </span>
+                  </Disclosure.Button>
+                ))}
+              </nav>
+              {authentication && (
+                <div className="border-t border-gray-600 pb-3 pt-4">
+                  <div className="flex items-center px-4">
+                    <div className="text-menu font-medium text-gray-50 font-philosopher">
+                      {authentication.username}
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-1">
+                    {/* TODO: Don't check for roles directly in frontend */}
+                    {authentication.roles.includes('ROLE_ADMIN') && (
+                      <Disclosure.Button
+                        as={DisclosureLink}
+                        to="/admin"
+                        className="block px-4 py-2 text-menu font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase font-philosopher"
+                      >
+                        {t('menu.admin')}
+                      </Disclosure.Button>
+                    )}
+                    <Disclosure.Button
+                      as="button"
+                      className="w-full text-left block px-4 py-2 text-menu font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase font-philosopher"
+                      onClick={() => {
+                        updateAuthentication(null);
+                      }}
+                    >
+                      {t('menu.logout')}
+                    </Disclosure.Button>
                   </div>
                 </div>
-                <div className="mt-3 space-y-1">
-                  {/* TODO: Don't check for roles directly in frontend */}
-                  {authentication.roles.includes('ROLE_ADMIN') && (
-                    <Disclosure.Button
-                      as={DisclosureLink}
-                      to="/admin"
-                      className="block px-4 py-2 text-menu font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase font-philosopher"
-                    >
-                      {t('menu.admin')}
-                    </Disclosure.Button>
-                  )}
-                  <Disclosure.Button
-                    as="button"
-                    className="w-full text-left block px-4 py-2 text-menu font-medium text-gray-50 hover:bg-gray-100 hover:text-gray-500 uppercase font-philosopher"
-                    onClick={() => {
-                      updateAuthentication(null);
-                    }}
-                  >
-                    {t('menu.logout')}
-                  </Disclosure.Button>
-                </div>
-              </div>
-            )}
-          </Disclosure.Panel>
+              )}
+            </Disclosure.Panel>
+          </Transition>
         </>
       )}
     </Disclosure>
