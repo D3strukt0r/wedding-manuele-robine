@@ -3,7 +3,7 @@
 namespace App\Controller\Admin\Api\User;
 
 use App\Dto\Admin\User\UserListDto;
-use App\Dto\Admin\User\UsersQueryDto;
+use App\Dto\Common\ListQueryDto;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -34,8 +34,6 @@ class ListUsersController extends AbstractController
     )]
     #[IsGranted(Role::ADMIN->value)]
     #[Security(name: 'Bearer')]
-    #[OA\Parameter(name: 'limit', in: 'query', description: 'The field used to limit the number of records returned', schema: new OA\Schema(type: 'integer'))]
-    #[OA\Parameter(name: 'offset', in: 'query', description: 'The field used to offset the records returned', schema: new OA\Schema(type: 'integer'))]
     #[OA\Response(response: Response::HTTP_OK, description: 'Returns a list of users', content: new OA\JsonContent(properties: [
         new OA\Property(property: 'total', type: 'integer'),
         new OA\Property(property: 'offset', type: 'integer'),
@@ -46,7 +44,7 @@ class ListUsersController extends AbstractController
     ]))]
     #[OA\Response(response: Response::HTTP_UNAUTHORIZED, description: 'Not authorized to access this resource', content: new OA\JsonContent(ref: '#/components/schemas/AuthError'))]
     #[OA\Tag('Admin/User')]
-    public function __invoke(#[MapQueryString] UsersQueryDto $query = new UsersQueryDto()): JsonResponse
+    public function __invoke(#[MapQueryString] ListQueryDto $query = new ListQueryDto()): JsonResponse
     {
         $users = $this->userRepository->findBy([], [], $query->limit, $query->offset);
 
