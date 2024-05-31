@@ -35,11 +35,11 @@ export default function NavBar({
         <>
           {/* Desktop Menu */}
           <div className="mx-auto max-w-7xl px-4 lg:px-8">
-            <div className="flex h-16 justify-between">
+            <div className="flex h-20 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
                   <div
-                    className="h-8 w-auto cursor-pointer"
+                    className="h-full p-4 w-auto cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
                       document.querySelector('#root')!.scrollTo({top: 0});

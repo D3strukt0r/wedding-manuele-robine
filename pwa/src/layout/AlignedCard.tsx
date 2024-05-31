@@ -37,7 +37,7 @@ export default function AlignedCard({
     // Gradient background to have two different colors on both sides
     <div
       id={id}
-      className={clsx('bg-gradient-to-r from-45% to-55% scroll-mt-16', {
+      className={clsx('bg-gradient-to-r from-45% to-55% scroll-mt-20', {
         'from-app-red-light': align === 'left' && backgroundColor === 'app-red-light',
         'from-app-gray-dark': align === 'left' && backgroundColor === 'app-gray-dark',
         'from-app-green-dark': align === 'left' && backgroundColor === 'app-green-dark',

@@ -6,7 +6,7 @@ import * as defaultTheme from 'tailwindcss/defaultTheme';
 export default {
   content: [
     './index.html',
-    './src/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx,json}',
   ],
   darkMode: ['class', '[data-theme="dark"]'],
   theme: {
