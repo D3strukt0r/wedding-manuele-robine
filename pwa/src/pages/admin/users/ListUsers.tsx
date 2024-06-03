@@ -257,6 +257,7 @@ function UpdateUser({ record }: { record: User }) {
           },
         ]}
       >
+        {/*<Form onSubmit={mutate} className="space-y-6" />*/}
         <form onSubmit={handleSubmit(mutate)} className="space-y-6">
           {isError ? (
             <Alert
@@ -364,6 +365,8 @@ function DeleteUser({ id, name }: { id: User['id'], name: ReactNode }) {
 export default function ListUsers() {
   const { t } = useTranslation('app');
 
+  // const pagination = usePagination();
+  // const users = useUsers({limit: pagination.limit, offset: pagination.offset});
   const users = useUsers();
   const roles = useLookupType(EnumTypes.ROLE);
 
@@ -401,6 +404,8 @@ export default function ListUsers() {
           <CreateUser />
         </div>
         <Table rowKey="id" columns={columns} dataSource={users.data.records} />
+        {/*<Table rowKey="id" columns={columns} dataSource={users.data.records} isLoading={users.isFetching && users.isPlaceholderData} />*/}
+        {/*<TablePagination {...pagination} total={users.data.total} />*/}
       </>
     );
   }
