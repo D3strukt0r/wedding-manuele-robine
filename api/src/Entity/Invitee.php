@@ -53,12 +53,12 @@ class Invitee
         return $this->id;
     }
 
-    public function getFirstname(): string
+    public function getFirstName(): string
     {
         return $this->firstname;
     }
 
-    public function getLastname(): string
+    public function getLastName(): string
     {
         return $this->lastname;
     }

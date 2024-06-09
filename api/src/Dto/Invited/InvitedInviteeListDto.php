@@ -26,8 +26,8 @@ readonly class InvitedInviteeListDto
     public function __construct(Invitee $invitee)
     {
         $this->id = $invitee->getId();
-        $this->firstname = $invitee->getFirstname();
-        $this->lastname = $invitee->getLastname();
+        $this->firstname = $invitee->getFirstName();
+        $this->lastname = $invitee->getLastName();
         $this->email = $invitee->getEmail();
         $this->willCome = $invitee->willCome();
         $this->food = $invitee->getFood();

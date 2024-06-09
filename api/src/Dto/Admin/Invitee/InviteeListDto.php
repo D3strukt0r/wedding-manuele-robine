@@ -43,8 +43,8 @@ readonly class InviteeListDto
         }
 
         $this->id = $id;
-        $this->firstname = $invitee->getFirstname();
-        $this->lastname = $invitee->getLastname();
+        $this->firstname = $invitee->getFirstName();
+        $this->lastname = $invitee->getLastName();
         $this->email = $invitee->getEmail();
         $this->willCome = $invitee->willCome();
         $this->food = $invitee->getFood();
