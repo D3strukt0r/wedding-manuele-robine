@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import AlignedCard from '#/layout/AlignedCard';
-import useGalleryIds from '#/api/invited/gallery/useGalleryIds.ts';
+import useGallery from '#/api/invited/gallery/useGallery.ts';
 import BigSpinner from '#/layout/BigSpinner.tsx';
 import ImageLazyLoad, { aspectRatio } from '#/components/common/ImageLazyLoad.tsx';
 import blurHashMap from '#/img/blurhash-map.json';
@@ -65,7 +65,7 @@ function MyGalleryUploadForm() {
 function CompleteGallery() {
   const { t } = useTranslation('app');
 
-  const galleryFileIds = useGalleryIds();
+  const galleryFileIds = useGallery();
 
   if (galleryFileIds.data) {
     if (galleryFileIds.data.files.length === 0) {

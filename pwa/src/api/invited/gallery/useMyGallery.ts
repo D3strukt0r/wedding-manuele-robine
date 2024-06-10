@@ -10,9 +10,9 @@ export default function useGalleryIds(
 ) {
   return useQuery({
     ...(queryOptions ?? {}),
-    queryKey: ['galleryIds'],
+    queryKey: ['myGallery'],
     queryFn: async () => {
-      const { data: response } = await axios.get<GalleryImages>('/invited/api/gallery');
+      const { data: response } = await axios.get<GalleryImages>('/invited/api/gallery/my');
       return response;
     },
   });
