@@ -5,11 +5,16 @@ import BigSpinner from '#/layout/BigSpinner.tsx';
 import ImageLazyLoad, { aspectRatio } from '#/components/common/ImageLazyLoad.tsx';
 import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
-import { GalleryImage as GalleryImageType, GalleryImages } from '#/components/types.ts';
+import { GalleryImage as GalleryImageType } from '#/components/types.ts';
 import { useMemo } from 'react';
 import { useAuthenticationContext } from '#/utils/authentication.tsx';
-import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType.ts';
 import useMyGallery from '#/api/invited/gallery/useMyGallery.ts';
+import * as z from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
+import useUpdateMyGallery from '#/api/invited/gallery/useUpdateMyGallery.ts';
+import { DevTool } from '@hookform/devtools';
 
 interface Props {
   id?: string;
@@ -86,7 +91,50 @@ interface MyGalleryUploadFormProps {
   files: GalleryImageType[];
 }
 function MyGalleryUploadForm({ files }: MyGalleryUploadFormProps) {
-  return <p>Diese funktion kommt noch</p>;
+  const { t } = useTranslation('app');
+
+  const schema = useMemo(() => {
+    return z.object({
+      fileIds: z.array(z.number()),
+    });
+  }, [t]);
+
+  type Inputs = z.infer<typeof schema>;
+  const {
+    register,
+    control,
+    handleSubmit,
+    reset,
+    setError,
+    formState: { errors, isDirty, isValid },
+  } = useForm<Inputs>({
+    resolver: zodResolver(schema),
+    defaultValues: useMemo(() => ({
+      fileIds: files.map((file) => file.id),
+    }), []),
+  });
+
+  const { mutate, isPending, isError, error } = useUpdateMyGallery({
+    onSuccess: (data) => {
+      reset({
+        fileIds: data.files.map((file) => file.id),
+      });
+    },
+    onError: (error) => {
+      setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
+    }
+  });
+
+  return (
+    <>
+      <form onSubmit={handleSubmit(mutate)}>
+        <p>Diese funktion kommt noch</p>
+      </form>
+      {import.meta.env.DEV && (
+        <DevTool control={control} />
+      )}
+    </>
+  );
 }
 
 function CompleteGallery() {
