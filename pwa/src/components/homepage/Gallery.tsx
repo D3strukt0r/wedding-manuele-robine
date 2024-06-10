@@ -7,12 +7,14 @@ import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
 import type { GalleryImage as GalleryImageType } from '#/components/types.ts';
 import { useMemo } from 'react';
+import { useAuthenticationContext } from '#/utils/authentication.tsx';
 
 interface Props {
   id?: string;
 }
 export default function Gallery({ id }: Props) {
   const { t } = useTranslation('app');
+  const [authentication] = useAuthenticationContext();
 
   return (
     <AlignedCard
@@ -37,6 +39,15 @@ export default function Gallery({ id }: Props) {
           <p className="whitespace-pre-line text-normal font-noto-sans">
             {t('homepage.gallery.text')}
           </p>
+          {authentication ? (
+            <div className="mt-8">
+              <MyGalleryUploadForm />
+            </div>
+          ) : (
+            <p className="text-normal font-noto-sans mt-8">
+              {t('homepage.gallery.pleaseLogin')}
+            </p>
+          )}
         </>
       }
       bottomContent={<CompleteGallery />}
@@ -45,6 +56,10 @@ export default function Gallery({ id }: Props) {
       imageShadowColor="app-green-dark"
     />
   );
+}
+
+function MyGalleryUploadForm() {
+  return <p>Diese funktion kommt noch</p>;
 }
 
 function CompleteGallery() {
