@@ -8,5 +8,5 @@ enum Food: string
     // case FISH = 'fish';
     case VEGETARIAN = 'vegetarian';
     // case VEGAN = 'vegan';
-    // case CHILD = 'child';
+    case CHILD = 'child';
 }
