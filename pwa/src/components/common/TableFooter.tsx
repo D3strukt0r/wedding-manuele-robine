@@ -105,7 +105,6 @@ export function getPaginationPages(page: number, total: number, limit: number, a
 
 interface ItemProps<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>> extends Partial<ControllerRenderProps<TFieldValues, TName>> {}
 const InputInternal = <TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>(props: ItemProps<TFieldValues, TName>, ref: ForwardedRef<HTMLInputElement>) => {
-  console.log(props)
   return <input {...props} ref={ref} />
 }
 const Input = forwardRef(InputInternal) as <TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>(props: ItemProps<TFieldValues, TName> & { ref?: ForwardedRef<HTMLInputElement> }) => ReactElement;

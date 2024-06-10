@@ -154,6 +154,24 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/stof/doctrine-extensions-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/kornrunner/blurhash" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/imagine/imagine" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/aws/aws-crt-php" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/aws/aws-sdk-php" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/guzzlehttp/psr7" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/lcobucci/clock" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/flysystem-aws-s3-v3" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/lexik/jwt-authentication-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/mtdowling/jmespath.php" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/namshi/jose" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/psr/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/psr/http-factory" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/ralouphie/getallheaders" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/twig-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/web-profiler-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/twig/extra-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

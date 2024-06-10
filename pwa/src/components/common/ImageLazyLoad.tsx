@@ -29,7 +29,6 @@ export interface ImageLazyLoadProps {
   loadLazy?: boolean;
   imgSources?: JSX.Element;
 }
-// console.log(aspectRatio(mainImage.width, mainImage.height))
 
 // https://codesandbox.io/s/unsplash-image-search-bn3rn?file=/src/modules/main/components/ImageLazyLoad/index.tsx
 export default function ImageLazyLoad({
