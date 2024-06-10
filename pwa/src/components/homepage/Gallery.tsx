@@ -5,80 +5,14 @@ import BigSpinner from '#/layout/BigSpinner.tsx';
 import ImageLazyLoad, { aspectRatio } from '#/components/common/ImageLazyLoad.tsx';
 import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
+import type { GalleryImage as GalleryImageType } from '#/components/types.ts';
+import { useMemo } from 'react';
 
 interface Props {
   id?: string;
 }
 export default function Gallery({ id }: Props) {
   const { t } = useTranslation('app');
-
-  const galleryFileIds = useGalleryIds();
-
-  let galleryView = <BigSpinner />;
-
-  if (galleryFileIds.data) {
-    if (galleryFileIds.data.files.length === 0) {
-      galleryView = (
-        <p className="text-normal font-noto-sans">
-          {t('homepage.gallery.noImages')}
-        </p>
-      );
-    } else {
-      galleryView = (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {galleryFileIds.data.files.map((file) => {
-            const isOptimized = file.children.length > 0;
-            // extract the main image possibly a jpg mimetype from the optimized images
-            const mainImage = isOptimized
-              ? (file.children.find((child) => child.mimeType === 'image/jpeg') ?? file)
-              : file;
-            // ... and the webp image as the first source
-            const imageWebp = isOptimized
-              ? (file.children.find((child) => child.mimeType === 'image/webp') ?? null)
-              : null;
-            // ... extract those two and use them as the other sources
-            const otherSources = isOptimized
-              ? file.children.filter((child) => ![mainImage.id, imageWebp?.id].filter(Boolean).includes(child.id))
-              : [];
-
-            const [width, height] = aspectRatio(mainImage.width, mainImage.height);
-
-            return (
-              <ImageLazyLoad
-                key={file.id}
-                // TODO: eventually use `file.publicUrl`
-                src={`${document.documentElement.dataset.apiUrl}/invited/api/gallery/${mainImage.id}`}
-                width={mainImage.width}
-                height={mainImage.height}
-                customSizeHandling
-                className="w-full"
-                wrapperStyle={{ aspectRatio: `${width}/${height}` }}
-                blurhash={mainImage.blurhash}
-                imgSources={(
-                  <>
-                    {imageWebp && (
-                      <source srcSet={`${document.documentElement.dataset.apiUrl}/invited/api/gallery/${imageWebp.id}`} type="image/webp" />
-                    )}
-                    {otherSources.map((source) => (
-                      <source key={source.id} srcSet={`${document.documentElement.dataset.apiUrl}/invited/api/gallery/${source.id}`} type={source.mimeType} />
-                    ))}
-                  </>
-                )}
-              />
-            )
-          })}
-        </div>
-      );
-    }
-  }
-
-  if (galleryFileIds.error) {
-    galleryView = (
-      <p className="text-normal font-noto-sans">
-        {t('homepage.gallery.error')}
-      </p>
-    );
-  }
 
   return (
     <AlignedCard
@@ -105,10 +39,98 @@ export default function Gallery({ id }: Props) {
           </p>
         </>
       }
-      bottomContent={galleryView}
+      bottomContent={<CompleteGallery />}
       align="right"
       backgroundColor="app-yellow-dark"
       imageShadowColor="app-green-dark"
     />
   );
+}
+
+function CompleteGallery() {
+  const { t } = useTranslation('app');
+
+  const galleryFileIds = useGalleryIds();
+
+  if (galleryFileIds.data) {
+    if (galleryFileIds.data.files.length === 0) {
+      return (
+        <p className="text-normal font-noto-sans">
+          {t('homepage.gallery.noImages')}
+        </p>
+      );
+    }
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {galleryFileIds.data.files.map((file) => <GalleryImage key={file.id} file={file} />)}
+      </div>
+    );
+  }
+
+  if (galleryFileIds.error) {
+    return (
+      <p className="text-normal font-noto-sans">
+        {t('homepage.gallery.error')}
+      </p>
+    );
+  }
+
+  return (
+    <BigSpinner />
+  );
+}
+
+interface GalleryImageProps {
+  file: GalleryImageType;
+}
+function GalleryImage({file}: GalleryImageProps) {
+  const isOptimized = useMemo(() => {
+    return file.children.length > 0;
+  }, [file.children.length]);
+
+  // extract the main image possibly a jpg mimetype from the optimized images
+  const mainImage = useMemo(() => {
+    return isOptimized
+      ? (file.children.find((child) => child.mimeType === 'image/jpeg') ?? file)
+      : file;
+  }, [file.children, isOptimized]);
+  // ... and the webp image as the first source
+  const imageWebp = useMemo(() => {
+    return isOptimized
+      ? (file.children.find((child) => child.mimeType === 'image/webp') ?? null)
+      : null;
+  }, [file.children, isOptimized]);
+  // ... extract those two and use them as the other sources
+  const otherSources = useMemo(() => {
+    return isOptimized
+      ? file.children.filter((child) => ![mainImage.id, imageWebp?.id].filter(Boolean).includes(child.id))
+      : [];
+  }, [file.children, isOptimized, mainImage, imageWebp]);
+
+  const [width, height] = useMemo(() => {
+    return aspectRatio(mainImage.width, mainImage.height);
+  }, [mainImage.width, mainImage.height]);
+
+  return (
+    <ImageLazyLoad
+      // TODO: eventually use `file.publicUrl`
+      src={`${document.documentElement.dataset.apiUrl}/invited/api/gallery/${mainImage.id}`}
+      width={mainImage.width}
+      height={mainImage.height}
+      customSizeHandling
+      className="w-full"
+      wrapperStyle={{ aspectRatio: `${width}/${height}` }}
+      blurhash={mainImage.blurhash}
+      imgSources={(
+        <>
+          {imageWebp && (
+            <source srcSet={`${document.documentElement.dataset.apiUrl}/invited/api/gallery/${imageWebp.id}`} type="image/webp" />
+          )}
+          {otherSources.map((source) => (
+            <source key={source.id} srcSet={`${document.documentElement.dataset.apiUrl}/invited/api/gallery/${source.id}`} type={source.mimeType} />
+          ))}
+        </>
+      )}
+    />
+  )
 }
