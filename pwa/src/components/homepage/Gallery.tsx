@@ -152,7 +152,9 @@ function CompleteGallery() {
     }
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {galleryFileIds.data.files.map((file) => <GalleryImage key={file.id} file={file} />)}
+        {galleryFileIds.data.files.map((file) => (
+          <GalleryImage key={file.id} file={file} />
+        ))}
       </div>
     );
   }
@@ -173,7 +175,8 @@ function CompleteGallery() {
 interface GalleryImageProps {
   file: GalleryImageType;
 }
-function GalleryImage({file}: GalleryImageProps) {
+
+function GalleryImage({ file }: GalleryImageProps) {
   const isOptimized = useMemo(() => {
     return file.children.length > 0;
   }, [file.children.length]);

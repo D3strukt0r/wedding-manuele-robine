@@ -118,7 +118,7 @@ interface Props {
   setLimit: Dispatch<SetStateAction<number>>;
 }
 export default function TableFooter({ page, total, limit, adjacents, setPage, setLimit }: Props) {
-  const {t} = useTranslation('app');
+  const { t } = useTranslation('app');
   const pages = useMemo(() => getPaginationPages(page, total, limit, adjacents), [page, total, limit, adjacents]);
 
   return (
