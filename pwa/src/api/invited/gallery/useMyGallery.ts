@@ -2,7 +2,7 @@ import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 import { GalleryImages } from '#/components/types.ts';
 
-export default function useGalleryIds(
+export default function useMyGallery(
   queryOptions?: Omit<
     UseQueryOptions<GalleryImages>,
     'queryKey' | 'queryFn'

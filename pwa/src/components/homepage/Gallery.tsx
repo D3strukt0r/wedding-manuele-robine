@@ -5,9 +5,11 @@ import BigSpinner from '#/layout/BigSpinner.tsx';
 import ImageLazyLoad, { aspectRatio } from '#/components/common/ImageLazyLoad.tsx';
 import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
-import type { GalleryImage as GalleryImageType } from '#/components/types.ts';
+import { GalleryImage as GalleryImageType, GalleryImages } from '#/components/types.ts';
 import { useMemo } from 'react';
 import { useAuthenticationContext } from '#/utils/authentication.tsx';
+import useLookupType, { EnumTypes } from '#/api/common/lookup/useLookupType.ts';
+import useMyGallery from '#/api/invited/gallery/useMyGallery.ts';
 
 interface Props {
   id?: string;
@@ -41,7 +43,7 @@ export default function Gallery({ id }: Props) {
           </p>
           {authentication ? (
             <div className="mt-8">
-              <MyGalleryUploadForm />
+              <MyGalleryUploadLoader />
             </div>
           ) : (
             <p className="text-normal font-noto-sans mt-8">
@@ -58,7 +60,32 @@ export default function Gallery({ id }: Props) {
   );
 }
 
-function MyGalleryUploadForm() {
+function MyGalleryUploadLoader() {
+  const myGallery = useMyGallery();
+
+  if (myGallery.data) {
+    return (
+      <MyGalleryUploadForm
+        files={myGallery.data.files}
+      />
+    );
+  }
+
+  if (myGallery.isError) {
+    return (
+      <div>
+        {myGallery.isError && <p>{myGallery.error.message}</p>}
+      </div>
+    );
+  }
+
+  return <BigSpinner />;
+}
+
+interface MyGalleryUploadFormProps {
+  files: GalleryImageType[];
+}
+function MyGalleryUploadForm({ files }: MyGalleryUploadFormProps) {
   return <p>Diese funktion kommt noch</p>;
 }
 
