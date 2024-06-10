@@ -1,10 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { forwardRef, ReactNode } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form/dist/types/form';
 import { InternalFieldName } from 'react-hook-form/dist/types/fields';
 import { useTranslation } from 'react-i18next';
+import { useDropzone } from 'react-dropzone'
+import { Transition } from '@headlessui/react';
 
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
 const mimeTypeMapping = {
   'application/pdf': 'PDF',
   'image/jpeg': 'JPG',
@@ -46,6 +49,19 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
 }, ref) => {
   const { t } = useTranslation('app');
 
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      console.log(acceptedFiles)
+      // Do something with the files
+    },
+    ...(allowedFileTypes ? {
+      accept: allowedFileTypes?.reduce((acc, type) => {
+        acc[type] = [];
+        return acc;
+      }, {} as Record<keyof typeof mimeTypeMapping, string[]>),
+    } : {}),
+  })
+
   return (
     <div className="col-span-full">
       {label && (
@@ -53,16 +69,22 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
           {label}
         </label>
       )}
-      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+      <div
+        className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 relative"
+        {...getRootProps()}
+        // https://stackoverflow.com/questions/49671325/react-dropzone-opens-files-chooser-twice
+        // or upload prompt will be triggered twice
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="text-center">
           <FontAwesomeIcon icon={faUpload} className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
-          <div className="mt-4 flex text-sm leading-6 text-gray-600">
+          <div className="mt-4 flex justify-center text-sm leading-6 text-gray-600">
             <label
               htmlFor={props.name}
               className="relative cursor-pointer rounded-md font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
             >
               <span>{t('common.upload.file')}</span>
-              <input ref={ref} id={props.name} {...props} type="file" className="sr-only" />
+              <input ref={ref} id={props.name} className="sr-only" {...getInputProps()} />
             </label>
             <p className="pl-1">{t('common.upload.orDrop')}</p>
           </div>
@@ -72,6 +94,18 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
               size: bytesToHumanReadableFileSize(allowedFileSize),
             })}
           </p>
+          <Transition
+            show={isDragActive}
+            enter="transition-[backdrop-filter,opacity] duration-150"
+            enterFrom="opacity-0 backdrop-blur-none"
+            enterTo="opacity-100 backdrop-blur-sm"
+            leave="transition-[backdrop-filter,opacity] duration-150"
+            leaveFrom="opacity-100 backdrop-blur-sm"
+            leaveTo="opacity-0 backdrop-blur-none"
+            className="absolute inset-0 flex justify-center items-center text-gray-600 backdrop-blur-sm"
+          >
+            <FontAwesomeIcon icon={faPlus} size="2xl" />
+          </Transition>
         </div>
       </div>
     </div>
