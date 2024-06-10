@@ -130,6 +130,11 @@
   "card.actions.update.title": "Karte bearbeiten",
   "card.actions.delete.title": "Karte löschen",
   "card.actions.delete.text": "Möchten Sie die Karte von '{{name}}' wirklich löschen?",
+  "dashboard.food.title": "Essenspräferenzen",
+  "dashboard.food.line": "{{food}}: {{count}}",
+  "dashboard.food.notDecided": "Noch nicht entschieden",
+  "dashboard.allergies.title": "Allergien",
+  "dashboard.allergies.line": "{{name}}: {{allergies}}",
   "footer.copyright": "Images by Sacha Kocher and Adobe Stock\n© {{year}} Manuele Vaccari and Robine Gautschi",
   "footer.copyright2": "© {{year}}. Erstellt durch Manuele Vaccari"
 }
