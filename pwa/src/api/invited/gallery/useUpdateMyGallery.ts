@@ -22,6 +22,7 @@ export default function useUpdateMyGallery(
     },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['gallery'] });
+      queryClient.invalidateQueries({ queryKey: ['myGallery'] });
       queryOptions?.onSuccess?.(data, variables, context);
     },
   });

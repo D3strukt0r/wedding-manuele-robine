@@ -9,6 +9,7 @@ use League\Flysystem\FilesystemOperator;
 readonly class ListGalleryImageDto
 {
     public int $id;
+    public string $fileName;
     public string $publicUrl;
     public string $mimeType;
     public string $blurhash;
@@ -20,6 +21,7 @@ readonly class ListGalleryImageDto
     public function __construct(File $file, FilesystemOperator $defaultStorage)
     {
         $this->id = $file->getId() ?? throw new \InvalidArgumentException('File id cannot be null');
+        $this->fileName = $file->getOriginalFilename();
         // $this->publicUrl = $defaultStorage->publicUrl($file->getPath()); // TODO: Somehow directly use minio, but minio is broken
         $this->publicUrl = '/invited/api/gallery/'.$file->getId();
         $this->mimeType = $file->getMimeType() ?? throw new \InvalidArgumentException('File mime type cannot be null');

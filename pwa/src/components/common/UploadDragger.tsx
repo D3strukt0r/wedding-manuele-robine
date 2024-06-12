@@ -53,7 +53,6 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
 }, ref) => {
   const { t } = useTranslation('app');
   const { field } = useController({ control, name });
-  const [fileIds, setFileIds] = useState(field.value as number[]);
   const [loading, setLoading] = useState(false);
 
   const { getRootProps, getInputProps, acceptedFiles, isDragActive } = useDropzone({
@@ -69,8 +68,7 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
 
   const { mutateAsync, isPending, isError, error } = useUploadFile({
     onSuccess: (data) => {
-      const newFiles = [...fileIds, data.id].filter((x) => x);
-      setFileIds(newFiles);
+      const newFiles = [...field.value, data.id].filter((x) => x);
       field.onChange(newFiles);
     },
   });

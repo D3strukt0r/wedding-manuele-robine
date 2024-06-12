@@ -77,6 +77,7 @@
   "homepage.gallery.text": "Wir freuen uns schon auf die vielen tollen Bilder, die es geben wird. Bitte lasst doch alle daran teilhaben und ladet diese hier hoch, wo sie jeder ansehen und herunterladen kann. Zu einem späteren Zeitpunkt werden wir hier auch die Bilder von unserem Fotografen hochladen.",
   "homepage.gallery.pleaseLogin": "Bitte logge dich ein, um Bilder hochzuladen.",
   "homepage.gallery.upload": "Bilder hochladen",
+  "homepage.gallery.toBeUploaded": "Wird angezeigt sobald gespeichert...",
   "homepage.gallery.error": "Gallery konnte nicht geladen werden",
   "homepage.gallery.noImages": "Noch keine Bilder vorhanden, sei der Erste!",
   "admin.login.title": "Admin Login",

@@ -10,11 +10,16 @@ import { useMemo } from 'react';
 import { useAuthenticationContext } from '#/utils/authentication.tsx';
 import useMyGallery from '#/api/invited/gallery/useMyGallery.ts';
 import * as z from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { setErrorFromSymfonyViolations } from '#/utils/form.ts';
 import useUpdateMyGallery from '#/api/invited/gallery/useUpdateMyGallery.ts';
 import { DevTool } from '@hookform/devtools';
+import UploadDragger from '#/components/common/UploadDragger.tsx';
+import Button from '#/components/common/Button.tsx';
+import ListCard from '#/components/common/ListCard.tsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   id?: string;
@@ -106,6 +111,7 @@ function MyGalleryUploadForm({ files }: MyGalleryUploadFormProps) {
     handleSubmit,
     reset,
     setError,
+    setValue,
     formState: { errors, isDirty, isValid },
   } = useForm<Inputs>({
     resolver: zodResolver(schema),
@@ -125,10 +131,69 @@ function MyGalleryUploadForm({ files }: MyGalleryUploadFormProps) {
     }
   });
 
+  const fileIds = useWatch({ control, name: 'fileIds' })
+
   return (
     <>
       <form onSubmit={handleSubmit(mutate)}>
-        <p>Diese funktion kommt noch</p>
+        <UploadDragger
+          name="fileIds"
+          control={control}
+          label={t('homepage.gallery.upload')}
+          disabled={isPending}
+          allowedFileTypes={['image/jpeg', 'image/png']}
+          allowedFileSize={10 * 1024 * 1024} // 10MB
+        />
+        <ListCard
+          customHeight
+          items={fileIds.map((fileId) => {
+            const alreadyUploaded = files.find((file) => file.id === fileId);
+            if (alreadyUploaded) {
+              return {
+                id: fileId,
+                content: (
+                  <div className="flex justify-between">
+                    <div className="flex space-x-2 py-1">
+                      <div className="h-6 w-6 overflow-hidden">
+                        <GalleryImage file={alreadyUploaded} />
+                      </div>
+                      <p>{alreadyUploaded.fileName}</p>
+                    </div>
+                    <button onClick={() => {
+                      setValue('fileIds', fileIds.filter((id) => id !== fileId), { shouldDirty: true });
+                    }}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                ),
+              };
+            }
+            return {
+              id: fileId,
+              content: (
+                <div className="flex justify-between">
+                  <p className="py-1">{t('homepage.gallery.toBeUploaded')}</p>
+                  <button
+                    onClick={() => {
+                      setValue('fileIds', fileIds.filter((id) => id !== fileId), { shouldDirty: true });
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              )
+            };
+          })}
+        />
+        <Button
+          type="submit"
+          layout="app-primary"
+          className="w-full mt-4"
+          loading={isPending}
+          disabled={!isDirty || !isValid}
+        >
+          {t('form.save')}
+        </Button>
       </form>
       {import.meta.env.DEV && (
         <DevTool control={control} />

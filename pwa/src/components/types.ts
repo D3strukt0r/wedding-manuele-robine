@@ -68,6 +68,7 @@ export type SymfonyValidationFailedResponse = {
 
 export type GalleryImage = {
   id: number;
+  fileName: string;
   publicUrl: string;
   mimeType: string;
   blurhash: string;
