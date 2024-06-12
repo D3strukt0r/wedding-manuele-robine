@@ -17,7 +17,7 @@ export default function useUpdateMyGallery(
   return useMutation({
     ...(queryOptions ?? {}),
     mutationFn: async (data: UpdateMyGallery) => {
-      const { data: response } = await axios.put<GalleryImages>(`/admin/api/gallery`, data);
+      const { data: response } = await axios.put<GalleryImages>(`/invited/api/gallery`, data);
       return response;
     },
     onSuccess: (data, variables, context) => {

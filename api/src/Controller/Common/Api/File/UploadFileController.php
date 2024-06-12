@@ -145,9 +145,9 @@ class UploadFileController extends AbstractController
 
         $this->em->flush();
 
-        return $this->json(['record' => [
+        return $this->json([
             'id' => $fileEntity->getId(),
-        ]]);
+        ]);
     }
 
     /**
