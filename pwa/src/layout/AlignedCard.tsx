@@ -23,6 +23,7 @@ interface Props {
     | 'app-yellow-dark'
     | 'app-gray-light'
     | 'white';
+  isLast?: boolean;
 }
 export default function AlignedCard({
   id,
@@ -32,35 +33,36 @@ export default function AlignedCard({
   align,
   backgroundColor,
   imageShadowColor,
+  isLast,
 }: Props) {
   return (
     // Gradient background to have two different colors on both sides
     <div
       id={id}
-      className={clsx('bg-gradient-to-r from-45% to-55% scroll-mt-20', {
-        'from-app-red-light': align === 'left' && backgroundColor === 'app-red-light',
-        'from-app-gray-dark': align === 'left' && backgroundColor === 'app-gray-dark',
-        'from-app-green-dark': align === 'left' && backgroundColor === 'app-green-dark',
-        'from-app-yellow': align === 'left' && backgroundColor === 'app-yellow',
-        'from-app-yellow-dark': align === 'left' && backgroundColor === 'app-yellow-dark',
-        'from-app-gray-light': align === 'left' && backgroundColor === 'app-gray-light',
-        'from-white': align === 'left' && backgroundColor === 'white',
-        'to-transparent': align === 'left',
-        'from-transparent': align === 'right',
-        'to-app-red-light': align === 'right' && backgroundColor === 'app-red-light',
-        'to-app-gray-dark': align === 'right' && backgroundColor === 'app-gray-dark',
-        'to-app-green-dark': align === 'right' && backgroundColor === 'app-green-dark',
-        'to-app-yellow': align === 'right' && backgroundColor === 'app-yellow',
-        'to-app-yellow-dark': align === 'right' && backgroundColor === 'app-yellow-dark',
-        'to-app-gray-light': align === 'right' && backgroundColor === 'app-gray-light',
-        'to-white': align === 'right' && backgroundColor === 'white',
+      className={clsx('xl:bg-gradient-to-r xl:from-45% xl:to-55% scroll-mt-20', {
+        'xl:from-app-red-light': align === 'left' && backgroundColor === 'app-red-light',
+        'xl:from-app-gray-dark': align === 'left' && backgroundColor === 'app-gray-dark',
+        'xl:from-app-green-dark': align === 'left' && backgroundColor === 'app-green-dark',
+        'xl:from-app-yellow': align === 'left' && backgroundColor === 'app-yellow',
+        'xl:from-app-yellow-dark': align === 'left' && backgroundColor === 'app-yellow-dark',
+        'xl:from-app-gray-light': align === 'left' && backgroundColor === 'app-gray-light',
+        'xl:from-white': align === 'left' && backgroundColor === 'white',
+        'xl:to-transparent': align === 'left',
+        'xl:from-transparent': align === 'right',
+        'xl:to-app-red-light': align === 'right' && backgroundColor === 'app-red-light',
+        'xl:to-app-gray-dark': align === 'right' && backgroundColor === 'app-gray-dark',
+        'xl:to-app-green-dark': align === 'right' && backgroundColor === 'app-green-dark',
+        'xl:to-app-yellow': align === 'right' && backgroundColor === 'app-yellow',
+        'xl:to-app-yellow-dark': align === 'right' && backgroundColor === 'app-yellow-dark',
+        'xl:to-app-gray-light': align === 'right' && backgroundColor === 'app-gray-light',
+        'xl:to-white': align === 'right' && backgroundColor === 'white',
       })}
     >
       {/* Container */}
       <div
-        className={clsx('mx-auto max-w-7xl md:px-6 lg:px-8', {
-          'md:pr-20 lg:pr-20': align === 'left',
-          'md:pl-20 lg:pl-20': align === 'right',
+        className={clsx('mx-auto max-w-7xl xl:px-8', {
+          'xl:pr-20': align === 'left',
+          'xl:pl-20': align === 'right',
         })}
       >
         {/* Container background color */}
@@ -78,8 +80,8 @@ export default function AlignedCard({
           {/* Content split and order */}
           <div
             className={clsx('flex flex-col', {
-              'md:flex-row-reverse': align === 'left',
-              'md:flex-row': align === 'right',
+              'xl:flex-row-reverse': align === 'left',
+              'xl:flex-row': align === 'right',
             })}
           >
             {/* Image always comes first on mobile */}
@@ -88,9 +90,10 @@ export default function AlignedCard({
               {typeof image === 'string' ? (
                 <img
                   src={image}
-                  className={clsx('w-full md:mt-12', {
-                    'md:translate-x-12': align === 'left',
-                    'md:-translate-x-12': align === 'right',
+                  className={clsx('w-full md:w-[35rem] xl:w-full md:-translate-y-20 xl:-translate-y-0 xl:ml-0 xl:mt-12', {
+                    'md:ml-auto': align === 'left',
+                    'xl:translate-x-12': align === 'left',
+                    'xl:-translate-x-12': align === 'right',
                     'md:shadow-[-1rem_1rem_0_0_#dab4a7]': imageShadowColor === 'app-red-light',
                     'md:shadow-[-1rem_1rem_0_0_#8c594d]': imageShadowColor === 'app-red-dark',
                     'md:shadow-[-1rem_1rem_0_0_#403a37]': imageShadowColor === 'app-gray-dark',
@@ -102,9 +105,10 @@ export default function AlignedCard({
                 />
               ) : (
                 <div
-                  className={clsx('h-96 md:mt-12', {
-                    'md:translate-x-12': align === 'left',
-                    'md:-translate-x-12': align === 'right',
+                  className={clsx('h-96 w-full md:w-[35rem] xl:w-full md:-translate-y-20 xl:-translate-y-0 xl:ml-0 xl:mt-12', {
+                    'md:ml-auto': align === 'left',
+                    'xl:translate-x-12': align === 'left',
+                    'xl:-translate-x-12': align === 'right',
                     'md:shadow-[-1rem_1rem_0_0_#dab4a7]': imageShadowColor === 'app-red-light',
                     'md:shadow-[-1rem_1rem_0_0_#8c594d]': imageShadowColor === 'app-red-dark',
                     'md:shadow-[-1rem_1rem_0_0_#403a37]': imageShadowColor === 'app-gray-dark',
@@ -119,7 +123,7 @@ export default function AlignedCard({
               )}
             </div>
             <div
-              className={clsx('flex-1 m-8 md:mx-0', {
+              className={clsx('flex-1 m-8 md:-mt-4 xl:mt-8 xl:mx-0', {
                 'text-white': ['app-gray-dark', 'app-green-dark'].includes(backgroundColor),
               })}
             >
@@ -139,9 +143,10 @@ export default function AlignedCard({
           >
             <div
               className={clsx('px-8 pb-8', {
-                'md:pl-0': align === 'left',
-                'md:pr-0': align === 'right',
+                'xl:pl-0': align === 'left',
+                'xl:pr-0': align === 'right',
                 'text-white': ['app-gray-dark', 'app-green-dark'].includes(backgroundColor),
+                'md:pb-28 xl:pb-8': !isLast,
               })}
             >
               {bottomContent}

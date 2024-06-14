@@ -35,7 +35,7 @@ export default function HowToWedding({ id }: Props) {
         <h2 className="text-gray-50 uppercase text-title mb-6 sm:hidden font-philosopher">
           {t('homepage.howToWedding.titleHowTo')}
         </h2>
-        <p className="whitespace-pre-line text-normal text-gray-50 font-noto-sans">
+        <p className="whitespace-pre-line text-normal text-gray-50 font-noto-sans md:max-w-prose">
           <Markup noWrap content={t('homepage.howToWedding.text')} />
         </p>
       </div>

@@ -46,20 +46,20 @@ export default function Homepage() {
         ]}
       />
       <article className="xl:mt-20">
-        <section className="md:pb-16">
+        <section className="md:pb-24 xl:pb-16">
           <HowToWedding id="how-to" />
         </section>
-        <section className="md:pb-16">
+        <section className="xl:pb-16">
           <MenuAndSelection id="menu" />
         </section>
-        <section className="md:pb-16">
+        <section className="xl:pb-16">
           <MapAndPlan id="address" id2="process" />
         </section>
-        <section className="md:pb-16">
+        <section className="xl:pb-16">
           <ImportantInfo id="important-info" />
         </section>
-        <section className="md:pb-16">
-          <Gallery id="gallery" />
+        <section className="xl:pb-16">
+          <Gallery id="gallery" isLast />
         </section>
       </article>
       <footer className="bg-app-gray-dark text-white">

@@ -23,14 +23,16 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 interface Props {
   id?: string;
+  isLast?: boolean;
 }
-export default function Gallery({ id }: Props) {
+export default function Gallery({ id, isLast }: Props) {
   const { t } = useTranslation('app');
   const [authentication] = useAuthenticationContext();
 
   return (
     <AlignedCard
       id={id}
+      isLast={isLast}
       image={
         <ImageLazyLoad
           src={image}
@@ -48,7 +50,7 @@ export default function Gallery({ id }: Props) {
           <h2 className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.gallery.title')}
           </h2>
-          <p className="whitespace-pre-line text-normal font-noto-sans">
+          <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose">
             {t('homepage.gallery.text')}
           </p>
           {authentication ? (

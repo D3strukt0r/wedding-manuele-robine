@@ -34,7 +34,7 @@ export default function MapAndPlan({ id, id2 }: Props) {
           <p className="whitespace-pre-line font-philosopher mb-4 text-subtitle">
             {t('homepage.map.address')}
           </p>
-          <p className="font-noto-sans text-normal">{t('homepage.map.addressInfo')}</p>
+          <p className="font-noto-sans text-normal md:max-w-prose">{t('homepage.map.addressInfo')}</p>
         </>
       }
       bottomContent={
