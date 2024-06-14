@@ -17,7 +17,7 @@ export default function Homepage() {
         <body className="bg-app-green app" />
       </Helmet>
       <NavBar
-        logo={<Logo mode="dark" />}
+        logo={<Logo mode="dark" className="h-full" />}
         menuItems={[
           {
             label: t('menu.howTo'),
