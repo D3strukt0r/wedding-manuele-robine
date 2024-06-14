@@ -89,7 +89,7 @@ export default function ImageLazyLoad({
   }, [blurhash, scaledWidth, scaledHeight, hideBlur, isImageLoaded, style, className, setHideBlur]);
 
   return (
-    <div className={clsx(wrapperClassName, 'w-full h-full relative')} style={wrapperStyle}>
+    <div className={clsx('w-full h-full relative', wrapperClassName)} style={wrapperStyle}>
       {placeholder}
       <picture>
         {imgSources}

@@ -13,27 +13,27 @@ export default function HowToWedding({ id }: Props) {
   return (
     <div
       id={id}
-      className="mx-auto max-w-7xl md:px-6 lg:px-8 flex flex-col md:flex-row-reverse scroll-mt-16"
+      className="mx-auto max-w-7xl flex flex-col xl:flex-row-reverse scroll-mt-16"
     >
-      <div className="flex-1 relative">
+      <div className="flex-1 lg:flex lg:flex-row-reverse relative">
         <ImageLazyLoad
           src={image}
           alt="Portrait von Manuele & Robine"
           blurhash={blurHashMap.portraitJpg}
-          className="md:shadow-[-1rem_1rem_0_0_#faffe4]"
-          wrapperClassName="h-screen md:h-full"
+          className="lg:shadow-[-1rem_1rem_0_0_#faffe4]"
+          wrapperClassName="sm:ml-auto h-screen sm:h-[40rem] xl:h-full sm:min-w-[30rem] sm:max-w-[30rem] xl:w-full"
           imgSources={<source srcSet={image} type="image/jpeg" />}
         />
-        <h2 className="absolute bottom-0 text-gray-50 uppercase text-title mx-8 mb-6 md:hidden font-philosopher">
-          {t('homepage.howToWedding.title1')}
+        <h2 className="absolute lg:static bottom-0 text-gray-50 uppercase text-title mx-8 mb-6 lg:mt-auto xl:hidden font-philosopher">
+          {t('homepage.howToWedding.titleAdventure')}
         </h2>
       </div>
-      <div className="flex-1 px-8 md:pl-0 py-8 md:mr-16 md:mt-12">
-        <h2 className="text-gray-50 uppercase text-title mb-6 hidden md:block font-philosopher">
-          {t('homepage.howToWedding.title1')}
+      <div className="flex-1 px-8 md:px-6 lg:px-8 py-8 md:mr-16 md:mt-12">
+        <h2 className="text-gray-50 uppercase text-title mb-6 hidden xl:block font-philosopher">
+          {t('homepage.howToWedding.titleAdventure')}
         </h2>
-        <h2 className="text-gray-50 uppercase text-title mb-6 md:hidden font-philosopher">
-          {t('homepage.howToWedding.title2')}
+        <h2 className="text-gray-50 uppercase text-title mb-6 sm:hidden font-philosopher">
+          {t('homepage.howToWedding.titleHowTo')}
         </h2>
         <p className="whitespace-pre-line text-normal text-gray-50 font-noto-sans">
           <Markup noWrap content={t('homepage.howToWedding.text')} />

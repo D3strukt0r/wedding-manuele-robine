@@ -45,7 +45,7 @@ export default function Homepage() {
           },
         ]}
       />
-      <article className="md:mt-20">
+      <article className="xl:mt-20">
         <section className="md:pb-16">
           <HowToWedding id="how-to" />
         </section>
