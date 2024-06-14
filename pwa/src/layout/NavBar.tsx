@@ -39,7 +39,7 @@ export default function NavBar({
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
                   <div
-                    className="h-full p-4 w-auto cursor-pointer"
+                    className="h-full py-4 w-auto cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
                       document.querySelector('#root')!.scrollTo({top: 0});
