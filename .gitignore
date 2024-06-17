@@ -171,6 +171,12 @@ fabric.properties
 .idea/material_theme_project_new.xml
 
 ### Project specific ###
-pwa/.pnpm-store/
+# Vagrant
 .vagrant.config.yml
+
+# Docker
 compose.yml
+
+# Vite
+pwa/.pnpm-store/
+pwa/vite.config.ts.timestamp-*.mjs
