@@ -9,6 +9,7 @@ use App\Service\BlurhashHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Hidehalo\Nanoid\Client;
 use Imagine\Image\Format;
+use Imagine\Image\Metadata\ExifMetadataReader;
 use Imagine\Imagick\Imagine;
 use League\Flysystem\FilesystemOperator;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -70,7 +71,26 @@ class UploadFileController extends AbstractController
         $metadata = [];
         if (self::mimeTypeIsImage($file->getMimeType())) {
             $imagine = new Imagine();
-            $originalImage = $imagine->open($file->getPathname());
+            $originalImage = $imagine
+                ->setMetadataReader(new ExifMetadataReader())
+                ->open($file->getPathname())
+            ;
+
+            // Fix rotation of image based on exif metadata (mostly for mobile photos)
+            // https://medium.com/thetiltblog/fixing-rotated-mobile-image-uploads-in-php-803bb96a852c
+            // https://stackoverflow.com/questions/7489742/php-read-exif-data-and-adjust-orientation
+            $orientation = $originalImage->metadata()->get('ifd0.Orientation'); // Somehow `thumbnail.Orientation` is not always set
+            $deg = match ($orientation) {
+                3 => 180,
+                6 => 90,
+                8 => -90,
+                default => 0, // & 1
+            };
+            $originalImage
+                ->rotate($deg)
+                ->save($file->getPathname())
+            ;
+
             $metadata['width'] = $originalImage->getSize()->getWidth();
             $metadata['height'] = $originalImage->getSize()->getHeight();
 
