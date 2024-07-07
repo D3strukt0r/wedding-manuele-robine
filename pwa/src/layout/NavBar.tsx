@@ -34,7 +34,7 @@ export default function NavBar({
       {({ open }) => (
         <>
           {/* Desktop Menu */}
-          <div className="mx-auto max-w-7xl px-4 lg:px-8">
+          <div className="mx-auto max-w-7xl px-8">
             <div className="flex h-20 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">

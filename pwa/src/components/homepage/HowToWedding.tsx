@@ -13,7 +13,7 @@ export default function HowToWedding({ id }: Props) {
   return (
     <div
       id={id}
-      className="mx-auto max-w-7xl flex flex-col xl:flex-row-reverse scroll-mt-16"
+      className="mx-auto max-w-7xl xl:pr-8 flex flex-col xl:flex-row-reverse scroll-mt-16"
     >
       <div className="flex-1 lg:flex lg:flex-row-reverse relative">
         <ImageLazyLoad
@@ -28,7 +28,7 @@ export default function HowToWedding({ id }: Props) {
           {t('homepage.howToWedding.titleAdventure')}
         </h2>
       </div>
-      <div className="flex-1 px-8 md:px-6 lg:px-8 py-8 md:mr-16 md:mt-12">
+      <div className="flex-1 p-8 md:mr-16 md:mt-12">
         <h2 className="text-gray-50 uppercase text-title mb-6 hidden xl:block font-philosopher">
           {t('homepage.howToWedding.titleAdventure')}
         </h2>
