@@ -57,7 +57,7 @@ const Select = <TFieldValues extends FieldValues>({
       multiple={multiple}
     >
       {label && (
-        <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">
+        <Combobox.Label className="block font-medium leading-6 text-gray-900">
           {label}
         </Combobox.Label>
       )}

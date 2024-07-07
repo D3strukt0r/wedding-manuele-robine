@@ -28,7 +28,7 @@ export default function RadioGroup({
   return (
     <>
       {label && (
-        <label className="text-base font-noto-sans text-gray-900">
+        <label className="text-base font-medium font-noto-sans text-gray-900">
           {label}
         </label>
       )}

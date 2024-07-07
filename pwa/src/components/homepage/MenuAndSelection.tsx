@@ -90,9 +90,12 @@ export default function ManuAndSelection({ id }: Props) {
       }
       topContent={
         <>
-          <h2 className="uppercase text-title font-philosopher">
+          <h2 className="uppercase text-title font-philosopher mb-6">
             {t('homepage.menu.title')}
           </h2>
+          <p className="text-normal font-noto-sans">
+            {t('homepage.menu.description')}
+          </p>
         </>
       }
       bottomContent={
@@ -266,7 +269,7 @@ function InviteesListOnMyCardForm({
             <h3 className="text-xl font-philosopher">
               {invitee.firstname} {invitee.lastname}
             </h3>
-            <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 mb-2">
               <div className="sm:col-span-3">
                 <Input
                   {...register(`invitees.${invitee.id}.firstname`, { setValueAs: (value) => value === '' ? null : value })}
@@ -290,7 +293,7 @@ function InviteesListOnMyCardForm({
                 />
               </div>
             </div>
-            <div>
+            <div className="mb-2">
               <Input
                 {...register(`invitees.${invitee.id}.email`, { setValueAs: (value) => value === '' ? null : value })}
                 label={t('homepage.manageCard.properties.email')}
@@ -300,7 +303,7 @@ function InviteesListOnMyCardForm({
                 error={errors.invitees?.[invitee.id]?.email}
               />
             </div>
-            <div className="my-2">
+            <div className="mb-2 my-2">
               <Checkbox
                 {...register(`invitees.${invitee.id}.willCome`)}
                 label={t('homepage.manageCard.properties.willCome')}
@@ -309,7 +312,7 @@ function InviteesListOnMyCardForm({
                 error={errors.invitees?.[invitee.id]?.willCome}
               />
             </div>
-            <div>
+            <div className="mb-2">
               <RadioGroup
                 label={t('homepage.manageCard.properties.food')}
                 inline

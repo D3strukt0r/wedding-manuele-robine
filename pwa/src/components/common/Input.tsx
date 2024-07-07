@@ -21,7 +21,7 @@ const Input = forwardRef<HTMLInputElement, Props>(({
     return label && (
       <label
         htmlFor={props.id ?? props.name}
-        className={clsx('block text-sm leading-6 text-gray-900', {
+        className={clsx('block leading-6 text-gray-900', {
           'font-medium': layout !== 'primary',
           'font-noto-sans': layout === 'app-primary',
         })}
