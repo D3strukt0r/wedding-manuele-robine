@@ -64,7 +64,6 @@
       <path value="$PROJECT_DIR$/api/vendor/phpunit/php-file-iterator" />
       <path value="$PROJECT_DIR$/api/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/api/vendor/phpstan/phpdoc-parser" />
-      <path value="$PROJECT_DIR$/api/vendor/sebastian/resource-operations" />
       <path value="$PROJECT_DIR$/api/vendor/psr/clock" />
       <path value="$PROJECT_DIR$/api/vendor/sebastian/object-enumerator" />
       <path value="$PROJECT_DIR$/api/vendor/sebastian/global-state" />
@@ -136,7 +135,6 @@
       <path value="$PROJECT_DIR$/api/vendor/symfony/process" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/framework-bundle" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/console" />
-      <path value="$PROJECT_DIR$/api/vendor/symfony/property-info" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/dom-crawler" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/browser-kit" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/mime" />
@@ -161,7 +159,6 @@
       <path value="$PROJECT_DIR$/api/vendor/nelmio/cors-bundle" />
       <path value="$PROJECT_DIR$/api/vendor/paragonie/random_compat" />
       <path value="$PROJECT_DIR$/api/vendor/hidehalo/nanoid-php" />
-      <path value="$PROJECT_DIR$/api/vendor/namshi/jose" />
       <path value="$PROJECT_DIR$/api/vendor/lcobucci/clock" />
       <path value="$PROJECT_DIR$/api/vendor/lcobucci/jwt" />
       <path value="$PROJECT_DIR$/api/vendor/lexik/jwt-authentication-bundle" />
@@ -185,6 +182,8 @@
       <path value="$PROJECT_DIR$/api/vendor/gedmo/doctrine-extensions" />
       <path value="$PROJECT_DIR$/api/vendor/kornrunner/blurhash" />
       <path value="$PROJECT_DIR$/api/vendor/imagine/imagine" />
+      <path value="$PROJECT_DIR$/api/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/api/vendor/symfony/translation" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
