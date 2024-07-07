@@ -1,0 +1,220 @@
+services:
+  pwa:
+    build:
+      dockerfile: pwa.Dockerfile
+      ssh:
+        - default
+      target: dev
+    init: true
+    container_name: pwa
+    volumes:
+      # Mount app directory
+      - ./pwa:/usr/local/src/app
+
+      # Store package manager cache in vagrant
+      - ~/data/pnpm:/var/cache/pnpm
+
+      # Disable nginx process and use vite dev server
+      - ./.docker/rootfs-local/empty.txt:/etc/supervisor/conf.d/nginx.conf
+      - ./pwa/.docker/rootfs-local/etc/supervisor/conf.d/vite-dev-server.conf:/etc/supervisor/conf.d/vite-dev-server.conf
+
+      # Entrypoint scripts to run only locally (install deps, etc.)
+      - ./pwa/.docker/rootfs-local/docker-entrypoint.d/10_install-deps.sh:/docker-entrypoint.d/10_install-deps.sh
+      #- ./pwa/.docker/rootfs-local/docker-entrypoint.d/20_build.sh:/docker-entrypoint.d/20_build.sh
+    environment:
+      API_URL: http://api
+      VITE_PUBLIC_API_URL: https://api.wedding-manuele-robine.test
+      VITE_GOOGLE_MAPS_API_KEY:
+    depends_on:
+      - api
+      - traefik
+    labels:
+      traefik.enable: true
+      traefik.http.routers.pwa.entrypoints: websecure
+      traefik.http.routers.pwa.rule: Host(`wedding-manuele-robine.test`)
+      traefik.http.routers.pwa.tls: true
+
+  api:
+    build:
+      dockerfile: api.Dockerfile
+      ssh:
+        - default
+      target: dev
+    init: true
+    container_name: api
+    volumes:
+      # Mount app directory
+      - ./api:/usr/local/src/app
+
+      # Move cache and sessions out of the way for better NFS performance
+      - ~/data/app/cache:/var/cache/app
+      - ~/data/app/sessions:/var/cache/sessions
+
+      # Keep cache data for IDE Symfony Plugin
+      - ./api/var/cache/dev/translations:/var/cache/app/dev/translations
+      - ./api/var/cache/dev/twig:/var/cache/app/dev/twig
+
+      # Store package manager cache in vagrant
+      - ~/data/composer:/var/cache/composer/cache
+
+      # Keep upload data
+      #- ~/data/app/data:/usr/local/src/app/data
+      #- ~/data/app/public/media:/usr/local/src/app/public/media
+
+      # Mount the .ssh folder of the vagrant machine to the php container to
+      # allow GIT access from within
+      - ~/.ssh:/home/app/.ssh
+
+      # This one is needed for running tests from inside PhpStorm with Remote
+      # interpreters and does only apply for a Vagrant environment
+      - ~:/home/vagrant
+
+      # Entrypoint scripts to run only locally (install deps, etc.)
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/02_composer-install.sh:/docker-entrypoint.d/02_composer-install.sh
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/06_test-cache-clear.sh:/docker-entrypoint.d/06_test-cache-clear.sh
+      - ./api/.docker/rootfs-local/docker-entrypoint.d/45_jwt-keys.sh:/docker-entrypoint.d/45_jwt-keys.sh
+
+      # Forward XDebug log to console
+      - ./api/.docker/rootfs-local/etc/supervisor/conf.d/xdebug-log.conf:/etc/supervisor/conf.d/xdebug-log.conf
+
+      # Add cron jobs supposed to run locally
+      - ./api/.docker/rootfs-local/etc/cron.d/crontabs:/etc/cron.d/crontabs
+
+      # Locally CSP should be set to report only
+      - ./api/.docker/rootfs-local/etc/nginx/snippets/csp-header.conf:/etc/nginx/snippets/csp-header.conf
+    environment:
+      PHP_IDE_CONFIG: serverName=wedding-manuele-robine # for PHPStorm debugging
+      DATABASE_URL: mysql://db:db@db:3306/db?serverVersion=10.11.2-MariaDB&charset=utf8mb4
+      COMPOSER_MEMORY_LIMIT: -1
+      RUNTIME_ENVIRONMENT: local
+      APP_ENV: dev
+      APP_URL: https://api.wedding-manuele-robine.test
+      TRUSTED_PROXIES: 127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      CORS_ALLOW_ORIGIN: ^https?://(wedding-manuele-robine\.test|localhost|127\.0\.0\.1)(:[0-9]+)?$
+      JWT_PASSPHRASE: b67fb4e4ee2322b294c1d52804cc5eff2486d37f25465c3811773e322d75f3c2
+      DEFAULT_STORAGE_SOURCE: default.storage.aws
+      S3_STORAGE_KEY: minio
+      S3_STORAGE_SECRET: minio123
+    depends_on:
+      - db
+      - mailpit
+      - minio
+    labels:
+      traefik.enable: true
+      traefik.http.routers.api.entrypoints: websecure
+      traefik.http.routers.api.rule: Host(`api.wedding-manuele-robine.test`)
+      traefik.http.routers.api.tls: true
+
+  traefik:
+    image: traefik
+    init: true
+    command:
+      - --api.insecure=true
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.file.directory=/etc/traefik/dynamic_conf
+      - --providers.file.watch=true
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.web.http.redirections.entrypoint.permanent=true
+      - --entrypoints.websecure.address=:443
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./.docker/certs:/etc/ssl/certs/local:ro
+      - ./.docker/rootfs-local/traefik/etc/traefik/dynamic_conf/conf.yml:/etc/traefik/dynamic_conf/conf.yml:ro
+    labels:
+      traefik.enable: true
+      traefik.http.routers.traefik.entrypoints: websecure
+      traefik.http.routers.traefik.rule: Host(`traefik.wedding-manuele-robine.test`)
+      traefik.http.routers.traefik.tls: true
+      traefik.http.routers.traefik.service: api@internal
+
+  db:
+    image: mariadb
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "--user=db", "--password=db"]
+    init: true
+    container_name: db
+    volumes:
+      - ./.docker/rootfs-local/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ~/data/db:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_USER: db
+      MARIADB_PASSWORD: db
+      MARIADB_DATABASE: db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    init: true
+    environment:
+      PMA_HOST: db
+      PMA_USER: db
+      PMA_PASSWORD: db
+      UPLOAD_LIMIT: 100M
+    depends_on:
+      - db
+    labels:
+      traefik.enable: true
+      traefik.http.routers.phpmyadmin.entrypoints: websecure
+      traefik.http.routers.phpmyadmin.rule: Host(`phpmyadmin.wedding-manuele-robine.test`)
+      traefik.http.routers.phpmyadmin.tls: true
+
+  mailpit:
+    image: axllent/mailpit
+    init: true
+    labels:
+      traefik.enable: true
+      traefik.http.services.mailpit.loadbalancer.server.port: 8025
+      traefik.http.routers.mailpit.entrypoints: websecure
+      traefik.http.routers.mailpit.rule: Host(`mailpit.wedding-manuele-robine.test`)
+      traefik.http.routers.mailpit.tls: true
+
+  minio:
+    image: quay.io/minio/minio
+    init: true
+    # TODO: Doesn't work yet
+    #command:
+    #  - sh
+    #  - -c
+    #  - |
+    #    mc config host rm local
+    #    mc config host add local http://localhost:9000 minio minio123
+    #    minio server /data --console-address ':9001'
+    command: minio server /data --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    volumes:
+      - ~/data/minio:/data
+    labels:
+      traefik.enable: true
+      traefik.http.services.minio.loadbalancer.server.port: 9001
+      traefik.http.routers.minio.entrypoints: websecure
+      traefik.http.routers.minio.rule: Host(`minio.wedding-manuele-robine.test`)
+      traefik.http.routers.minio.tls: true
+  # https://stackoverflow.com/questions/76401435/why-i-cant-get-access-to-minio-console-from-docker-container
+  minio-setup:
+    image: minio/mc:latest
+    init: true
+    environment:
+      MC_HOST_minio: http://minio:minio123@minio:9000
+    entrypoint:
+      - sh
+      - -c
+      - |
+        until mc ls minio > /dev/null 2>&1; do
+          sleep 0.5
+        done
+
+        mc mb minio/default
+        #mc anonymous set download minio/default/public
+        #mc anonymous links minio/default --recursive

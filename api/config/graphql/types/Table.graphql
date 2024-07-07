@@ -1,0 +1,9 @@
+type Table {
+  id: ID!
+  seats: Int!
+  invitees: [Invitee!]!
+}
+
+input CreateTable {
+  seats: Int!
+}

@@ -1,0 +1,18 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
+api_common:
+    resource: ../src/Controller/Common/Api/
+    type: attribute
+    prefix: common/api
+api_admin:
+    resource: ../src/Controller/Admin/Api/
+    type: attribute
+    prefix: admin/api
+api_invited:
+    resource: ../src/Controller/Invited/Api/
+    type: attribute
+    prefix: invited/api

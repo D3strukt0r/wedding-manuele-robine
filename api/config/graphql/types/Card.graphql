@@ -1,0 +1,9 @@
+type Card {
+  id: ID!
+  loginCode: String!
+  invitees: [Invitee!]!
+}
+
+input CreateCard {
+  loginCode: String!
+}

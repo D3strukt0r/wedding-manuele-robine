@@ -1,0 +1,28 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: Wedding for Manuele & Robine
+            description: API documentation for Wedding for Manuele & Robine
+            version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+            schemas:
+                AuthError:
+                    type: object
+                    properties:
+                        code:
+                            type: integer
+                            example: 401
+                        message:
+                            type: string
+                            example: JWT Token not found|Invalid JWT Token
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+            - ^/common/api
+            - ^/admin/api
+            - ^/invited/api

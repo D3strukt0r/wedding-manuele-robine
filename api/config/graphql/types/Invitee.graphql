@@ -1,0 +1,24 @@
+enum Food {
+  MEAT
+  FISH
+  VEGETARIAN
+  VEGAN
+  CHILD
+}
+
+type Invitee {
+  id: ID!
+  firstname: String!
+  lastname: String!
+  email: String
+  willCome: Boolean
+  food: Food
+  allergies: String
+  tableToSit: Table
+  card: Card
+}
+
+input CreateInvitee {
+  firstname: String!
+  lastname: String!
+}

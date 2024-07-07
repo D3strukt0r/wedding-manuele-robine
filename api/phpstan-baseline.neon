@@ -1,0 +1,36 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Parameter \\#1 \\$username of class App\\\\Entity\\\\User constructor expects string, mixed given\\.$#"
+			count: 1
+			path: src/Command/CreateAdminUserCommand.php
+
+		-
+			message: "#^Parameter \\#3 \\$password of class App\\\\Entity\\\\User constructor expects string, mixed given\\.$#"
+			count: 1
+			path: src/Command/CreateAdminUserCommand.php
+
+		-
+			message: "#^Call to an undefined method App\\\\Entity\\\\User\\:\\:setPassword\\(\\)\\.$#"
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: "#^Instanceof between App\\\\Entity\\\\User and App\\\\Entity\\\\User will always evaluate to true\\.$#"
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 3
+			path: src/Resolver/AppResolverMap.php
+
+		-
+			message: "#^Method App\\\\Resolver\\\\AppResolverMap\\:\\:map\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Resolver/AppResolverMap.php
+
+		-
+			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, int\\|null given\\.$#"
+			count: 1
+			path: src/Validator/Invited/HasOnlyUnchangedInviteesFromOwnCardValidator.php

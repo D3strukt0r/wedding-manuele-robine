@@ -1,0 +1,13 @@
+# See /etc/profile
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+LD_LIBRARY_PATH=/usr/local/lib
+
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * command to be executed
+# 0  *  *  *  * cron-bash.sh php bin/console cache:clear --env=prod 2>&1 | tee -a /var/log/cron.log
+# 0  *  *  *  * cron-symfony-console.sh cache:clear --env=prod 2>&1 | tee -a /var/log/cron.log

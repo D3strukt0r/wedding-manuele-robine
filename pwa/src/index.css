@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  .app {
+    section {
+      a {
+        @apply text-app-green italic;
+        &:hover {
+          @apply text-app-green-dark underline;
+        }
+      }
+    }
+
+    .text-title {
+      @apply text-4xl md:text-7xl;
+    }
+    .text-subtitle {
+      @apply text-xl md:text-4xl;
+    }
+    .text-normal {
+      @apply text-base md:text-2xl;
+    }
+    .text-menu {
+      @apply text-xl;
+    }
+  }
+}

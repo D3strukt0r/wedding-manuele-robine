@@ -1,0 +1,58 @@
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.md'
+
+feature:
+  - head-branch: ['^feature', 'feature']
+
+release:
+  - all:
+    - base-branch: 'master'
+    - head-branch: ['^release', 'release']
+
+docker:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.docker/**/*'
+      - 'api/.docker/**/*'
+      - 'pwa/.docker/**/*'
+      - '.dockerignore'
+      - 'api.Dockerfile'
+      - 'pwa.Dockerfile'
+      - 'compose.build.yml'
+      - 'compose.vm.yml.dist'
+
+source:
+  - all:
+    - changed-files:
+      - any-glob-to-any-file:
+        - 'api/bin/**/*'
+        - 'api/config/**/*'
+        - 'api/migrations/**/*'
+        - 'api/public/**/*'
+        - 'api/src/**/*'
+        - 'api/templates/**/*'
+        - 'api/translations/**/*'
+        - 'api/.env'
+        - 'api/composer.json'
+        - 'api/composer.lock'
+        - 'api/symfony.lock'
+        - 'pwa/public/**/*'
+        - 'pwa/src/**/*'
+        - 'pwa/.browserslistrc'
+        - 'pwa/index.html'
+        - 'pwa/package.json'
+        - 'pwa/pnpm-lock.yaml'
+        - 'pwa/postcss.config.js'
+        - 'pwa/tailwind.config.js'
+        - 'pwa/tsconfig.json'
+        - 'pwa/tsconfig.node.json'
+        - 'pwa/vite.config.ts'
+      - all-globs-to-all-files: '!pwa/src/**/*.test.tsx'
+
+test:
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'api/tests/**/*'
+      - 'pwa/src/**/*.test.tsx'
+      - 'pwa/tests/**/*'

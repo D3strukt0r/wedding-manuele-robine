@@ -1,0 +1,10 @@
+app:
+    title: Hochzeit von Manuele & Robine
+    description: Verwalte deine Hochzeit
+
+welcome:
+    introduction: |
+        Willkommen beim Hochzeitmanager von Manuele & Robine!
+        Dies ist ein Tool, um deine Hochzeit zu verwalten.
+        Du bist auf der API gelandet.
+        Wenn du Fragen hast, kontaktiere uns bitte unter <a href="mailto:%email%">%email%</a>.

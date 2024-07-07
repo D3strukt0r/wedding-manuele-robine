@@ -1,0 +1,42 @@
+# see https://symfony.com/doc/current/reference/configuration/framework.html
+framework:
+    # Value should be a series of characters, numbers and symbols chosen randomly and the recommended length is around 32 characters
+    secret: '%env(APP_SECRET)%'
+    #csrf_protection: true
+    http_method_override: false
+    handle_all_throwables: true
+
+    # Enables session support. Note that the session will ONLY be started if you read or write from it.
+    # Remove or comment this section to explicitly disable session support.
+    session:
+        # Let Symfony manage the sessions itself
+        # We save the sessions in a custom path and let the php-fpm image take care of cleaning them up every night
+        # (via `CLEAR_SESSIONS_IN` env variable)
+        handler_id: 'session.handler.native_file'
+        save_path: '/var/cache/sessions/%kernel.environment%'
+        # Improves the security of the cookies used for sessions
+        cookie_secure: auto
+        cookie_samesite: lax
+        storage_factory_id: session.storage.factory.native
+        # https://symfony.com/doc/current/session.html#configuring-garbage-collection
+        # On Debian systems `session.gc_probability` is set to 0, which means that the garbage collector is disabled.
+        # Symfony tries to overwrite this setting with 1. So we reset it to null, which means that the default value
+        # of 0 will be used.
+        gc_probability: null
+
+    #esi: true
+    #fragments: true
+    php_errors:
+        log: true
+
+    # For Symfony to understand being behind a reverse proxy (e.g. Docker) (https://symfony.com/doc/current/deployment/proxies.html)
+    # the IP address (or range) of your proxy
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    # trust *all* "X-Forwarded-*" headers
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
