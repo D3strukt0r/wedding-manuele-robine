@@ -30,6 +30,9 @@ updates:
       interval: "daily"
       time: "08:00"
       timezone: "Europe/Zurich"
+    ignore:
+      - dependency-name: "symfony/*"
+        update-types: ["version-update:semver-major"]
     groups:
       api-dependencies:
         applies-to: version-updates
