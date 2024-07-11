@@ -36,7 +36,6 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/object-enumerator" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/object-reflector" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/recursion-context" />
-      <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/resource-operations" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/version" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/browser-kit" />
@@ -77,7 +76,6 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/phpdocumentor/type-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/phpstan/phpdoc-parser" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/options-resolver" />
-      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/property-info" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/webmozart/assert" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/doctrine/inflector" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/maker-bundle" />
@@ -123,7 +121,6 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/security-http" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/serializer" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/stopwatch" />
-      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/translation-contracts" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/twig-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/validator" />
@@ -164,7 +161,6 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/flysystem-aws-s3-v3" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/lexik/jwt-authentication-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/mtdowling/jmespath.php" />
-      <excludeFolder url="file://$MODULE_DIR$/api/vendor/namshi/jose" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/psr/http-client" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/psr/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/psr/http-message" />
@@ -172,6 +168,8 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/twig-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/web-profiler-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/twig/extra-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/property-info" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/translation" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
