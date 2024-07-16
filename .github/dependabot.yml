@@ -14,8 +14,8 @@ updates:
     reviewers:
       - "D3strukt0r"
     schedule:
-      interval: "daily"
-      time: "08:00"
+      interval: "weekly" # on monday
+      time: "16:00"
       timezone: "Europe/Zurich"
 
   # API composer
@@ -27,12 +27,28 @@ updates:
     reviewers:
       - "D3strukt0r"
     schedule:
-      interval: "daily"
-      time: "08:00"
+      interval: "weekly" # on monday
+      time: "16:00"
       timezone: "Europe/Zurich"
     ignore:
       - dependency-name: "symfony/*"
         update-types: ["version-update:semver-major"]
+    groups:
+      api-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+  - package-ecosystem: "composer"
+    directory: "/api"
+    target-branch: "develop"
+    labels:
+      - "dependabot :robot:"
+    schedule:
+      interval: "weekly" # on monday
+      time: "16:00"
+      timezone: "Europe/Zurich"
     groups:
       api-dependencies:
         applies-to: version-updates
@@ -51,8 +67,24 @@ updates:
     reviewers:
       - "D3strukt0r"
     schedule:
-      interval: "daily"
-      time: "08:00"
+      interval: "weekly" # on monday
+      time: "16:00"
+      timezone: "Europe/Zurich"
+    groups:
+      pwa-dependencies:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "major"
+  - package-ecosystem: "npm"
+    directory: "/pwa"
+    target-branch: "develop"
+    labels:
+      - "dependabot :robot:"
+    schedule:
+      interval: "weekly" # on monday
+      time: "16:00"
       timezone: "Europe/Zurich"
     groups:
       pwa-dependencies:
