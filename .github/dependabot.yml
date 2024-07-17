@@ -3,6 +3,8 @@
 # Please see the documentation for all configuration options:
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
+# Note: unique combination of 'package-ecosystem', 'directory', and 'target-branch'
+
 version: 2
 updates:
   # GitHub Actions
@@ -24,27 +26,8 @@ updates:
     target-branch: "develop"
     labels:
       - "dependabot :robot:"
-    reviewers:
-      - "D3strukt0r"
-    schedule:
-      interval: "weekly" # on monday
-      time: "16:00"
-      timezone: "Europe/Zurich"
-    ignore:
-      - dependency-name: "symfony/*"
-        update-types: ["version-update:semver-major"]
-    groups:
-      api-dependencies:
-        applies-to: version-updates
-        patterns:
-          - "*"
-        update-types:
-          - "major"
-  - package-ecosystem: "composer"
-    directory: "/api"
-    target-branch: "develop"
-    labels:
-      - "dependabot :robot:"
+    #reviewers:
+    #  - "D3strukt0r"
     schedule:
       interval: "weekly" # on monday
       time: "16:00"
@@ -57,6 +40,12 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      #api-dependencies:
+      #  applies-to: version-updates
+      #  patterns:
+      #    - "*"
+      #  update-types:
+      #    - "major"
 
   # PWA pnpm
   - package-ecosystem: "npm"
@@ -64,24 +53,8 @@ updates:
     target-branch: "develop"
     labels:
       - "dependabot :robot:"
-    reviewers:
-      - "D3strukt0r"
-    schedule:
-      interval: "weekly" # on monday
-      time: "16:00"
-      timezone: "Europe/Zurich"
-    groups:
-      pwa-dependencies:
-        applies-to: version-updates
-        patterns:
-          - "*"
-        update-types:
-          - "major"
-  - package-ecosystem: "npm"
-    directory: "/pwa"
-    target-branch: "develop"
-    labels:
-      - "dependabot :robot:"
+    #reviewers:
+    #  - "D3strukt0r"
     schedule:
       interval: "weekly" # on monday
       time: "16:00"
@@ -94,3 +67,9 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      #pwa-dependencies:
+      #  applies-to: version-updates
+      #  patterns:
+      #    - "*"
+      #  update-types:
+      #    - "major"
