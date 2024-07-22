@@ -315,7 +315,7 @@ function InviteesListOnMyCardForm({
             <div className="mb-2">
               <RadioGroup
                 label={t('homepage.manageCard.properties.food')}
-                inline
+                inline="md"
                 options={foodOptions.map((food) => ({
                   value: food,
                   title: t(`enum.food.${food}`),

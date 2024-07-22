@@ -12,7 +12,7 @@ interface Option extends InputHTMLAttributes<HTMLInputElement> {
 interface Props {
   label?: string;
   legend?: string;
-  inline?: boolean;
+  inline?: boolean | 'sm' | 'md';
   options: Option[];
   error?: FieldError;
   disabled?: boolean;
@@ -38,7 +38,8 @@ export default function RadioGroup({
         )}
         <div
           className={clsx('space-y-2', {
-            'sm:flex sm:flex-wrap sm:items-center sm:space-x-4 sm:space-y-0': inline,
+            'sm:flex sm:items-center sm:space-x-4 sm:space-y-0': inline === true || inline === 'sm',
+            'md:flex md:items-center md:space-x-6 md:space-y-0': inline === 'md',
           })}
         >
           {options.map(({ title, ...props }) => (
