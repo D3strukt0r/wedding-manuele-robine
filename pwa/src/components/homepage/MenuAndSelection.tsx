@@ -315,7 +315,7 @@ function InviteesListOnMyCardForm({
             <div className="mb-2">
               <RadioGroup
                 label={t('homepage.manageCard.properties.food')}
-                inline
+                inline="md"
                 options={foodOptions.map((food) => ({
                   value: food,
                   title: t(`enum.food.${food}`),
@@ -340,7 +340,7 @@ function InviteesListOnMyCardForm({
         <Button
           type="submit"
           layout="app-primary"
-          className="col-span-2"
+          className="sm:col-span-2"
           loading={isPending}
           disabled={!isDirty || !isValid}
         >
