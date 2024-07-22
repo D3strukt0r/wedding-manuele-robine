@@ -340,7 +340,7 @@ function InviteesListOnMyCardForm({
         <Button
           type="submit"
           layout="app-primary"
-          className="col-span-2"
+          className="sm:col-span-2"
           loading={isPending}
           disabled={!isDirty || !isValid}
         >

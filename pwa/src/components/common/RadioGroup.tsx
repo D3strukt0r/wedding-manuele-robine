@@ -37,8 +37,8 @@ export default function RadioGroup({
           <legend className="sr-only">{legend}</legend>
         )}
         <div
-          className={clsx('space-y-4', {
-            'sm:flex sm:items-center sm:space-x-10 sm:space-y-0': inline,
+          className={clsx('space-y-2', {
+            'sm:flex sm:flex-wrap sm:items-center sm:space-x-4 sm:space-y-0': inline,
           })}
         >
           {options.map(({ title, ...props }) => (
