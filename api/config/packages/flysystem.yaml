@@ -29,7 +29,7 @@ services:
                 version: latest
                 region: eu-west-1
                 endpoint: '%env(S3_STORAGE_ENDPOINT)%'
-                use_path_style_endpoint: true
+                use_path_style_endpoint: '%env(bool:S3_USE_PATH_STYLE_ENDPOINT)%'
                 credentials:
                     key: '%env(S3_STORAGE_KEY)%'
                     secret: '%env(S3_STORAGE_SECRET)%'
