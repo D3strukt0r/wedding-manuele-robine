@@ -39,7 +39,7 @@ class ShowDashboardController extends AbstractController
         $foodChoices = [];
         foreach ($invitees as $invitee) {
             if ($invitee->willCome() === false) {
-                continue; //
+                continue;
             }
             $food = $invitee->getFood()->value ?? 'not_decided';
             $foodChoices[$food] = ($foodChoices[$food] ?? 0) + 1;
