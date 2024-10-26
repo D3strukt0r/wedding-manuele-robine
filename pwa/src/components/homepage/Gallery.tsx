@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import AlignedCard from '#/layout/AlignedCard';
 import useGallery from '#/api/invited/gallery/useGallery.ts';
 import BigSpinner from '#/layout/BigSpinner.tsx';
-import ImageLazyLoad, { aspectRatio } from '#/components/common/ImageLazyLoad.tsx';
+import ImageLazyLoad, { aspectRatio, ImageLazyLoadProps } from '#/components/common/ImageLazyLoad.tsx';
 import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
 import { GalleryImage as GalleryImageType } from '#/components/types.ts';
@@ -20,6 +20,7 @@ import Button from '#/components/common/Button.tsx';
 import ListCard from '#/components/common/ListCard.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
 
 interface Props {
   id?: string;
@@ -155,11 +156,14 @@ function MyGalleryUploadForm({ files }: MyGalleryUploadFormProps) {
                 id: fileId,
                 content: (
                   <div className="flex justify-between">
-                    <div className="flex space-x-2 py-1">
-                      <div className="h-6 w-6 overflow-hidden">
-                        <GalleryImage file={alreadyUploaded} />
-                      </div>
-                      <p>{alreadyUploaded.fileName}</p>
+                    <div className="flex space-x-2 py-1 pr-1 w-full overflow-hidden">
+                      <GalleryImage
+                        file={alreadyUploaded}
+                        wrapperClassName="min-w-6 max-w-6"
+                        className="h-6 object-cover"
+                        wrapperStyle={{aspectRatio: 'auto'}}
+                      />
+                      <p className="text-ellipsis overflow-hidden">{alreadyUploaded.fileName}</p>
                     </div>
                     <button onClick={() => {
                       setValue('fileIds', fileIds.filter((id) => id !== fileId), { shouldDirty: true });
@@ -174,7 +178,7 @@ function MyGalleryUploadForm({ files }: MyGalleryUploadFormProps) {
               id: fileId,
               content: (
                 <div className="flex justify-between">
-                  <p className="py-1">{t('homepage.gallery.toBeUploaded')}</p>
+                  <p className="py-1 pr-1">{t('homepage.gallery.toBeUploaded')}</p>
                   <button
                     onClick={() => {
                       setValue('fileIds', fileIds.filter((id) => id !== fileId), { shouldDirty: true });
@@ -241,9 +245,12 @@ function CompleteGallery() {
 
 interface GalleryImageProps {
   file: GalleryImageType;
+  className?: ImageLazyLoadProps['className'];
+  wrapperClassName?: ImageLazyLoadProps['wrapperClassName'];
+  wrapperStyle?: ImageLazyLoadProps['wrapperStyle'];
 }
 
-function GalleryImage({ file }: GalleryImageProps) {
+function GalleryImage({ file, className, wrapperClassName, wrapperStyle }: GalleryImageProps) {
   const isOptimized = useMemo(() => {
     return file.children.length > 0;
   }, [file.children.length]);
@@ -278,8 +285,9 @@ function GalleryImage({ file }: GalleryImageProps) {
       width={mainImage.width}
       height={mainImage.height}
       customSizeHandling
-      className="w-full"
-      wrapperStyle={{ aspectRatio: `${width}/${height}` }}
+      className={clsx('w-full', className)}
+      wrapperClassName={wrapperClassName}
+      wrapperStyle={{ aspectRatio: `${width}/${height}`, ...wrapperStyle }}
       blurhash={mainImage.blurhash}
       imgSources={(
         <>
