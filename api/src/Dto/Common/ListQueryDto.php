@@ -27,7 +27,7 @@ readonly class ListQueryDto
 
         /** @var array<ListFiltersDto> */
         #[Assert\Valid]
-        #[OA\Property(description: 'Filter certain columns', example:[['property' => 'name', 'value' => 'John Doe']])]
+        #[OA\Property(description: 'Filter certain columns', example: [['property' => 'name', 'value' => 'John Doe']])]
         public array $filters = [],
     ) {}
 }

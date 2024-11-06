@@ -68,12 +68,12 @@ class DownloadGalleryImagesController extends AbstractController
             $files[$id] = $file;
         }
 
-        if (count($files) === 0) {
+        if (\count($files) === 0) {
             return new JsonResponse(['message' => 'No files requested, how did you do that?'], Response::HTTP_NOT_FOUND);
         }
 
         // Download the single high-res image
-        if (count($files) === 1) {
+        if (\count($files) === 1) {
             $file = $files[0];
             $imageFile = $this->writeFileToTmp($file);
 
@@ -82,9 +82,9 @@ class DownloadGalleryImagesController extends AbstractController
 
         // Check if we already have the zip file
         $sortedFileIds = array_map(static fn (File $file) => $file->getId(), $files);
-        sort($sortedFileIds, \SORT_NUMERIC);
+        sort($sortedFileIds, SORT_NUMERIC);
         $pathPrefix = 'large-downloads/';
-        $zipFileName = hash('sha3-256', implode(',', $sortedFileIds)) . '.zip';
+        $zipFileName = hash('sha3-256', implode(',', $sortedFileIds)).'.zip';
         if ($this->defaultStorage->fileExists($pathPrefix.$zipFileName)) {
             $zipFile = UploadFileController::createTempFile('gallery.zip', 'application/zip');
             $contentStream = $this->defaultStorage->readStream($pathPrefix.$zipFileName);
@@ -98,11 +98,11 @@ class DownloadGalleryImagesController extends AbstractController
         ini_set('max_execution_time', 600); // 10 minutes
 
         $zipFile = UploadFileController::createTempFile('gallery.zip', 'application/zip');
-        $zip = new \ZipArchive;
+        $zip = new \ZipArchive();
         $zipOpened = $zip->open($zipFile->getPathname(), \ZipArchive::CREATE);
 
         if ($zipOpened !== true) {
-            throw new \RuntimeException('Failed to open zip file. Error code: ' . $zipOpened);
+            throw new \RuntimeException('Failed to open zip file. Error code: '.$zipOpened);
         }
 
         foreach ($files as $file) {
@@ -114,7 +114,7 @@ class DownloadGalleryImagesController extends AbstractController
         unset($zip);
 
         // Save created zip as cache
-        $zipFileStream = fopen($zipFile->getPathname(), 'rb');
+        $zipFileStream = fopen($zipFile->getPathname(), 'r');
         $this->defaultStorage->writeStream($pathPrefix.$zipFileName, $zipFileStream);
         fclose($zipFileStream);
 

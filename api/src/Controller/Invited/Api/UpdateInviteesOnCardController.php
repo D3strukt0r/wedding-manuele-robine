@@ -56,7 +56,7 @@ class UpdateInviteesOnCardController extends AbstractController
         foreach ($dto->invitees as $inviteeId => $inviteeDto) {
             $invitee = $this->inviteeRepository->find($inviteeId);
             if ($invitee === null) {
-                throw $this->createNotFoundException(sprintf('Invitee with ID %s not found', $inviteeId));
+                throw $this->createNotFoundException(\sprintf('Invitee with ID %s not found', $inviteeId));
             }
             $invitee->update($inviteeDto);
             $this->inviteeRepository->save($invitee, true); // TODO: Batch handling

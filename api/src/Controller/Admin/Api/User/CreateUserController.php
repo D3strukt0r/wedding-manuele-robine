@@ -45,7 +45,7 @@ class CreateUserController extends AbstractController
     public function __invoke(#[MapRequestPayload] CreateUserDto $dto): JsonResponse
     {
         if ($this->userRepository->findOneBy(['username' => $dto->username]) !== null) {
-            throw new UnprocessableEntityHttpException(sprintf('User with username %s already exists', $dto->username));
+            throw new UnprocessableEntityHttpException(\sprintf('User with username %s already exists', $dto->username));
         }
 
         $plainPassword = $dto->password ?? $this->passwordGenerator->generate();
