@@ -336,7 +336,7 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
         </div>
       </form>
       {import.meta.env.DEV && (
-        <DevTool control={control} />
+        <DevTool control={control} styles={{button: {top: `${(2 * 5) + 14}px`}}} />
       )}
     </>
   );
