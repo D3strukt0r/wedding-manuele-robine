@@ -42,6 +42,7 @@ interface Props<TFieldValues extends FieldValues = FieldValues> extends UseContr
   disabled?: boolean;
   allowedFileTypes?: (keyof typeof mimeTypeMapping)[];
   allowedFileSize?: number; // in bytes
+  onLoading?: (loading: boolean) => void;
 }
 const UploadDragger = forwardRef<HTMLInputElement, Props>(({
   label,
@@ -50,6 +51,7 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
   allowedFileSize = 100 * 1024 * 1024,
   control,
   name,
+  onLoading,
 }, ref) => {
   const { t } = useTranslation('app');
   const { field } = useController({ control, name });
@@ -75,10 +77,12 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
   useEffect(() => {
     (async () => {
       setLoading(true);
+      onLoading?.(true);
       for (const file of acceptedFiles) {
         await mutateAsync({ file });
       }
       setLoading(false);
+      onLoading?.(false);
     })();
   }, [acceptedFiles]);
 

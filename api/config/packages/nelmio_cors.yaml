@@ -4,7 +4,7 @@ nelmio_cors:
         allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
         allow_methods: ['HEAD', 'OPTIONS', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE']
         allow_headers: ['Content-Type', 'Authorization']
-        expose_headers: ['Link']
+        expose_headers: ['Link', 'Content-Disposition']
         max_age: 3600
     # https://symfony.com/bundles/LexikJWTAuthenticationBundle/current/4-cors-requests.html#example-usage-with-the-lexikjwtauthenticationbundle
     #paths:

@@ -78,7 +78,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         php${PHP_VERSION}-intl \
         # Used for BlurHash encoding
         php${PHP_VERSION}-gd \
-        php${PHP_VERSION}-imagick >/dev/null
+        php${PHP_VERSION}-imagick \
+        # Used for Gallery download as Zip \
+        php${PHP_VERSION}-zip >/dev/null
 
 ENV PHP_DIR=/etc/php/$PHP_VERSION/fpm
 RUN \

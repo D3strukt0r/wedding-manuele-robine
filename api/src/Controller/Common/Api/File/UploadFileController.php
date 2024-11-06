@@ -183,7 +183,7 @@ class UploadFileController extends AbstractController
         return \in_array($mimeType, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true);
     }
 
-    private static function createTempFile(string $originalName, ?string $mimeType = null): UploadedFile
+    public static function createTempFile(string $originalName, ?string $mimeType = null): UploadedFile
     {
         $file = tmpfile();
         if ($file === false) {
