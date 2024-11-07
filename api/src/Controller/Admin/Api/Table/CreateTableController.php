@@ -52,7 +52,7 @@ class CreateTableController extends AbstractController
 
         $inviteesNotFound = array_filter($inviteesToBe, static fn (?Invitee $invitee) => $invitee === null);
         if (\count($inviteesNotFound) > 0) {
-            throw new UnprocessableEntityHttpException(sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
+            throw new UnprocessableEntityHttpException(\sprintf('Invitees with IDs %s not found', implode(', ', array_keys($inviteesNotFound))));
         }
 
         /** @var array<int, Invitee> $inviteesToBe */

@@ -33,42 +33,44 @@ const Input = forwardRef<HTMLInputElement, Props>(({
             'focus:ring-blue-600': !error && layout === 'primary',
             'focus:ring-app-green-dark': !error && layout === 'app-primary',
             'focus:ring-red-500': error,
-          }
+          },
         )}
         type="checkbox"
         ref={ref}
       />
     </div>
-    <div className="ml-3 text-sm leading-6">
-      {label && (
-        <label
-          htmlFor={props.id ?? props.name}
-          className={clsx('text-gray-900', {
-            'font-medium': layout === 'primary',
-            'font-noto-sans': layout === 'app-primary',
-          })}
-        >
-          {label}
-        </label>
-      )}
-      {description && (
-        <p
-          id={`${props.id ?? props.name}-description`}
-          className="text-gray-500"
-        >
-          {description}
-        </p>
-      )}
-      {error && (
-        <div className="text-sm text-red-600" id={`${props.id ?? props.name}-error`}>
-          {error.types ? Object.entries(error.types).map(([type, message]) => (
-            <p key={type} role="alert">{message}</p>
-          )) : (
-            <p role="alert">{error.message}</p>
-          )}
-        </div>
-      )}
-    </div>
+    {(label || description || error) && (
+      <div className="ml-3 text-sm leading-6">
+        {label && (
+          <label
+            htmlFor={props.id ?? props.name}
+            className={clsx('text-gray-900', {
+              'font-medium': layout === 'primary',
+              'font-noto-sans': layout === 'app-primary',
+            })}
+          >
+            {label}
+          </label>
+        )}
+        {description && (
+          <p
+            id={`${props.id ?? props.name}-description`}
+            className="text-gray-500"
+          >
+            {description}
+          </p>
+        )}
+        {error && (
+          <div className="text-sm text-red-600" id={`${props.id ?? props.name}-error`}>
+            {error.types ? Object.entries(error.types).map(([type, message]) => (
+              <p key={type} role="alert">{message}</p>
+            )) : (
+              <p role="alert">{error.message}</p>
+            )}
+          </div>
+        )}
+      </div>
+    )}
   </div>
 ));
 

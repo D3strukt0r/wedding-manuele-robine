@@ -51,7 +51,7 @@ class UpdateUserController extends AbstractController
             $user->getUsername() !== $dto->username
             && $this->userRepository->findOneBy(['username' => $dto->username]) !== null
         ) {
-            throw new UnprocessableEntityHttpException(sprintf('User with username %s already exists', $dto->username));
+            throw new UnprocessableEntityHttpException(\sprintf('User with username %s already exists', $dto->username));
         }
 
         $user->update($dto, $this->passwordHasher);

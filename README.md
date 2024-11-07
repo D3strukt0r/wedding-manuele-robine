@@ -44,6 +44,9 @@ vagrant up
 * Initial App startup: ~20s ?
 * Subsequent startups: ~1m 7s (VM) + 26s (Docker) ?
 
+If you get an error `Could not kickstart service "com.apple.nfsd": 1: Operation not permitted`,
+use `sudo nfsd update` to fix it. (https://github.com/hashicorp/vagrant/issues/13364)
+
 Common commands
 
 ```shell

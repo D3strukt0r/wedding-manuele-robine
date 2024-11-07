@@ -53,7 +53,7 @@ class UpdateInviteeController extends AbstractController
         $card = $dto->cardId !== null ? $this->cardRepository->find($dto->cardId) : null;
 
         if (($dto->cardId !== null && $card === null) || ($dto->tableId !== null && $table === null)) {
-            throw new UnprocessableEntityHttpException(sprintf('Card with ID %s or table with ID %s not found', $dto->cardId, $dto->tableId));
+            throw new UnprocessableEntityHttpException(\sprintf('Card with ID %s or table with ID %s not found', $dto->cardId, $dto->tableId));
         }
 
         $invitee->update($dto);
