@@ -7,6 +7,7 @@ use App\Repository\FileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use Imagine\Imagick\Imagine;
+use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -48,7 +49,14 @@ class RefreshGalleryTakenOnFromFile extends Command
             $i = 0;
             foreach ($filesToCheck as $file) {
                 $imageFile = UploadFileController::createTempFile($file->getOriginalFilename(), $file->getMimeType());
-                $contentStream = $this->defaultStorage->readStream($file->getPath());
+
+                try {
+                    $contentStream = $this->defaultStorage->readStream($file->getPath());
+                } catch (FilesystemException $e) {
+                    $io->writeln('File ID '.$file->getId().' could not be read from storage');
+
+                    continue;
+                }
                 file_put_contents($imageFile->getPathname(), $contentStream);
 
                 $image = $imagine
