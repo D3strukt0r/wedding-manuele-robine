@@ -7,11 +7,12 @@ use App\Entity\File;
 use App\Entity\Gallery;
 use App\Repository\FileRepository;
 use App\Repository\GalleryRepository;
+use Imagine\Image\Metadata\ExifMetadataReader;
+use Imagine\Imagick\Imagine;
 use League\Flysystem\FilesystemOperator;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -69,13 +70,14 @@ class DownloadGalleryImagesController extends AbstractController
         }
 
         if (\count($files) === 0) {
-            return new JsonResponse(['message' => 'No files requested, how did you do that?'], Response::HTTP_NOT_FOUND);
+            return $this->json(['message' => 'No files requested, how did you do that?'], Response::HTTP_NOT_FOUND);
         }
 
         // Download the single high-res image
         if (\count($files) === 1) {
             $file = $files[0];
             $imageFile = $this->writeFileToTmp($file);
+            $this->fixOrientationForExport($imageFile);
 
             return $this->file($imageFile, $imageFile->getClientOriginalName());
         }
@@ -107,6 +109,7 @@ class DownloadGalleryImagesController extends AbstractController
 
         foreach ($files as $file) {
             $imageFile = $this->writeFileToTmp($file);
+            $this->fixOrientationForExport($imageFile);
             $zip->addFile($imageFile->getPathname(), $imageFile->getClientOriginalName());
         }
 
@@ -128,5 +131,30 @@ class DownloadGalleryImagesController extends AbstractController
         file_put_contents($imageFile->getPathname(), $contentStream);
 
         return $imageFile;
+    }
+
+    private function fixOrientationForExport(UploadedFile $file): void
+    {
+        $imagine = new Imagine();
+        $originalImage = $imagine
+            ->setMetadataReader(new ExifMetadataReader())
+            ->open($file->getPathname())
+        ;
+
+        // Fix rotation of image based on exif metadata (mostly for mobile photos)
+        // Was adjusted in UploadFileController, but we need to adjust it back
+        // https://medium.com/thetiltblog/fixing-rotated-mobile-image-uploads-in-php-803bb96a852c
+        // https://stackoverflow.com/questions/7489742/php-read-exif-data-and-adjust-orientation
+        $orientation = $originalImage->metadata()->get('ifd0.Orientation'); // Somehow `thumbnail.Orientation` is not always set
+        $deg = match ($orientation) {
+            3 => 180,
+            6 => 90,
+            8 => -90,
+            default => 0, // & 1
+        };
+        $originalImage
+            ->rotate($deg * -1)
+            ->save($file->getPathname())
+        ;
     }
 }
