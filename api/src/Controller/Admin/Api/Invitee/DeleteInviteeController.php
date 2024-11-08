@@ -5,7 +5,7 @@ namespace App\Controller\Admin\Api\Invitee;
 use App\Entity\Invitee;
 use App\Entity\Role;
 use App\Repository\InviteeRepository;
-use Nelmio\ApiDocBundle\Annotation\Security;
+use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

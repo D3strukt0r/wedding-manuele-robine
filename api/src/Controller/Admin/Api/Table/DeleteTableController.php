@@ -5,7 +5,7 @@ namespace App\Controller\Admin\Api\Table;
 use App\Entity\Role;
 use App\Entity\Table;
 use App\Repository\TableRepository;
-use Nelmio\ApiDocBundle\Annotation\Security;
+use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

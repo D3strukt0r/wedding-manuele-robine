@@ -3,7 +3,7 @@
 namespace App\Controller\Common\Api\Lookup;
 
 use App\Dto\Common\ListableType;
-use Nelmio\ApiDocBundle\Annotation\Security;
+use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
