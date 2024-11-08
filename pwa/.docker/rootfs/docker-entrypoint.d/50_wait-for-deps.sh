@@ -48,5 +48,7 @@ if [ $elapsed_seconds -gt $DEPS_TIMEOUT ]; then
   entrypoint_error 'The api is not up or not reachable'
   exit 1
 else
-  entrypoint_info 'The api is now ready and reachable'
+  current_time="$(date -u +%s)"
+  elapsed_seconds=$((current_time - start_time))
+  entrypoint_info "The api is now ready and reachable after $elapsed_seconds seconds"
 fi
