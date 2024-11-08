@@ -15,8 +15,10 @@ readonly class ListGalleryImageDto
     public string $blurhash;
     public int $height;
     public int $width;
+
     /** @var array<ListGalleryImageDto> */
     public array $children;
+    public ?\DateTimeImmutable $takenOn;
 
     public function __construct(File $file, FilesystemOperator $defaultStorage)
     {
@@ -24,7 +26,7 @@ readonly class ListGalleryImageDto
         $this->fileName = $file->getOriginalFilename();
         // $this->publicUrl = $defaultStorage->publicUrl($file->getPath()); // TODO: Somehow directly use minio, but minio is broken
         $this->publicUrl = '/invited/api/gallery/'.$file->getId();
-        $this->mimeType = $file->getMimeType() ?? throw new \InvalidArgumentException('File mime type cannot be null');
+        $this->mimeType = $file->getMimeType();
 
         $blurhash = $file->getMetadata()['blurhash'] ?? $file->getParent()?->getMetadata()['blurhash'] ?? null;
         if (\is_string($blurhash)) {
@@ -40,6 +42,10 @@ readonly class ListGalleryImageDto
         $this->width = $file->getMetadata()['width']
             ?? $file->getParent()?->getMetadata()['width']
             ?? throw new \InvalidArgumentException('Image width not found');
+        $takenOn = $file->getMetadata()['taken_on']
+            ?? $file->getParent()?->getMetadata()['taken_on']
+            ?? null;
+        $this->takenOn = $takenOn ? new \DateTimeImmutable($takenOn) : null;
         $this->children = array_map(
             static fn (File $file) => new ListGalleryImageDto($file, $defaultStorage),
             $file->getChildren()->toArray(),

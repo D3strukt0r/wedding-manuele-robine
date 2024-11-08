@@ -39,7 +39,7 @@ class DownloadGalleryImagesController extends AbstractController
     #[OA\Tag('Invited/Gallery')]
     public function __invoke(Request $request): Response
     {
-        $requestedScope = $request->get('fileIds');
+        $requestedScope = $request->query->get('fileIds');
 
         // Get all fileIds from request
         if ($requestedScope === 'all' || $requestedScope === '' || $requestedScope === null) {
@@ -52,7 +52,7 @@ class DownloadGalleryImagesController extends AbstractController
             );
         } else {
             // TODO: Could also include a file not in the gallery, security issue?
-            $fileIds = array_map('intval', explode(',', $requestedScope));
+            $fileIds = array_map(intval(...), explode(',', $requestedScope));
         }
 
         // Find db entry for all files
@@ -107,8 +107,8 @@ class DownloadGalleryImagesController extends AbstractController
             throw new \RuntimeException('Failed to open zip file. Error code: '.$zipOpened);
         }
 
-        foreach ($files as $file) {
-            $imageFile = $this->writeFileToTmp($file);
+        foreach ($files as $fileToAdd) {
+            $imageFile = $this->writeFileToTmp($fileToAdd);
             $this->fixOrientationForExport($imageFile);
             $zip->addFile($imageFile->getPathname(), $imageFile->getClientOriginalName());
         }
@@ -119,7 +119,9 @@ class DownloadGalleryImagesController extends AbstractController
         // Save created zip as cache
         $zipFileStream = fopen($zipFile->getPathname(), 'r');
         $this->defaultStorage->writeStream($pathPrefix.$zipFileName, $zipFileStream);
-        fclose($zipFileStream);
+        if (\is_resource($zipFileStream)) {
+            fclose($zipFileStream);
+        }
 
         return $this->file($zipFile, $zipFile->getClientOriginalName());
     }

@@ -117,6 +117,14 @@ class File
         return $this->metadata;
     }
 
+    /**
+     * @param null|array<mixed> $metadata
+     */
+    public function setMetadata(?array $metadata): void
+    {
+        $this->metadata = $metadata;
+    }
+
     public function getCreatedBy(): string
     {
         return $this->createdBy;

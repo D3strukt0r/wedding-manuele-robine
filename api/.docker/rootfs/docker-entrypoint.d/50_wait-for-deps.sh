@@ -70,5 +70,7 @@ if [ $elapsed_seconds -gt $DEPS_TIMEOUT ]; then
   entrypoint_error 'The db is not up or not reachable'
   exit 1
 else
-  entrypoint_info 'The db is now ready and reachable'
+  current_time="$(date -u +%s)"
+  elapsed_seconds=$((current_time - start_time))
+  entrypoint_info "The db is now ready and reachable after $elapsed_seconds seconds"
 fi

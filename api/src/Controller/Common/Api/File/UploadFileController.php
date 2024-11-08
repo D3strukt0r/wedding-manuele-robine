@@ -12,8 +12,8 @@ use Imagine\Image\Format;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use Imagine\Imagick\Imagine;
 use League\Flysystem\FilesystemOperator;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Security;
+use Nelmio\ApiDocBundle\Attribute\Model;
+use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -93,6 +93,14 @@ class UploadFileController extends AbstractController
 
             $metadata['width'] = $originalImage->getSize()->getWidth();
             $metadata['height'] = $originalImage->getSize()->getHeight();
+
+            $takenOn = $originalImage->metadata()->get('exif.DateTimeOriginal');
+            if (\is_string($takenOn)) {
+                $takenOn = \DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $takenOn);
+                if ($takenOn !== false) {
+                    $metadata['taken_on'] = $takenOn->format(\DateTimeInterface::ATOM);
+                }
+            }
 
             // Check if file (image) requires compression (>100kb)
             $requiresOptimization = $file->getSize() > (100 * 1024);

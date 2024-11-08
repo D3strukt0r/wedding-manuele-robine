@@ -5,7 +5,7 @@ namespace App\Controller\Admin\Api\User;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Nelmio\ApiDocBundle\Annotation\Security;
+use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

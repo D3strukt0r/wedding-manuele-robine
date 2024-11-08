@@ -21,6 +21,11 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
 
+        # https://github.com/ScientaNL/DoctrineJsonFunctions?tab=readme-ov-file#symfony-with-doctrine-bundle
+        dql:
+            string_functions:
+                JSON_EXTRACT: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonExtract
+
 when@test:
     doctrine:
         dbal:
