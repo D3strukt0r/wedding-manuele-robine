@@ -94,6 +94,14 @@ class UploadFileController extends AbstractController
             $metadata['width'] = $originalImage->getSize()->getWidth();
             $metadata['height'] = $originalImage->getSize()->getHeight();
 
+            $takenOn = $originalImage->metadata()->get('exif.DateTimeOriginal');
+            if (\is_string($takenOn)) {
+                $takenOn = \DateTimeImmutable::createFromFormat('Y:m:d H:i:s', $takenOn);
+                if ($takenOn !== false) {
+                    $metadata['taken_on'] = $takenOn->format(\DateTimeInterface::ATOM);
+                }
+            }
+
             // Check if file (image) requires compression (>100kb)
             $requiresOptimization = $file->getSize() > (100 * 1024);
             if ($requiresOptimization) {

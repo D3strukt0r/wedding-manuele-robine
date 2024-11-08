@@ -36,19 +36,9 @@ class ListGalleryImagesController extends AbstractController
     #[OA\Tag('Invited/Gallery')]
     public function __invoke(): JsonResponse
     {
-        $gallery = $this->galleryRepository->findAll();
-
-        /** @var array<int> $fileIds */
-        $fileIds = array_reduce($gallery,
-            static fn (array $carry, Gallery $gallery) => array_merge($carry, $gallery->getFileIds()),
-            [],
-        );
-        rsort($fileIds); // sort by id descending, so newest files are first
-
-        $files = array_map(fn (int $fileId) => $this->fileRepository->find($fileId), $fileIds);
-        if (\in_array(null, $files, true)) {
-            throw $this->createNotFoundException('File not found');
-        }
+        $fileIds = $this->galleryRepository->findAllFileIds();
+        $files = $this->fileRepository->findByGivenIdsSortedByTakenOn($fileIds);
+        // TODO: File IDs set in gallery, but not existing in file repository, are silently ignored. Cron Job for cleanup?
 
         return $this->json(new ListGalleryImagesDto($files, $this->defaultStorage));
     }

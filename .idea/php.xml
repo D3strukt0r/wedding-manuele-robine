@@ -183,6 +183,7 @@
       <path value="$PROJECT_DIR$/api/vendor/kornrunner/blurhash" />
       <path value="$PROJECT_DIR$/api/vendor/imagine/imagine" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/property-info" />
+      <path value="$PROJECT_DIR$/api/vendor/scienta/doctrine-json-functions" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

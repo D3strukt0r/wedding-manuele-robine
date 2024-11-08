@@ -43,10 +43,20 @@ class CreateAdminUserCommand extends Command
         while ($username === null) {
             $username = $io->ask('Username');
         }
+        if (!\is_string($username)) {
+            $io->error('Username must be a string');
+
+            return Command::FAILURE;
+        }
 
         $password = $input->getOption('password');
         while ($password === null) {
             $password = $io->askHidden('Password');
+        }
+        if (!\is_string($password)) {
+            $io->error('Password must be a string');
+
+            return Command::FAILURE;
         }
 
         try {

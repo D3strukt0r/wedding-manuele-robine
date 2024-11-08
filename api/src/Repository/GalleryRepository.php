@@ -20,4 +20,28 @@ class GalleryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Gallery::class);
     }
+
+    /**
+     * @return array<int>
+     */
+    public function findAllFileIds(): array
+    {
+        /** @var array<array{fileIds: array<string>}> $galleries */
+        $galleries = $this->createQueryBuilder('g')
+            ->select('g.fileIds')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+
+        $fileIds = array_reduce($galleries,
+            static fn (array $carry, mixed $gallery) => array_merge($carry, $gallery['fileIds']),
+            [],
+        );
+
+        // Convert to array of integers and sort ascending
+        $fileIds = array_map(intval(...), $fileIds);
+        sort($fileIds);
+
+        return $fileIds;
+    }
 }
