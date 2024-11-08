@@ -304,7 +304,7 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
           mutate({ fileIds });
         })}
       >
-        <div className="flex justify-end gap-1 mb-2">
+        <div className="flex flex-wrap justify-end gap-1 mb-2">
           <Button type="button" layout="app-primary" disabled={isPending} onClick={selectAll}>{t('homepage.gallery.selectAll')}</Button>
           <Button type="button" layout="app-primary" disabled={isPending} onClick={deselectAll}>{t('homepage.gallery.deselectAll')}</Button>
           <Button type="submit" layout="app-primary" loading={isPending}>{t('homepage.gallery.downloadSelected')}</Button>
