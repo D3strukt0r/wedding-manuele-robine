@@ -5,6 +5,7 @@ import BigSpinner from '#/layout/BigSpinner.tsx';
 import ImageLazyLoad, { aspectRatio, ImageLazyLoadProps } from '#/components/common/ImageLazyLoad.tsx';
 import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
+import LogoPolarsteps from '#/assets/logo-polarsteps.svg?react';
 import { GalleryImage as GalleryImageType } from '#/components/types.ts';
 import { useCallback, useMemo, useState } from 'react';
 import { useAuthenticationContext } from '#/utils/authentication.tsx';
@@ -24,6 +25,7 @@ import clsx from 'clsx';
 import Checkbox from '#/components/common/Checkbox.tsx';
 import useDownloadGalleryImages from '#/api/invited/gallery/useDownloadGalleryImages.ts';
 import { downloadBlob } from '#/utils/download.ts';
+import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 
 interface Props {
   id?: string;
@@ -57,6 +59,20 @@ export default function Gallery({ id, isLast }: Props) {
           <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose">
             {t('homepage.gallery.text')}
           </p>
+          <div className="flex flex-wrap items-start gap-2 mt-4">
+            <a href="https://www.instagram.com/travel.za.world/" target="_blank"
+               className="rounded-md bg-[#c13584] px-3.5 py-2.5 text-sm font-semibold !text-white !no-underline !not-italic shadow-sm hover:bg-[#c13584]/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c13584]/50">
+              <FontAwesomeIcon icon={faInstagram} /> Instagram (@travel.za.world)
+            </a>
+          </div>
+          <div className="flex flex-wrap items-start gap-2 mt-4">
+            <a href="https://www.polarsteps.com/RubySu" className="rounded-md bg-[#cc3e55] px-3.5 py-2.5 text-sm font-semibold !text-white !no-underline !not-italic shadow-sm hover:bg-[#cc3e55]/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#cc3e55]/50">
+              <LogoPolarsteps className="inline-block h-[1em] box-content align-[-0.125em]" /> Polarsteps (Robine)
+            </a>
+            <a href="https://www.polarsteps.com/D3strukt0r" className="rounded-md bg-[#cc3e55] px-3.5 py-2.5 text-sm font-semibold !text-white !no-underline !not-italic shadow-sm hover:bg-[#cc3e55]/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#cc3e55]/50">
+              <LogoPolarsteps className="inline-block h-[1em] box-content align-[-0.125em]" /> Polarsteps (Manuele)
+            </a>
+          </div>
           {authentication ? (
             <div className="mt-8">
               <MyGalleryUploadLoader />
