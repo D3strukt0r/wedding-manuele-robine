@@ -324,7 +324,7 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
               </div>
               <div
                 title={t('homepage.gallery.downloadSingle')}
-                className="absolute top-0 right-0 p-2 z-10 text-app-green bg-white/75 rounded-bl-md hover:bg-black hover:cursor-pointer"
+                className="absolute top-0 right-0 p-2 z-10 text-app-green bg-white/75 rounded-bl-md hover:bg-white/25 hover:text-app-green-dark/50 hover:cursor-pointer"
                 aria-disabled={isPending}
                 onClick={() => !isPending && mutate({ fileIds: [file.id] })}
               >
