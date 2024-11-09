@@ -154,9 +154,11 @@ class DownloadGalleryImagesController extends AbstractController
             8 => -90,
             default => 0, // & 1
         };
-        $originalImage
-            ->rotate($deg * -1)
-            ->save($file->getPathname())
-        ;
+        if ($deg !== 0) {
+            $originalImage
+                ->rotate($deg * -1)
+                ->save($file->getPathname())
+            ;
+        }
     }
 }

@@ -86,10 +86,12 @@ class UploadFileController extends AbstractController
                 8 => -90,
                 default => 0, // & 1
             };
-            $originalImage
-                ->rotate($deg)
-                ->save($file->getPathname())
-            ;
+            if ($deg !== 0) {
+                $originalImage
+                    ->rotate($deg)
+                    ->save($file->getPathname())
+                ;
+            }
 
             $metadata['width'] = $originalImage->getSize()->getWidth();
             $metadata['height'] = $originalImage->getSize()->getHeight();
