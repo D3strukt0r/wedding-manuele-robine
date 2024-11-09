@@ -204,7 +204,13 @@ RUN \
     && sed -i 's/^\(realpath_cache_size =\).*/\1\ 4096K/' "$PHP_DIR/php.ini" \
     # save the results for 10 minutes (600 seconds)
     && sed -i '/^;realpath_cache_ttl/s/^;//' "$PHP_DIR/php.ini" \
-    && sed -i 's/^\(realpath_cache_ttl =\).*/\1\ 600/' "$PHP_DIR/php.ini"
+    && sed -i 's/^\(realpath_cache_ttl =\).*/\1\ 600/' "$PHP_DIR/php.ini" \
+    \
+    # Increase ImageMagick disk cache size to prevent
+    # Rotate operation failed, cache resources exhausted `/tmp/phpXXXXXX' @ error/cache.c/OpenPixelCache/4095
+    # https://blog.eq8.eu/til/imagemagic-cache-resources-exhausted.html
+    # https://github.com/ImageMagick/ImageMagick/issues/396#issuecomment-326849298
+    && sed -i 's/\(<policy domain="resource" name="disk" value="\)[^"]*"/\18GiB"/' /etc/ImageMagick-6/policy.xml
 
 COPY .docker/rootfs/common /
 COPY api/.docker/rootfs /
