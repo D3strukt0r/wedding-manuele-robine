@@ -26,6 +26,7 @@ import Checkbox from '#/components/common/Checkbox.tsx';
 import useDownloadGalleryImages from '#/api/invited/gallery/useDownloadGalleryImages.ts';
 import { downloadBlob } from '#/utils/download.ts';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { AxiosProgressEvent } from 'axios/index';
 
 interface Props {
   id?: string;
@@ -301,6 +302,8 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
     }
   }, [files, setValue]);
 
+  const [progress, setProgress] = useState<AxiosProgressEvent>();
+
   const { mutate, isPending, isError, error } = useDownloadGalleryImages({
     onSuccess: ([blob, mimeType, filename]) => {
       downloadBlob(blob, mimeType, filename);
@@ -308,7 +311,28 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
     onError: (error) => {
       setErrorFromSymfonyViolations(setError, error.response?.data?.violations)
     }
+  }, {
+    onDownloadProgress: (progressEvent) => {
+      setProgress(progressEvent);
+
+      if (progressEvent.progress === 1) {
+        setTimeout(() => {
+          setProgress(undefined);
+        }, 1000);
+      }
+    },
   });
+
+  const bytesToHumanReadableFileSize = useCallback((bytes: number, decimalPlaces = 2, sizes = ['B', 'KB', 'MB', 'GB']) => {
+    if (bytes === 0) {
+      return '0 B';
+    }
+
+    const baseLog = 1024;
+    const magnitude = Math.min(Math.floor(Math.log(bytes) / Math.log(baseLog)), sizes.length - 1);
+
+    return `${Number.parseFloat((bytes / (baseLog ** magnitude)).toString()).toFixed(decimalPlaces)} ${sizes[magnitude]}`;
+  }, []);
 
   return (
     <>
@@ -326,6 +350,22 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
           <Button type="submit" layout="app-primary" loading={isPending}>{t('homepage.gallery.downloadSelected')}</Button>
           <Button type="button" layout="app-primary" loading={isPending} onClick={() => mutate({ fileIds: 'all' })}>{t('homepage.gallery.downloadAll')}</Button>
         </div>
+        {progress && progress.lengthComputable && (
+          <div className="mb-2">
+            {typeof progress.progress === 'number' && (
+              <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                <div className="bg-app-green text-xs font-medium text-gray-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${progress.progress * 100}%` }}> {Math.ceil(progress.progress * 100 * 100) / 100}%</div>
+              </div>
+            )}
+            <p>
+              {[
+                `${bytesToHumanReadableFileSize(progress.loaded)}${progress.total !== undefined ? ` / ${bytesToHumanReadableFileSize(progress.total)}` : ''}`,
+                progress.estimated !== undefined ? `${Math.ceil( progress.estimated)} sekunden` : undefined,
+                progress.rate !== undefined ? `${bytesToHumanReadableFileSize(progress.rate)}/s` : undefined,
+              ].filter(Boolean).join(' | ')}
+            </p>
+          </div>
+        )}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {files.map((file) => (
             <div key={file.id} className="relative">
