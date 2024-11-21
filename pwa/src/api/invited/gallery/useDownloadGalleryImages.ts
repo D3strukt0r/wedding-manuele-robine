@@ -12,6 +12,7 @@ export default function useDownloadGalleryImages(
     UseMutationOptions<[Blob, string, string], AxiosError<SymfonyValidationFailedResponse>, DownloadGalleryImages>,
     'mutationFn'
   >,
+  axiosOptions?: Omit<Parameters<typeof axios.get<Blob>>[1], 'responseType'>,
 ) {
   return useMutation({
     ...(queryOptions ?? {}),
@@ -21,6 +22,7 @@ export default function useDownloadGalleryImages(
       });
 
       const response = await axios.get<Blob>(`/invited/api/gallery/download?${params.toString()}`, {
+        ...axiosOptions,
         responseType: 'blob',
       });
       return [response.data, getMimeType(response), getFilename(response)] satisfies [Blob, string, string];

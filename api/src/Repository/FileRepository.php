@@ -43,6 +43,10 @@ class FileRepository extends ServiceEntityRepository
      */
     public function findByGivenIdsSortedByTakenOn(array $fileIds): array
     {
+        if (empty($fileIds)) {
+            return [];
+        }
+
         $qb = $this->createQueryBuilder('f');
 
         // https://stackoverflow.com/questions/45137881/sort-by-json-field-values
