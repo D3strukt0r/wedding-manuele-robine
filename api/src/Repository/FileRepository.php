@@ -64,4 +64,25 @@ class FileRepository extends ServiceEntityRepository
 
         return array_map(static fn (array $file) => $file[0], $files);
     }
+
+    /**
+     * @param array<int> $fileIds
+     *
+     * @return array<File>
+     */
+    public function findByNotGivenIds(array $fileIds): array
+    {
+        if (empty($fileIds)) {
+            return $this->findAll();
+        }
+
+        $qb = $this->createQueryBuilder('f');
+
+        return $qb
+            ->where($qb->expr()->notIn('f.id', $fileIds))
+            ->andWhere($qb->expr()->isNull('f.parent'))
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
