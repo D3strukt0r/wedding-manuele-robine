@@ -55,9 +55,9 @@ class FileRepository extends ServiceEntityRepository
             ->select('f')
             ->addSelect('JSON_EXTRACT(f.metadata, \'$.taken_on\') AS takenOn')
             ->where($qb->expr()->in('f.id', $fileIds))
-            ->orderBy('takenOn', 'DESC')
+            ->orderBy('takenOn', 'ASC')
             // TODO: Prefer this way, but it does not work, syntax error
-            // ->orderBy('f.metadata->"$.taken_on"', 'DESC')
+            // ->orderBy('f.metadata->"$.taken_on"', 'ASC')
             ->getQuery()
             ->getResult()
         ;
