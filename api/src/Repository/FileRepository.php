@@ -55,13 +55,34 @@ class FileRepository extends ServiceEntityRepository
             ->select('f')
             ->addSelect('JSON_EXTRACT(f.metadata, \'$.taken_on\') AS takenOn')
             ->where($qb->expr()->in('f.id', $fileIds))
-            ->orderBy('takenOn', 'DESC')
+            ->orderBy('takenOn', 'ASC')
             // TODO: Prefer this way, but it does not work, syntax error
-            // ->orderBy('f.metadata->"$.taken_on"', 'DESC')
+            // ->orderBy('f.metadata->"$.taken_on"', 'ASC')
             ->getQuery()
             ->getResult()
         ;
 
         return array_map(static fn (array $file) => $file[0], $files);
+    }
+
+    /**
+     * @param array<int> $fileIds
+     *
+     * @return array<File>
+     */
+    public function findByNotGivenIds(array $fileIds): array
+    {
+        if (empty($fileIds)) {
+            return $this->findAll();
+        }
+
+        $qb = $this->createQueryBuilder('f');
+
+        return $qb
+            ->where($qb->expr()->notIn('f.id', $fileIds))
+            ->andWhere($qb->expr()->isNull('f.parent'))
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

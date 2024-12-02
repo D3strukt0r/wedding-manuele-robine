@@ -166,7 +166,7 @@ function MyGalleryUploadForm({ files }: MyGalleryUploadFormProps) {
           label={t('homepage.gallery.upload')}
           disabled={isPending}
           allowedFileTypes={['image/jpeg', 'image/png']}
-          allowedFileSize={10 * 1024 * 1024} // 10MB
+          allowedFileSize={20 * 1024 * 1024} // 20MB
           onLoading={setUploading}
         />
         <ListCard
