@@ -78,11 +78,14 @@ const UploadDragger = forwardRef<HTMLInputElement, Props>(({
     (async () => {
       setLoading(true);
       onLoading?.(true);
-      for (const file of acceptedFiles) {
-        await mutateAsync({ file });
+      try {
+        for (const file of acceptedFiles) {
+          await mutateAsync({ file });
+        }
+      } finally {
+        setLoading(false);
+        onLoading?.(false);
       }
-      setLoading(false);
-      onLoading?.(false);
     })();
   }, [acceptedFiles]);
 
