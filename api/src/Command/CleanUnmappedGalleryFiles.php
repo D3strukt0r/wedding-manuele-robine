@@ -45,6 +45,15 @@ class CleanUnmappedGalleryFiles extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
+        $this->handleNonExistingFiles($io, $input);
+        $io->newLine();
+        $this->handleUnmappedFiles($io, $input);
+
+        return Command::SUCCESS;
+    }
+
+    private function handleNonExistingFiles(SymfonyStyle $io, InputInterface $input): void
+    {
         $io->writeln('Finding non-existing files...');
         $files = $this->fileRepository->findAll();
         $files = array_filter($files, function ($file) {
@@ -54,33 +63,47 @@ class CleanUnmappedGalleryFiles extends Command
                 return true;
             }
         });
+
+        if (empty($files)) {
+            $io->writeln('No files found');
+
+            return;
+        }
+
         $this->listFiles($io, $files);
 
         if (!$input->getOption('no-interaction') && !$io->confirm('Do you want to delete these files?')) {
             $io->writeln('Aborted');
 
-            return Command::SUCCESS;
+            return;
         }
 
         $io->writeln('Deleting files...');
         $this->deleteFiles($io, $files, true);
+    }
 
-        $io->newLine();
+    private function handleUnmappedFiles(SymfonyStyle $io, InputInterface $input): void
+    {
         $io->writeln('Finding unmapped files...');
         $fileIds = $this->galleryRepository->findAllFileIds();
         $files = $this->fileRepository->findByNotGivenIds($fileIds);
+
+        if (empty($files)) {
+            $io->writeln('No files found');
+
+            return;
+        }
+
         $this->listFilesWithChildren($io, $files);
 
         if (!$input->getOption('no-interaction') && !$io->confirm('Do you want to delete these files?')) {
             $io->writeln('Aborted');
 
-            return Command::SUCCESS;
+            return;
         }
 
         $io->writeln('Deleting files...');
         $this->deleteFilesWithChildren($io, $files);
-
-        return Command::SUCCESS;
     }
 
     /**
