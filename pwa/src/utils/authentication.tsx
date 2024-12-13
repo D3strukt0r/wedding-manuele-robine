@@ -116,7 +116,8 @@ export function AuthenticationProvider({
     axios.interceptors.response.use(
       (response) => response,
       (error) => {
-        if (error.response.status === 401) {
+        // Errors with XMLHttpRequest (e.g. Upload) have no response in error case
+        if ((error.response?.status ?? null) === 401) {
           updateAuthentication(null);
         }
 
