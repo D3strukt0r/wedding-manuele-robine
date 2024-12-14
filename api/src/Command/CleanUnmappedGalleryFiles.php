@@ -45,9 +45,15 @@ class CleanUnmappedGalleryFiles extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->handleNonExistingFiles($io, $input);
-        $io->newLine();
-        $this->handleUnmappedFiles($io, $input);
+        try {
+            $this->handleNonExistingFiles($io, $input);
+            $io->newLine();
+            $this->handleUnmappedFiles($io, $input);
+        } catch (\Throwable $exception) {
+            $io->error($exception->getMessage());
+
+            return Command::FAILURE;
+        }
 
         return Command::SUCCESS;
     }
@@ -159,10 +165,14 @@ class CleanUnmappedGalleryFiles extends Command
             $this->em->remove($file);
 
             if ($index % $flushInterval === 0) {
+                $io->writeln('Flushing...');
                 $this->em->flush();
                 // $this->em->clear();
             }
         }
+
+        $io->writeln('Flushing...');
+        $this->em->flush();
     }
 
     /**
@@ -198,9 +208,13 @@ class CleanUnmappedGalleryFiles extends Command
             $this->em->remove($file);
 
             if ($index % $flushInterval === 0) {
+                $io->writeln('Flushing...');
                 $this->em->flush();
                 // $this->em->clear();
             }
         }
+
+        $io->writeln('Flushing...');
+        $this->em->flush();
     }
 }
