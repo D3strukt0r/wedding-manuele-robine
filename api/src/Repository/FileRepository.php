@@ -85,4 +85,49 @@ class FileRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    /**
+     * Find file by given ids and get the parent file where available recursively.
+     *
+     * @param array<int> $fileIds
+     *
+     * @return array<File>
+     */
+    public function findParentByGivenIds(array $fileIds): array
+    {
+        if (empty($fileIds)) {
+            return [];
+        }
+
+        $qb = $this->createQueryBuilder('f');
+
+        /** @var array<File> */
+        $files = $qb
+            ->select('f')
+            ->where($qb->expr()->in('f.id', $fileIds))
+            ->getQuery()
+            ->getResult()
+        ;
+
+        // Get all the high-res parent file for all files
+        foreach ($files as $id => $file) {
+            while ($file->getParent()) {
+                $file = $file->getParent();
+            }
+            $files[$id] = $file;
+        }
+
+        return $files;
+    }
+
+    /**
+     * @param array<File> $files
+     */
+    public static function getHashForFileIds(array $files): string
+    {
+        $sortedFileIds = array_map(static fn (File $file) => $file->getId(), $files);
+        sort($sortedFileIds, SORT_NUMERIC);
+
+        return hash('sha3-256', implode(',', $sortedFileIds));
+    }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Command;
 
-use App\Controller\Common\Api\File\UploadFileController;
 use App\Repository\FileRepository;
+use App\Service\FileHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Imagine\Image\Metadata\ExifMetadataReader;
 use Imagine\Imagick\Imagine;
@@ -48,7 +48,7 @@ class RefreshGalleryTakenOnFromFile extends Command
             $batchCount = 100;
             $i = 0;
             foreach ($filesToCheck as $file) {
-                $imageFile = UploadFileController::createTempFile($file->getOriginalFilename(), $file->getMimeType());
+                $imageFile = FileHelper::createTempFile($file->getOriginalFilename(), $file->getMimeType());
 
                 try {
                     $contentStream = $this->defaultStorage->readStream($file->getPath());
