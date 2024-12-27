@@ -6,6 +6,7 @@ use App\Dto\Common\UploadFileDto;
 use App\Entity\File;
 use App\Entity\User;
 use App\Service\BlurhashHelper;
+use App\Service\FileHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Hidehalo\Nanoid\Client;
 use Imagine\Image\Format;
@@ -23,14 +24,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\String\AbstractUnicodeString;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class UploadFileController extends AbstractController
 {
     public function __construct(
         private readonly FilesystemOperator $defaultStorage,
-        private readonly SluggerInterface $slugger,
+        private readonly FileHelper $fileHelper,
         private readonly EntityManagerInterface $em,
     ) {}
 
@@ -63,13 +62,13 @@ class UploadFileController extends AbstractController
         // Generate unique filename
         $pathPrefix = 'uploads/';
 
-        $safeFilename = $this->getSafeFilename($file);
+        $safeFilename = $this->fileHelper->getSafeFilename($file);
         $uniqueId = (new Client())->generateId();
 
         $childFiles = [];
 
         $metadata = [];
-        if (self::mimeTypeIsImage($file->getMimeType())) {
+        if (FileHelper::mimeTypeIsImage($file->getMimeType())) {
             $imagine = new Imagine();
             $originalImage = $imagine
                 ->setMetadataReader(new ExifMetadataReader())
@@ -109,7 +108,7 @@ class UploadFileController extends AbstractController
             if ($requiresOptimization) {
                 // And to an optimized JPEG
                 $filename = $safeFilename.'-optimized-'.$uniqueId.'.jpeg';
-                $optimizedImage = self::createTempFile($file->getClientOriginalName(), 'image/jpeg');
+                $optimizedImage = FileHelper::createTempFile($file->getClientOriginalName(), 'image/jpeg');
                 $imagine
                     ->open($file->getPathname())
                     ->resize($imagine->open($file->getPathname())->getSize()->widen(500))
@@ -119,7 +118,7 @@ class UploadFileController extends AbstractController
                 $childFiles[$filename] = $optimizedImage;
                 // Convert to WebP and resize to 500px width with same aspect ratio
                 $filename = $safeFilename.'-optimized-'.$uniqueId.'.webp';
-                $optimizedImage = self::createTempFile($file->getClientOriginalName(), 'image/webp');
+                $optimizedImage = FileHelper::createTempFile($file->getClientOriginalName(), 'image/webp');
                 $originalImage
                     ->resize($originalImage->getSize()->widen(500))
                     ->save($optimizedImage->getPathname(), ['format' => Format::ID_WEBP, 'webp_quality' => 50])
@@ -154,7 +153,7 @@ class UploadFileController extends AbstractController
         // Check all checksums before flushing
         $checksumMismatched = false;
         foreach ($filesToCheckForChecksum as $fileToCheck) {
-            if (!self::checksumMatches([
+            if (!FileHelper::checksumMatches([
                 $this->defaultStorage->checksum($fileToCheck['defaultStoragePath'], ['checksum_algo' => 'sha3-256']),
                 hash_file('sha3-256', $fileToCheck['localFilePath']),
                 $fileToCheck['entity']->getChecksum(),
@@ -178,35 +177,5 @@ class UploadFileController extends AbstractController
         return $this->json([
             'id' => $fileEntity->getId(),
         ]);
-    }
-
-    /**
-     * @param array<false|string> $checksums
-     */
-    private static function checksumMatches(array $checksums): bool
-    {
-        return \count(array_unique($checksums)) === 1;
-    }
-
-    private static function mimeTypeIsImage(?string $mimeType): bool
-    {
-        return \in_array($mimeType, ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], true);
-    }
-
-    public static function createTempFile(string $originalName, ?string $mimeType = null): UploadedFile
-    {
-        $file = tmpfile();
-        if ($file === false) {
-            throw new \RuntimeException('Failed to create temporary file');
-        }
-
-        return new UploadedFile(stream_get_meta_data($file)['uri'], $originalName, $mimeType);
-    }
-
-    private function getSafeFilename(UploadedFile $file): AbstractUnicodeString
-    {
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-
-        return $this->slugger->slug($originalFilename);
     }
 }

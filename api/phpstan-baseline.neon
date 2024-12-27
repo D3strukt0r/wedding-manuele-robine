@@ -1,26 +1,271 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\User\\:\\:setPassword\\(\\)\\.$#"
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 2
+			path: src/Command/CleanUnmappedGalleryFiles.php
+
+		-
+			message: '#^Only booleans are allowed in a negated boolean, mixed given\.$#'
+			identifier: booleanNot.exprNotBoolean
+			count: 2
+			path: src/Command/CleanUnmappedGalleryFiles.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Command/RefreshGalleryTakenOnFromFile.php
+
+		-
+			message: '#^Parameter \#1 \$galleryDownloadId of class App\\Message\\PrepareHugeGalleryDownload constructor expects int, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Invited/Api/Gallery/DownloadGalleryImagesController.php
+
+		-
+			message: '#^Property App\\Entity\\Gallery\:\:\$fileIds type mapping mismatch\: database can contain list\<string\>\|null but property expects array\<int\>\|null\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Gallery.php
+
+		-
+			message: '#^Property App\\Entity\\Gallery\:\:\$fileIds type mapping mismatch\: property can contain array\<int\>\|null but database expects array\<string\>\|null\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Gallery.php
+
+		-
+			message: '#^Method App\\Entity\\GalleryDownload\:\:getStateContext\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/GalleryDownload.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryDownload\:\:\$fileIds \(array\<int\>\) does not accept array\<int\|null\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Entity/GalleryDownload.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryDownload\:\:\$fileIds type mapping mismatch\: database can contain list\<string\> but property expects array\<int\>\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/GalleryDownload.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryDownload\:\:\$fileIds type mapping mismatch\: property can contain array\<int\> but database expects array\<string\>\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/GalleryDownload.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryDownload\:\:\$stateContext type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Entity/GalleryDownload.php
+
+		-
+			message: '#^Class App\\Repository\\CardRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/CardRepository.php
+
+		-
+			message: '#^Class App\\Repository\\CardRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/CardRepository.php
+
+		-
+			message: '#^Class App\\Repository\\CardRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/CardRepository.php
+
+		-
+			message: '#^Class App\\Repository\\CardRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/CardRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileMappingRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileMappingRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileMappingRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileMappingRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileMappingRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileMappingRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileMappingRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileMappingRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileRepository.php
+
+		-
+			message: '#^Class App\\Repository\\FileRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/FileRepository.php
+
+		-
+			message: '#^Construct empty\(\) is not allowed\. Use more strict comparison\.$#'
+			identifier: empty.notAllowed
+			count: 3
+			path: src/Repository/FileRepository.php
+
+		-
+			message: '#^Class App\\Repository\\GalleryRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/GalleryRepository.php
+
+		-
+			message: '#^Class App\\Repository\\GalleryRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/GalleryRepository.php
+
+		-
+			message: '#^Class App\\Repository\\GalleryRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/GalleryRepository.php
+
+		-
+			message: '#^Class App\\Repository\\GalleryRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/GalleryRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InviteeRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InviteeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InviteeRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InviteeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InviteeRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InviteeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\InviteeRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/InviteeRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TableRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TableRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TableRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TableRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TableRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TableRepository.php
+
+		-
+			message: '#^Class App\\Repository\\TableRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/TableRepository.php
+
+		-
+			message: '#^Call to an undefined method App\\Entity\\User\:\:setPassword\(\)\.$#'
+			identifier: method.notFound
 			count: 1
 			path: src/Repository/UserRepository.php
 
 		-
-			message: "#^Instanceof between App\\\\Entity\\\\User and App\\\\Entity\\\\User will always evaluate to true\\.$#"
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: src/Repository/UserRepository.php
 
 		-
-			message: "#^Cannot cast mixed to int\\.$#"
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#1 \$criteria with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Class App\\Repository\\UserRepository has PHPDoc tag @method for method findOneBy\(\) parameter \#2 \$orderBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Instanceof between App\\Entity\\User and App\\Entity\\User will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/Repository/UserRepository.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
 			count: 3
 			path: src/Resolver/AppResolverMap.php
 
 		-
-			message: "#^Method App\\\\Resolver\\\\AppResolverMap\\:\\:map\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: '#^Method App\\Resolver\\AppResolverMap\:\:map\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: src/Resolver/AppResolverMap.php
 
 		-
-			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, int\\|null given\\.$#"
+			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, int\|null given\.$#'
+			identifier: argument.type
 			count: 1
 			path: src/Validator/Invited/HasOnlyUnchangedInviteesFromOwnCardValidator.php

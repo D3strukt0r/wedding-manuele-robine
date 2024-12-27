@@ -7,7 +7,7 @@ import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
 import LogoPolarsteps from '#/assets/logo-polarsteps.svg?react';
 import { GalleryImage as GalleryImageType } from '#/components/types.ts';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuthenticationContext } from '#/utils/authentication.tsx';
 import useMyGallery from '#/api/invited/gallery/useMyGallery.ts';
 import * as z from 'zod';
@@ -26,7 +26,8 @@ import Checkbox from '#/components/common/Checkbox.tsx';
 import useDownloadGalleryImages from '#/api/invited/gallery/useDownloadGalleryImages.ts';
 import { downloadBlob } from '#/utils/download.ts';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { AxiosProgressEvent } from 'axios/index';
+import { AxiosProgressEvent } from 'axios';
+import useDownloadState, { DownloadCheckAsyncProcess } from '#/api/invited/gallery/useDownloadState.ts';
 
 interface Props {
   id?: string;
@@ -303,9 +304,20 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
   }, [files, setValue]);
 
   const [progress, setProgress] = useState<AxiosProgressEvent>();
+  const [isPendingAsync, setIsPendingAsync] = useState(false);
+  const [asyncDownloadHash, setAsyncDownloadHash] = useState<string>();
+  const [lastRequestedFileIds, setLastRequestedFileIds] = useState<number[] | 'all'>();
 
   const { mutate, isPending, isError, error } = useDownloadGalleryImages({
-    onSuccess: ([blob, mimeType, filename]) => {
+    onSuccess: (response) => {
+      // check if is object with property hash
+      if (typeof response === 'object' && 'hash' in response) {
+        setAsyncDownloadHash(response.hash);
+        setIsPendingAsync(true);
+        return;
+      }
+
+      const [blob, mimeType, filename] = response;
       downloadBlob(blob, mimeType, filename);
     },
     onError: (error) => {
@@ -322,6 +334,15 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
       }
     },
   });
+
+  const onFinishAsyncDownload = useCallback(() => {
+    setTimeout(() => {
+      setIsPendingAsync(false);
+      setAsyncDownloadHash(undefined);
+      mutate({ fileIds: lastRequestedFileIds });
+      setLastRequestedFileIds(undefined);
+    }, 1000);
+  }, [setIsPendingAsync, setAsyncDownloadHash, mutate, lastRequestedFileIds, setLastRequestedFileIds]);
 
   const bytesToHumanReadableFileSize = useCallback((bytes: number, decimalPlaces = 2, sizes = ['B', 'KB', 'MB', 'GB']) => {
     if (bytes === 0) {
@@ -341,15 +362,24 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
           const fileIds = Object.entries(data.fileIds)
             .filter(([, selected]) => selected)
             .map(([id]) => +id);
+          setLastRequestedFileIds(fileIds);
           mutate({ fileIds });
         })}
       >
         <div className="flex flex-wrap justify-end gap-1 mb-2">
-          <Button type="button" layout="app-primary" disabled={isPending} onClick={selectAll}>{t('homepage.gallery.selectAll')}</Button>
-          <Button type="button" layout="app-primary" disabled={isPending} onClick={deselectAll}>{t('homepage.gallery.deselectAll')}</Button>
-          <Button type="submit" layout="app-primary" loading={isPending}>{t('homepage.gallery.downloadSelected')}</Button>
-          <Button type="button" layout="app-primary" loading={isPending} onClick={() => mutate({ fileIds: 'all' })}>{t('homepage.gallery.downloadAll')}</Button>
+          <Button type="button" layout="app-primary" disabled={isPending || isPendingAsync} onClick={selectAll}>{t('homepage.gallery.selectAll')}</Button>
+          <Button type="button" layout="app-primary" disabled={isPending || isPendingAsync} onClick={deselectAll}>{t('homepage.gallery.deselectAll')}</Button>
+          <Button type="submit" layout="app-primary" loading={isPending || isPendingAsync}>{t('homepage.gallery.downloadSelected')}</Button>
+          <Button type="button" layout="app-primary" loading={isPending || isPendingAsync} onClick={() => {
+            setLastRequestedFileIds('all');
+            mutate({ fileIds: 'all' });
+          }}>{t('homepage.gallery.downloadAll')}</Button>
         </div>
+        {isPendingAsync && asyncDownloadHash && (
+          <div className="mb-2">
+            <AsyncDownload hash={asyncDownloadHash} onFinish={onFinishAsyncDownload} />
+          </div>
+        )}
         {progress && progress.lengthComputable && (
           <div className="mb-2">
             {typeof progress.progress === 'number' && (
@@ -373,7 +403,7 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
                 <Checkbox
                   {...register(`fileIds.${file.id}`)}
                   layout="app-primary"
-                  disabled={isPending}
+                  disabled={isPending || isPendingAsync}
                   error={errors.fileIds?.[file.id]}
                   className="mx-1"
                 />
@@ -381,8 +411,8 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
               <div
                 title={t('homepage.gallery.downloadSingle')}
                 className="absolute top-0 right-0 p-2 z-10 text-app-green bg-white/75 rounded-bl-md hover:bg-white/25 hover:text-app-green-dark/50 hover:cursor-pointer"
-                aria-disabled={isPending}
-                onClick={() => !isPending && mutate({ fileIds: [file.id] })}
+                aria-disabled={isPending || isPendingAsync}
+                onClick={() => !isPending && !isPendingAsync && mutate({ fileIds: [file.id] })}
               >
                 <FontAwesomeIcon icon={faDownload} size="2xl" />
               </div>
@@ -396,6 +426,72 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
       )}
     </>
   );
+}
+
+function AsyncDownload({ hash, onFinish }: { hash: string; onFinish: () => void }) {
+  const { t } = useTranslation('app');
+
+  const downloadState = useDownloadState(hash, {
+    gcTime: 0, // clear cache of "previous" download state on unmount, ready for next download
+    refetchIntervalInBackground: true, // needs to keep updating the download state, so we can move forward to actual download
+    refetchInterval: 2000,
+  });
+
+  useEffect(() => {
+    if (downloadState.data && !['pending', 'create_zip', 'downloading', 'caching'].includes(downloadState.data.state)) {
+      onFinish?.();
+    }
+  }, [downloadState.data?.state]);
+
+  if (downloadState.data) {
+    const getMessageForState = (data: DownloadCheckAsyncProcess) => {
+      switch (data.state) {
+        case 'pending':
+          return t('homepage.gallery.downloadAsyncPending');
+        case 'create_zip':
+          return t('homepage.gallery.downloadAsyncCreateZip');
+        case 'downloading':
+          return t('homepage.gallery.downloadAsyncDownloading', {current: data.context.countDone, total: data.fileCount})
+        case 'caching':
+          return t('homepage.gallery.downloadAsyncCaching');
+        default:
+          return t('homepage.gallery.downloadAsyncReady');
+      }
+    };
+
+    const calculateProgress = (data: DownloadCheckAsyncProcess) => {
+      // pending = 0%, create_zip = 5%, downloading = 5% - 90%, caching = 95%
+      switch (data.state) {
+        case 'pending':
+          return 0;
+        case 'create_zip':
+          return 0.05;
+        case 'downloading':
+          const imageProgressDone = data.context.countDone / data.fileCount;
+          return 0.05 + Math.round(imageProgressDone * (90 - 5)) / 100;
+        case 'caching':
+          return 0.95;
+        default:
+          return 1;
+      }
+    }
+    const progress = calculateProgress(downloadState.data);
+
+    return (
+      <>
+        <p>{getMessageForState(downloadState.data)}</p>
+        <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+          <div className="bg-app-green text-xs font-medium text-gray-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${progress * 100}%` }}> {Math.ceil(progress * 100 * 100) / 100}%</div>
+        </div>
+      </>
+    );
+  }
+
+  if (downloadState.isError) {
+    throw new Error(downloadState.error.message);
+  }
+
+  return <BigSpinner />;
 }
 
 interface GalleryImageProps {
