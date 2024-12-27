@@ -50,11 +50,20 @@ use `sudo nfsd update` to fix it. (https://github.com/hashicorp/vagrant/issues/1
 Common commands
 
 ```shell
+docker compose exec api bash -c 'supervisorctl stop messenger:* && supervisorctl start messenger:*'
+
+docker compose exec -u app api bash -c 'composer update'
+docker compose exec -u app pwa bash -c 'pnpm upgrade'
+
 phpstan
 phpstan analyse --generate-baseline
+docker compose exec api bash -c 'phpstan'
+docker compose exec api bash -c 'phpstan analyse --generate-baseline'
 
 PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run -v --allow-risky=yes --diff --show-progress=dots
 PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix -v --allow-risky=yes --show-progress=dots
+docker compose exec api bash -c 'PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --dry-run -v --allow-risky=yes --diff --show-progress=dots'
+docker compose exec api bash -c 'PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix -v --allow-risky=yes --show-progress=dots'
 
 phpcs -p
 phpcbf

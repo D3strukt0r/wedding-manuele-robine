@@ -184,6 +184,7 @@
       <path value="$PROJECT_DIR$/api/vendor/imagine/imagine" />
       <path value="$PROJECT_DIR$/api/vendor/symfony/property-info" />
       <path value="$PROJECT_DIR$/api/vendor/scienta/doctrine-json-functions" />
+      <path value="$PROJECT_DIR$/api/vendor/staabm/side-effects-detector" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

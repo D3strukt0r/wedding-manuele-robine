@@ -171,6 +171,7 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/property-info" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/scienta/doctrine-json-functions" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/staabm/side-effects-detector" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
