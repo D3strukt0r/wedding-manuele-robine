@@ -140,11 +140,27 @@ class DownloadGalleryImagesController extends AbstractController
 
             $imageFile = $this->fileHelper->writeRemoteFileToTmp($fileToAdd);
             GalleryHelper::fixOrientationForExport($imageFile);
-            $zip->addFile($imageFile->getPathname(), $imageFile->getClientOriginalName());
 
-            $this->logger->info('Added file {n} of {m} to zip with hash {hash}. Time taken: {time} s. Time taken total: {totalTime} s', [
-                'n' => $i,
-                'm' => \count($files),
+            $filename = $imageFile->getClientOriginalName();
+            if ($zip->locateName($filename) !== false) {
+                // File with same name already exists in zip, so we need to rename it to avoid conflicts
+                // (e.g. IMG_1234.jpg and IMG_1234(1).jpg) and increase the counter
+                $extension = pathinfo($filename, PATHINFO_EXTENSION);
+                $rawFilename = pathinfo($filename, PATHINFO_FILENAME);
+                // Remove possible counter from filename (1), (2), etc.
+                $rawFilename = preg_replace('/\(\d+\)$/', '', $rawFilename);
+
+                $counter = 1;
+                while ($zip->locateName($rawFilename.'('.$counter.').'.$extension) !== false) {
+                    ++$counter;
+                }
+                $filename = $rawFilename.'('.$counter.').'.$extension;
+            }
+            $zip->addFile($imageFile->getPathname(), $filename);
+
+            $this->logger->info('Added file {current} of {total} to zip with hash {hash}. Time taken: {time} s. Time taken total: {totalTime} s', [
+                'current' => $i,
+                'total' => \count($files),
                 'hash' => $hash,
                 'time' => ceil(microtime(true) - $executionStep),
                 'totalTime' => ceil(microtime(true) - $executionStart),

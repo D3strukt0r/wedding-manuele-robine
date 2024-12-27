@@ -19,32 +19,8 @@ parameters:
 			path: src/Command/RefreshGalleryTakenOnFromFile.php
 
 		-
-			message: '#^Call to an undefined method App\\Entity\\GalleryDownload\:\:getStatus\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Controller/Invited/Api/Gallery/CheckGalleryDownloadController.php
-
-		-
-			message: '#^Call to method App\\Repository\\GalleryDownloadRepository\:\:findOneBy\(\) \- entity App\\Entity\\GalleryDownload does not have a field named \$zipFileName\.$#'
-			identifier: doctrine.findOneByArgument
-			count: 1
-			path: src/Controller/Invited/Api/Gallery/CheckGalleryDownloadController.php
-
-		-
-			message: '#^Cannot access offset ''size'' on array\{0\: int, 1\: int, 2\: int, 3\: int, 4\: int, 5\: int, 6\: int, 7\: int, \.\.\.\}\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Controller/Invited/Api/Gallery/DownloadGalleryImagesController.php
-
-		-
 			message: '#^Parameter \#1 \$galleryDownloadId of class App\\Message\\PrepareHugeGalleryDownload constructor expects int, int\|null given\.$#'
 			identifier: argument.type
-			count: 1
-			path: src/Controller/Invited/Api/Gallery/DownloadGalleryImagesController.php
-
-		-
-			message: '#^Property App\\Controller\\Invited\\Api\\Gallery\\DownloadGalleryImagesController\:\:\$bus is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: src/Controller/Invited/Api/Gallery/DownloadGalleryImagesController.php
 
