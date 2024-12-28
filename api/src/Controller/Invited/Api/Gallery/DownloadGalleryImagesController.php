@@ -87,19 +87,24 @@ class DownloadGalleryImagesController extends AbstractController
         if ($this->defaultStorage->fileExists($location)) {
             $contentStream = $this->defaultStorage->readStream($location);
 
+            $zipFile = FileHelper::createTempFile('gallery.zip', 'application/zip');
+            file_put_contents($zipFile->getPathname(), $contentStream);
+
+            return $this->file($zipFile, $zipFile->getClientOriginalName());
+
             // https://dev.to/rubenrubiob/serve-a-file-stream-in-symfony-3ei3
-            return new StreamedResponse(
-                static function () use ($contentStream): void {
-                    fpassthru($contentStream);
-                },
-                Response::HTTP_OK,
-                [
-                    'Content-Transfer-Encoding', 'binary',
-                    'Content-Type' => 'application/zip',
-                    'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT.'; filename="gallery.zip"',
-                    'Content-Length' => $this->defaultStorage->fileSize($location),
-                ]
-            );
+            // return new StreamedResponse(
+            //     static function () use ($contentStream): void {
+            //         fpassthru($contentStream);
+            //     },
+            //     Response::HTTP_OK,
+            //     [
+            //         'Content-Transfer-Encoding', 'binary',
+            //         'Content-Type' => 'application/zip',
+            //         'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT.'; filename="gallery.zip"',
+            //         'Content-Length' => $this->defaultStorage->fileSize($location),
+            //     ]
+            // );
         }
 
         if (\count($files) > $this->appDownloadSyncMax) {
