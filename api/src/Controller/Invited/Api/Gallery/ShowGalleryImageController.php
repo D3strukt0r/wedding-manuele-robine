@@ -7,9 +7,9 @@ use League\Flysystem\FilesystemOperator;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -38,7 +38,7 @@ class ShowGalleryImageController extends AbstractController
         // $content = $this->defaultStorage->read($location);
 
         // $response = new Response();
-        // $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $file->getOriginalFilename());
+        // $disposition = $response->headers->makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file->getOriginalFilename());
         // $response->headers->set('Content-Disposition', $disposition);
         // $response->headers->set('Content-Type', $file->getMimeType());
         // $response->setContent($content);
@@ -55,7 +55,7 @@ class ShowGalleryImageController extends AbstractController
             Response::HTTP_OK,
             [
                 'Content-Transfer-Encoding', 'binary',
-                'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT.'; filename="'.$file->getOriginalFilename().'"',
+                'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file->getOriginalFilename()),
                 'Content-Type' => $file->getMimeType(),
                 'Content-Length' => $this->defaultStorage->fileSize($location),
             ],

@@ -6,6 +6,7 @@ import ImageLazyLoad, { aspectRatio, ImageLazyLoadProps } from '#/components/com
 import blurHashMap from '#/img/blurhash-map.json';
 import image from '#/img/Fotos.jpg';
 import LogoPolarsteps from '#/assets/logo-polarsteps.svg?react';
+import LogoGDrive from '#/assets/logo-gdrive.svg?react';
 import { GalleryImage as GalleryImageType } from '#/components/types.ts';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuthenticationContext } from '#/utils/authentication.tsx';
@@ -26,9 +27,10 @@ import Checkbox from '#/components/common/Checkbox.tsx';
 import useDownloadGalleryImages from '#/api/invited/gallery/useDownloadGalleryImages.ts';
 import { downloadBlob } from '#/utils/download.ts';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
-import { AxiosProgressEvent } from 'axios';
+import axios, { AxiosProgressEvent } from 'axios';
 import useDownloadState, { DownloadCheckAsyncProcess } from '#/api/invited/gallery/useDownloadState.ts';
 import * as dayjs from 'dayjs';
+import { Markup } from 'interweave';
 
 interface Props {
   id?: string;
@@ -59,16 +61,16 @@ export default function Gallery({ id, isLast }: Props) {
           <h2 className="uppercase text-title mb-6 font-philosopher">
             {t('homepage.gallery.title')}
           </h2>
-          <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose">
+          <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose mb-4">
             {t('homepage.gallery.text')}
           </p>
-          <div className="flex flex-wrap items-start gap-2 mt-4">
+          <div className="flex flex-wrap items-start gap-2 mb-4">
             <a href="https://www.instagram.com/travel.za.world/" target="_blank"
                className="rounded-md bg-[#c13584] px-3.5 py-2.5 text-sm font-semibold !text-white !no-underline !not-italic shadow-sm hover:bg-[#c13584]/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#c13584]/50">
               <FontAwesomeIcon icon={faInstagram} /> Instagram (@travel.za.world)
             </a>
           </div>
-          <div className="flex flex-wrap items-start gap-2 mt-4">
+          <div className="flex flex-wrap items-start gap-2 mb-4">
             <a href="https://www.polarsteps.com/RubySu" className="rounded-md bg-[#cc3e55] px-3.5 py-2.5 text-sm font-semibold !text-white !no-underline !not-italic shadow-sm hover:bg-[#cc3e55]/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#cc3e55]/50">
               <LogoPolarsteps className="inline-block h-[1em] box-content align-[-0.125em]" /> Polarsteps (Robine)
             </a>
@@ -76,6 +78,9 @@ export default function Gallery({ id, isLast }: Props) {
               <LogoPolarsteps className="inline-block h-[1em] box-content align-[-0.125em]" /> Polarsteps (Manuele)
             </a>
           </div>
+          <p className="whitespace-pre-line text-normal font-noto-sans md:max-w-prose">
+            {t('homepage.gallery.downloadGDriveInstead')}
+          </p>
           {authentication ? (
             <div className="mt-8">
               <MyGalleryUploadLoader />
@@ -356,6 +361,10 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
     return `${Number.parseFloat((bytes / (baseLog ** magnitude)).toString()).toFixed(decimalPlaces)} ${sizes[magnitude]}`;
   }, []);
 
+  const downloadParams = new URLSearchParams({
+    fileIds: Array.isArray(lastRequestedFileIds) ? lastRequestedFileIds.join(',') : lastRequestedFileIds,
+  });
+
   return (
     <>
       <form
@@ -368,6 +377,9 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
         })}
       >
         <div className="flex flex-wrap justify-end gap-1 mb-2">
+          <a href="https://drive.google.com/drive/folders/1ELFdf_4LDhU6AZqHfrNAw7xUk4Y8fOEW?usp=sharing" target="_blank" className="rounded-md bg-[#414141] px-3.5 py-2.5 text-sm !text-white !no-underline !not-italic shadow-sm hover:bg-[#414141]/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#414141]/50">
+            <LogoGDrive className="inline-block h-[1.5em] box-content" /> Google Drive
+          </a>
           <Button type="button" layout="app-primary" disabled={isPending || isPendingAsync} onClick={selectAll}>{t('homepage.gallery.selectAll')}</Button>
           <Button type="button" layout="app-primary" disabled={isPending || isPendingAsync} onClick={deselectAll}>{t('homepage.gallery.deselectAll')}</Button>
           <Button type="submit" layout="app-primary" loading={isPending || isPendingAsync}>{t('homepage.gallery.downloadSelected')}</Button>
@@ -394,6 +406,9 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
                 progress.estimated !== undefined ? `${dayjs.duration(progress.estimated, 'seconds').humanize()} übrig` : undefined,
                 progress.rate !== undefined ? `${bytesToHumanReadableFileSize(progress.rate)}/s` : undefined,
               ].filter(Boolean).join(' | ')}
+            </p>
+            <p>
+              <Markup noWrap content={t('homepage.gallery.downloadAlternative', { link: `${axios.defaults.baseURL}/invited/api/gallery/download?${downloadParams.toString()}` })} />
             </p>
           </div>
         )}

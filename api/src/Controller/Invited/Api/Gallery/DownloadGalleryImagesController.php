@@ -15,9 +15,9 @@ use League\Flysystem\FilesystemOperator;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -100,7 +100,7 @@ class DownloadGalleryImagesController extends AbstractController
                 Response::HTTP_OK,
                 [
                     'Content-Transfer-Encoding', 'binary',
-                    'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT.'; filename="gallery.zip"',
+                    'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, 'gallery.zip'),
                     'Content-Type' => 'application/zip',
                     'Content-Length' => $this->defaultStorage->fileSize($location),
                 ],
