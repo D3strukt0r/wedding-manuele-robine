@@ -53,6 +53,15 @@ function App() {
               <RouterProvider
                 router={router}
                 fallbackElement={<BigSpinner />}
+                future={{
+                  // https://reactrouter.com/6.28.1/upgrading/future#v7_relativesplatpath
+                  v7_relativeSplatPath: true,
+                  v7_startTransition: true,
+                  v7_fetcherPersist: true,
+                  v7_normalizeFormMethod: true,
+                  v7_partialHydration: true,
+                  v7_skipActionErrorRevalidation: true,
+                }}
               />
             </Suspense>
           </AuthenticationProvider>

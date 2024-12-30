@@ -97,6 +97,11 @@ readonly class PrepareHugeGalleryDownloadHandler
             ]);
         }
 
+        $galleryDownload->setStateSaveZip();
+        $this->em->flush();
+
+        // Closing actually saves the additions, this can take a while for many files
+        // TODO: Do this in a batch job
         $zip->close();
         unset($zip);
 

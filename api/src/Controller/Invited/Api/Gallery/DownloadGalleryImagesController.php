@@ -15,9 +15,9 @@ use League\Flysystem\FilesystemOperator;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -87,24 +87,24 @@ class DownloadGalleryImagesController extends AbstractController
         if ($this->defaultStorage->fileExists($location)) {
             $contentStream = $this->defaultStorage->readStream($location);
 
-            $zipFile = FileHelper::createTempFile('gallery.zip', 'application/zip');
-            file_put_contents($zipFile->getPathname(), $contentStream);
-
-            return $this->file($zipFile, $zipFile->getClientOriginalName());
+            // $zipFile = FileHelper::createTempFile('gallery.zip', 'application/zip');
+            // file_put_contents($zipFile->getPathname(), $contentStream);
+            //
+            // return $this->file($zipFile, $zipFile->getClientOriginalName());
 
             // https://dev.to/rubenrubiob/serve-a-file-stream-in-symfony-3ei3
-            // return new StreamedResponse(
-            //     static function () use ($contentStream): void {
-            //         fpassthru($contentStream);
-            //     },
-            //     Response::HTTP_OK,
-            //     [
-            //         'Content-Transfer-Encoding', 'binary',
-            //         'Content-Type' => 'application/zip',
-            //         'Content-Disposition' => ResponseHeaderBag::DISPOSITION_ATTACHMENT.'; filename="gallery.zip"',
-            //         'Content-Length' => $this->defaultStorage->fileSize($location),
-            //     ]
-            // );
+            return new StreamedResponse(
+                static function () use ($contentStream): void {
+                    fpassthru($contentStream);
+                },
+                Response::HTTP_OK,
+                [
+                    'Content-Transfer-Encoding', 'binary',
+                    'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_ATTACHMENT, 'gallery.zip'),
+                    'Content-Type' => 'application/zip',
+                    'Content-Length' => $this->defaultStorage->fileSize($location),
+                ],
+            );
         }
 
         if (\count($files) > $this->appDownloadSyncMax) {

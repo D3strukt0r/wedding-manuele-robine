@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import axios from 'axios';
 
-type GalleryDownloadState = 'pending' | 'create_zip' | 'downloading' | 'caching';
+type GalleryDownloadState = 'pending' | 'create_zip' | 'downloading' | 'save_zip' | 'caching';
 
 export interface DownloadCheckAsyncProcess {
   message: string;

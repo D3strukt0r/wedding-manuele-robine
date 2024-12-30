@@ -7,9 +7,10 @@ use League\Flysystem\FilesystemOperator;
 use OpenApi\Attributes as OA;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -32,14 +33,32 @@ class ShowGalleryImageController extends AbstractController
     #[OA\Tag('Invited/Gallery')]
     public function __invoke(#[MapEntity(id: 'file_id')] File $file): Response
     {
-        $content = $this->defaultStorage->read($file->getPath());
+        $location = $file->getPath();
 
-        $response = new Response();
-        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, $file->getOriginalFilename());
-        $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-Type', $file->getMimeType());
-        $response->setContent($content);
+        // $content = $this->defaultStorage->read($location);
 
-        return $response;
+        // $response = new Response();
+        // $disposition = $response->headers->makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file->getOriginalFilename());
+        // $response->headers->set('Content-Disposition', $disposition);
+        // $response->headers->set('Content-Type', $file->getMimeType());
+        // $response->setContent($content);
+
+        // return $response;
+
+        $contentStream = $this->defaultStorage->readStream($location);
+
+        // https://dev.to/rubenrubiob/serve-a-file-stream-in-symfony-3ei3
+        return new StreamedResponse(
+            static function () use ($contentStream): void {
+                fpassthru($contentStream);
+            },
+            Response::HTTP_OK,
+            [
+                'Content-Transfer-Encoding', 'binary',
+                'Content-Disposition' => HeaderUtils::makeDisposition(HeaderUtils::DISPOSITION_INLINE, $file->getOriginalFilename()),
+                'Content-Type' => $file->getMimeType(),
+                'Content-Length' => $this->defaultStorage->fileSize($location),
+            ],
+        );
     }
 }

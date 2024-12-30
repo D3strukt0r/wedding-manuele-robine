@@ -77,6 +77,11 @@ class GalleryDownload
         $this->stateContext = ['countDone' => $countDone];
     }
 
+    public function setStateSaveZip(): void
+    {
+        $this->state = GalleryDownloadState::SAVE_ZIP;
+    }
+
     public function setStateCaching(): void
     {
         $this->state = GalleryDownloadState::CACHING;
