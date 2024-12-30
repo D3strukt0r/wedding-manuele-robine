@@ -89,6 +89,7 @@
   "homepage.gallery.downloadAsyncPending": "Download wird bald erstellt ...",
   "homepage.gallery.downloadAsyncCreateZip": "ZIP wird erstellt ...",
   "homepage.gallery.downloadAsyncDownloading": "Datei {{current}} von {{total}} wurde der ZIP Datei hinzugefügt ...",
+  "homepage.gallery.downloadAsyncSaveZip": "ZIP Datei wird gespeichert ...",
   "homepage.gallery.downloadAsyncCaching": "Erstellte ZIP Datei wird zwischengespeichert für den nächsten ...",
   "homepage.gallery.downloadAsyncReady": "ZIP Datei ist bereit zum Download und wird in kürze automatisch heruntergeladen",
   "admin.login.title": "Admin Login",

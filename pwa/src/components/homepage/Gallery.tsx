@@ -452,6 +452,8 @@ function AsyncDownload({ hash, onFinish }: { hash: string; onFinish: () => void 
           return t('homepage.gallery.downloadAsyncCreateZip');
         case 'downloading':
           return t('homepage.gallery.downloadAsyncDownloading', {current: data.context.countDone, total: data.fileCount})
+        case 'save_zip':
+          return t('homepage.gallery.downloadAsyncSaveZip');
         case 'caching':
           return t('homepage.gallery.downloadAsyncCaching');
         default:
@@ -468,8 +470,10 @@ function AsyncDownload({ hash, onFinish }: { hash: string; onFinish: () => void 
           return 0.05;
         case 'downloading':
           const imageProgressDone = data.context.countDone / data.fileCount;
-          return 0.05 + Math.round(imageProgressDone * (90 - 5)) / 100;
-        case 'caching':
+          return 0.05 + Math.round(imageProgressDone * (80 - 5)) / 100;
+        case 'save_zip':
+          return 0.85;
+          case 'caching':
           return 0.95;
         default:
           return 1;
@@ -479,10 +483,10 @@ function AsyncDownload({ hash, onFinish }: { hash: string; onFinish: () => void 
 
     return (
       <>
-        <p>{getMessageForState(downloadState.data)}</p>
         <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
           <div className="bg-app-green text-xs font-medium text-gray-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${progress * 100}%` }}> {Math.ceil(progress * 100 * 100) / 100}%</div>
         </div>
+        <p>{getMessageForState(downloadState.data)}</p>
       </>
     );
   }
