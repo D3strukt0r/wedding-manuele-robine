@@ -28,6 +28,7 @@ import { downloadBlob } from '#/utils/download.ts';
 import { faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { AxiosProgressEvent } from 'axios';
 import useDownloadState, { DownloadCheckAsyncProcess } from '#/api/invited/gallery/useDownloadState.ts';
+import * as dayjs from 'dayjs';
 
 interface Props {
   id?: string;
@@ -390,7 +391,7 @@ function GalleryAndDownload({ files }: GalleryAndDownloadProps) {
             <p>
               {[
                 `${bytesToHumanReadableFileSize(progress.loaded)}${progress.total !== undefined ? ` / ${bytesToHumanReadableFileSize(progress.total)}` : ''}`,
-                progress.estimated !== undefined ? `${Math.ceil( progress.estimated)} sekunden` : undefined,
+                progress.estimated !== undefined ? `${dayjs.duration(progress.estimated, 'seconds').humanize()} übrig` : undefined,
                 progress.rate !== undefined ? `${bytesToHumanReadableFileSize(progress.rate)}/s` : undefined,
               ].filter(Boolean).join(' | ')}
             </p>
