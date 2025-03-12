@@ -62,7 +62,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 RUN \
     # Use Node.js corepack to enable pnpm
-    corepack enable \
+    npm install -g corepack@latest \
+    && corepack enable \
     \
     # Smoke tests
     && node --version \
