@@ -2,8 +2,6 @@ services:
   pwa:
     build:
       dockerfile: pwa.Dockerfile
-      ssh:
-        - default
       target: dev
     init: true
     container_name: pwa
@@ -38,8 +36,6 @@ services:
   api:
     build:
       dockerfile: api.Dockerfile
-      ssh:
-        - default
       target: dev
     init: true
     container_name: api

@@ -103,11 +103,6 @@ jobs:
           flavor: |
             prefix=pwa-,onlatest=true
 
-      - name: Start SSH agent for Docker build with '--mount=type=ssh'
-        uses: webfactory/ssh-agent@v0.10.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image (API)
@@ -117,8 +112,8 @@ jobs:
           file: ./api.Dockerfile
           target: prod
           platforms: linux/amd64 #,linux/arm64 # TODO: Reenable when needed
-          ssh: |
-            default
+          secrets: |
+            "github_token=${{ secrets.GITHUB_TOKEN }}"
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-api.outputs.tags }}
           labels: ${{ steps.meta-api.outputs.labels }}
@@ -131,8 +126,6 @@ jobs:
           file: ./pwa.Dockerfile
           target: prod
           platforms: linux/amd64 #,linux/arm64 # TODO: Reenable when needed
-          ssh: |
-            default
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta-pwa.outputs.tags }}
           labels: ${{ steps.meta-pwa.outputs.labels }}

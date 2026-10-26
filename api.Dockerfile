@@ -349,9 +349,10 @@ FROM base AS prod-deps
 COPY --from=composer /usr/local/bin/composer /usr/local/bin/composer
 COPY api/composer.json api/composer.lock api/symfony.lock ./
 RUN --mount=type=cache,target=/var/cache/composer/cache \
-    --mount=type=ssh,required=true \
-    # Don't use ~/.ssh/known_hosts (see https://stackoverflow.com/a/73264002/4156752)
-    ssh-keyscan -t ed25519 github.com >>/etc/ssh/ssh_known_hosts \
+    --mount=type=secret,id=github_token \
+    # With a GitHub token (CI passes GITHUB_TOKEN), downloads from GitHub are not held to the
+    # low limit for anonymous requests; without one (local builds) Composer runs anonymously
+    if [ -f /run/secrets/github_token ]; then export COMPOSER_AUTH="{\"github-oauth\":{\"github.com\":\"$(cat /run/secrets/github_token)\"}}"; fi \
     # Install composer dependencies (see https://stackoverflow.com/a/21921309/4156752)
     # https://symfony.com/doc/current/performance.html#optimize-composer-autoloader
     # https://getcomposer.org/doc/articles/autoloader-optimization.md \
